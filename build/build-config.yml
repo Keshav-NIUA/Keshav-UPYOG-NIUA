@@ -768,7 +768,7 @@ config:
       - work-dir: frontend/workbench-ui/
         dockerfile: frontend/workbench-ui/web/workbench/Dockerfile
         image-name: workbench-ui
-   - name: builds/upyog/frontend/micro-ui/homepage
+  - name: builds/upyog/frontend/micro-ui/homepage
     build:
       - work-dir: frontend/homepage/
         dockerfile: frontend/homepage/web/homepage/Dockerfile
