@@ -768,8 +768,11 @@ config:
       - work-dir: frontend/workbench-ui/
         dockerfile: frontend/workbench-ui/web/workbench/Dockerfile
         image-name: workbench-ui
-
-  #EDCR
+   - name: builds/upyog/frontend/micro-ui/homepage
+    build:
+      - work-dir: frontend/homepage/
+        dockerfile: frontend/homepage/web/homepage/Dockerfile
+        image-name: homepage
   
   - name: builds/upyog/edcr/dcr-client/egov-dcr
     build:
