@@ -14,8 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Query builder for property search operations
+ * Handles construction of SQL queries including geometry data
+ */
 @Component
+@Slf4j
 public class PropertyQueryBuilder {
 
 	@Autowired
@@ -58,7 +64,9 @@ public class PropertyQueryBuilder {
 
 	private static String ownerDocSelectValues = " owndoc.id as owndocid, owndoc.tenantid as owndoctenantid, owndoc.entityid as owndocentityId, owndoc.documenttype as owndoctype, owndoc.filestoreid as owndocfilestore, owndoc.documentuid as owndocuid, owndoc.status as owndocstatus, ";
 
-	private static String UnitSelectValues = "unit.id as unitid, unit.tenantid as unittenantid, unit.propertyid as unitpid, floorno, unittype, unit.usagecategory as unitusagecategory, occupancytype, occupancydate, carpetarea, builtuparea, plintharea, unit.superbuiltuparea as unitspba, arv, constructiontype, constructiondate, dimensions, unit.active as isunitactive, unit.createdby as unitcreatedby, unit.createdtime as unitcreatedtime, unit.lastmodifiedby as unitlastmodifiedby, unit.lastmodifiedtime as unitlastmodifiedtime ";
+	private static String UnitSelectValues = "unit.id as unitid, unit.tenantid as unittenantid, unit.propertyid as unitpid, floorno, unittype, unit.usagecategory as unitusagecategory, occupancytype, occupancydate, carpetarea, builtuparea, plintharea, unit.superbuiltuparea as unitspba, arv, constructiontype, constructiondate, dimensions, unit.active as isunitactive, unit.createdby as unitcreatedby, unit.createdtime as unitcreatedtime, unit.lastmodifiedby as unitlastmodifiedby, unit.lastmodifiedtime as unitlastmodifiedtime, ";
+
+	private static String GeometrySelectValues = "pgeometry.id as geometryid, pgeometry.propertyid as geometrypid, pgeometry.tenantid as geometrytenantid, pgeometry.geometry as geometrydata, pgeometry.createdby as geometrycreatedby, pgeometry.createdtime as geometrycreatedtime, pgeometry.lastmodifiedby as geometrylastmodifiedby, pgeometry.lastmodifiedtime as geometrylastmodifiedtime ";
 
 	private static final String TOTAL_APPLICATIONS_COUNT_QUERY = "select count(*) from eg_pt_property where tenantid = '{}';";
 
@@ -91,6 +99,40 @@ public class PropertyQueryBuilder {
 			+   LEFT_JOIN  +  " {schema}.eg_pt_DOCUMENT owndoc         ON owner.ownerinfouuid = owndoc.entityid "
 
 			+	LEFT_JOIN  +  " {schema}.eg_pt_UNIT unit		          ON property.id =  unit.propertyid ";
+
+	private static final String QUERY_WITH_GEOMETRY = SELECT
+
+			+	propertySelectValues
+
+			+   addressSelectValues
+
+			+   institutionSelectValues
+
+			+   propertyDocSelectValues
+
+			+   ownerSelectValues
+
+			+   ownerDocSelectValues
+
+			+   UnitSelectValues
+
+			+   GeometrySelectValues
+
+			+   " FROM {schema}.eg_pt_PROPERTY property "
+
+			+   INNER_JOIN +  " {schema}.eg_pt_ADDRESS address         ON property.id = address.propertyid "
+
+			+   LEFT_JOIN  +  " {schema}.eg_pt_INSTITUTION institution ON property.id = institution.propertyid "
+
+			+   LEFT_JOIN  +  " {schema}.eg_pt_DOCUMENT pdoc           ON property.id = pdoc.entityid "
+
+			+   INNER_JOIN +  " {schema}.eg_pt_OWNER owner             ON property.id = owner.propertyid "
+
+			+   LEFT_JOIN  +  " {schema}.eg_pt_DOCUMENT owndoc         ON owner.ownerinfouuid = owndoc.entityid "
+
+			+	LEFT_JOIN  +  " {schema}.eg_pt_UNIT unit		          ON property.id =  unit.propertyid "
+
+			+   LEFT_JOIN  +  " {schema}.eg_pt_property_geometry pgeometry ON property.propertyid = pgeometry.propertyid ";
 
 	private static final String ID_QUERY = SELECT
 
@@ -220,6 +262,10 @@ public class PropertyQueryBuilder {
 
 		else if (criteria.getIsRequestForCount()) {
 			builder = new StringBuilder(COUNT_QUERY);
+
+		} 		else if (criteria.getIncludeGeometry()) {
+			log.debug("Including geometry data in property search for tenant: {}", criteria.getTenantId());
+			builder = new StringBuilder(QUERY_WITH_GEOMETRY);
 
 		} else
 			builder = new StringBuilder(QUERY);

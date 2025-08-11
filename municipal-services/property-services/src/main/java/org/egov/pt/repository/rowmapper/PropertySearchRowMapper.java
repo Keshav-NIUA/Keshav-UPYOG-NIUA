@@ -20,6 +20,7 @@ import org.egov.pt.models.Institution;
 import org.egov.pt.models.Locality;
 import org.egov.pt.models.OwnerInfo;
 import org.egov.pt.models.Property;
+import org.egov.pt.models.PropertyGeometry;
 import org.egov.pt.models.Unit;
 import org.egov.pt.models.enums.Channel;
 import org.egov.pt.models.enums.CreationReason;
@@ -36,7 +37,14 @@ import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * Row mapper for property search results
+ * Handles mapping of database results to Property objects including geometry data
+ */
 @Component
+@Slf4j
 public class PropertySearchRowMapper implements ResultSetExtractor<List<Property>> {
 
 	@Autowired
@@ -89,6 +97,7 @@ public class PropertySearchRowMapper implements ResultSetExtractor<List<Property
 				setPropertyInfo(currentProperty, rs, tenanId, propertyUuId, linkedProperties, address);
 				currentProperty.setDueAmount(rs.getString("taxDue"));
 				currentProperty.setDueAmountYear(rs.getString("taxDueYear"));
+				addGeometryToProperty(rs, currentProperty);
 				addChildrenToProperty(rs, currentProperty);
 				propertyMap.put(propertyUuId, currentProperty);
 			}
@@ -405,6 +414,36 @@ public class PropertySearchRowMapper implements ResultSetExtractor<List<Property
 		currentProperty.setLinkedProperties(linkedProperties);
 		currentProperty.setTenantId(tenantId);
 		currentProperty.setId(propertyUuId);
+	}
+
+	/**
+	 * Adds geometry data to property if available
+	 * @param rs ResultSet containing geometry data
+	 * @param currentProperty Property object to add geometry to
+	 * @throws SQLException if database error occurs
+	 */
+	private void addGeometryToProperty(ResultSet rs, Property currentProperty) throws SQLException {
+		String geometryId = rs.getString("geometryid");
+		if (geometryId != null) {
+			try {
+				PropertyGeometry geometry = PropertyGeometry.builder()
+						.propertyId(rs.getString("geometrypid"))
+						.tenantId(rs.getString("geometrytenantid"))
+						.geometry(rs.getString("geometrydata"))
+						.auditDetails(AuditDetails.builder()
+								.createdBy(rs.getString("geometrycreatedby"))
+								.createdTime(rs.getLong("geometrycreatedtime"))
+								.lastModifiedBy(rs.getString("geometrylastmodifiedby"))
+								.lastModifiedTime(rs.getLong("geometrylastmodifiedtime"))
+								.build())
+						.build();
+				currentProperty.setGeometry(geometry);
+				log.debug("Geometry data added to property: {}", currentProperty.getPropertyId());
+			} catch (Exception e) {
+				log.warn("Failed to add geometry data to property: {}, Error: {}", 
+						currentProperty.getPropertyId(), e.getMessage());
+			}
+		}
 	}
 
 }

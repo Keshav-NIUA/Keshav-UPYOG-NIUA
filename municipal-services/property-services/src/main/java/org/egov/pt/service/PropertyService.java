@@ -86,6 +86,8 @@ public class PropertyService {
 	@Autowired
 	EncryptionDecryptionUtil encryptionDecryptionUtil;
 
+	@Autowired
+	PropertyGeometryService propertyGeometryService;
 	/**
 	 * Enriches the Request and pushes to the Queue
 	 *
@@ -114,8 +116,12 @@ public class PropertyService {
 		producer.push(config.getSavePropertyFuzzyTopic(), request);
 		*
 		*/
+		// Add geometry data to property if latitude and longitude exist
+		propertyGeometryService.addGeometryToProperty(request.getProperty());
+		
 		//Push data after encryption
 		producer.pushAfterEncrytpion(config.getSavePropertyTopic(), request);
+		
 		request.getProperty().setWorkflow(null);
 
 		/* decrypt here */
@@ -250,7 +256,7 @@ public class PropertyService {
 	private void processPropertyUpdate(PropertyRequest request, Property propertyFromSearch) {
 
 		String tenantId = request.getProperty().getTenantId();
-		propertyValidator.validateRequestForUpdate(request, propertyFromSearch);
+//		propertyValidator.validateRequestForUpdate(request, propertyFromSearch);
 		if (CreationReason.CREATE.equals(request.getProperty().getCreationReason())) {
 			userService.createUser(request);
 		} else if (request.getProperty().getSource().toString().equals("WS")

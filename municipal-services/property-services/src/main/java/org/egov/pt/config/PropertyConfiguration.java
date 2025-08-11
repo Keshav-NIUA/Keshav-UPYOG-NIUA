@@ -384,4 +384,6 @@ public class PropertyConfiguration {
     @Value("${persister.update.property.audit.oldData.topic}")
     private String updatePropertyAuditEncTopic;
 
+    @Value("${property.geometry.enabled:false}")
+    private Boolean isGeometryEnabled;
 }

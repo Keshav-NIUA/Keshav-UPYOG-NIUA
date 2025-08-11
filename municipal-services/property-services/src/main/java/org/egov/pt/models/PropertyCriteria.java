@@ -81,4 +81,7 @@ public class PropertyCriteria {
 	@Builder.Default
 	private Boolean isRequestForOldDataEncryption = false;
 
+	@Builder.Default
+	private Boolean includeGeometry = false;
+
 }

@@ -110,6 +110,9 @@ public class Property extends PropertyInfo {
 	@JsonProperty("workflow")
 	@DiffIgnore
 	private ProcessInstance workflow;
+
+	@JsonProperty("geometry")
+	private PropertyGeometry geometry;
 	
 	@JsonProperty("AlternateUpdated")
 	private boolean AlternateUpdated;

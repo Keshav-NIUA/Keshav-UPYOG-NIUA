@@ -937,3 +937,11 @@ config:
         dockerfile: "build/maven/Dockerfile"
       - work-dir: "municipal-services/tp-services/src/main/resources/db"
         image-name: "tp-services-db"
+
+  - name: "builds/upyog/core-services/gis-services"
+    build:
+      - work-dir: "core-services/gis-services"
+        image-name: "gis-services"
+        dockerfile: "build/maven/Dockerfile"
+      - work-dir: "core-services/gis-services/src/main/resources/db"
+        image-name: "gis-service-db"
