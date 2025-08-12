@@ -21,8 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class WaterClosetsExtract extends FeatureExtract {
-    private static final Logger LOG = LogManager.getLogger(WaterClosetsExtract.class);
+public class CommonRoomExtract extends FeatureExtract {
+    private static final Logger LOG = LogManager.getLogger(CommonRoomExtract.class);
     @Autowired
     private LayerNames layerNames;
 
@@ -34,7 +34,7 @@ public class WaterClosetsExtract extends FeatureExtract {
     @Override
     public PlanDetail extract(PlanDetail planDetail) {
         List<DXFLWPolyline> rooms;
-        List<DXFLWPolyline> ventilationWC;
+        List<DXFLWPolyline> ventilationCR;
         List<Measurement> roomMeasurements;
         List<Measurement> ventilationMeasurements;
         List<BigDecimal> roomHeights;
@@ -47,30 +47,30 @@ public class WaterClosetsExtract extends FeatureExtract {
 //                            f.getNumber());
                     String layerName = layerNames.getLayerName("LAYER_NAME_BLOCK_NAME_PREFIX") + block.getNumber() + "_"
                             + layerNames.getLayerName("LAYER_NAME_FLOOR_NAME_PREFIX") + f.getNumber() + "_"
-                            + layerNames.getLayerName("LAYER_NAME_WATER_CLOSET");
+                            + layerNames.getLayerName("LAYER_NAME_COMMON_ROOM");
                     String ventilationLayerName = layerNames.getLayerName("LAYER_NAME_BLOCK_NAME_PREFIX") + block.getNumber() + "_"
                     		+ layerNames.getLayerName("LAYER_NAME_FLOOR_NAME_PREFIX") + f.getNumber() + "_"
-                    		+ layerNames.getLayerName("LAYER_NAME_WATER_CLOSET_VENTILATION");
+                    		+ layerNames.getLayerName("LAYER_NAME_COMMON_ROOM_VENTILATION");
                     rooms = Util.getPolyLinesByLayer(planDetail.getDoc(), layerName);
-                    ventilationWC = Util.getPolyLinesByLayer(planDetail.getDoc(), ventilationLayerName);
+                    ventilationCR = Util.getPolyLinesByLayer(planDetail.getDoc(), ventilationLayerName);
                     roomMeasurements = rooms.stream()
                             .map(flightPolyLine -> new MeasurementDetail(flightPolyLine, true)).collect(Collectors.toList());
-                    ventilationMeasurements = ventilationWC.stream()
+                    ventilationMeasurements = ventilationCR.stream()
                     		.map(flightPolyLine -> new MeasurementDetail(flightPolyLine, true)).collect(Collectors.toList());
                     f.setWaterClosets(new Room());
                     
 //                    f.setVentilation(ventilationMeasurements);
-                    f.getWaterClosets().setRooms(roomMeasurements);
-                    f.getWaterClosets().setWaterClosetVentilation(ventilationMeasurements);
+                    f.getCommonRoom().setRooms(roomMeasurements);
+                    f.getCommonRoom().setCommonRoomVentialtion(ventilationMeasurements);
                     roomHeights = Util.getListOfDimensionValueByLayer(planDetail,
-                            String.format(layerNames.getLayerName("LAYER_NAME_BLK_FLR_WC_HT"), block.getNumber(), f.getNumber()));
+                            String.format(layerNames.getLayerName("LAYER_NAME_BLK_FLR_COMMON_ROOM_HT"), block.getNumber(), f.getNumber()));
                     roomHeightsList = new ArrayList<>();
                     for (BigDecimal h : roomHeights) {
                         height = new RoomHeight();
                         height.setHeight(h);
                         roomHeightsList.add(height);
                     }
-                    f.getWaterClosets().setHeights(roomHeightsList);
+                    f.getCommonRoom().setHeights(roomHeightsList);
                 }
 
         return planDetail;
