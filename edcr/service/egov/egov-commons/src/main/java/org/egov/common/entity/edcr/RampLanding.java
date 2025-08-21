@@ -1,5 +1,5 @@
 /*
- * eGov  SmartCity eGovernance suite aims to improve the internal efficiency,transparency,
+ * UPYOG  SmartCity eGovernance suite aims to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
  *
  *  Copyright (C) <2019>  eGovernments Foundation
@@ -48,85 +48,71 @@
 package org.egov.common.entity.edcr;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
-public class Ramp extends Measurement {
+/**
+ * Represents a ramp landing in a building or structure.
+ * <p>
+ * This class extends {@link Measurement} and includes additional properties
+ * such as landing number, associated landings, lengths, widths, and whether
+ * the landing is closed. It is typically used in building plan scrutiny
+ * to verify ramp and landing measurements as per regulations.
+ * </p>
+ */
 
-    private static final long serialVersionUID = 30L;
 
-    private Integer number;
+public class RampLanding extends Measurement {
 
-    private BigDecimal slope;
+    private static final long serialVersionUID = 57L;
 
-    private transient List<Measurement> ramps;  
+    private String number;
 
-    private List<Flight> flights = new ArrayList<>();
+    private transient List<Measurement> landings;
 
-    private Boolean rampClosed = false;  
+    private Boolean landingClosed = false;
 
-    private BigDecimal floorHeight;
+    private List<BigDecimal> lengths;
 
-    public BigDecimal getFloorHeight() {
-        return floorHeight;
-    }
-    
-	public List<Flight> getFlights() {
-		return flights;
-	}
+    private List<BigDecimal> widths;
 
-	public void setFlights(List<Flight> flights) {
-		this.flights = flights;
-	}
-
-	public void addFlights(Flight flight) {
-		this.flights.add(flight);
-	}
-    public void setFloorHeight(BigDecimal floorHeight) {
-        this.floorHeight = floorHeight;
-    }
-   
-    public List<Measurement> getRamps() {
-		return ramps;
-	}
-
-	public void setRamps(List<Measurement> ramps) {
-		this.ramps = ramps;
-	}
-
-	public Boolean getRampClosed() {
-		return rampClosed;
-	}
-
-	public void setRampClosed(Boolean rampClosed) {
-		this.rampClosed = rampClosed;
-	}
-
-	public BigDecimal getSlope() {
-        return slope;
-    }
-
-    public void setSlope(BigDecimal slope) {
-        this.slope = slope;
-    }
-
-    public Integer getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(Integer number) {
+    public void setNumber(String number) {
         this.number = number;
     }
-    
-    private BigDecimal minEntranceHeight;
 
-    public BigDecimal getMinEntranceHeight() {
-        return minEntranceHeight;
+    public List<Measurement> getLandings() {
+		return landings;
+	}
+
+	public void setLandings(List<Measurement> landings) {
+		this.landings = landings;
+	}
+
+	public Boolean getLandingClosed() {
+		return landingClosed;
+	}
+
+	public void setLandingClosed(Boolean landingClosed) {
+		this.landingClosed = landingClosed;
+	}
+
+	public List<BigDecimal> getLengths() {
+        return lengths;
     }
 
-    public void setMinEntranceHeight(BigDecimal minEntranceHeight) {
-        this.minEntranceHeight = minEntranceHeight;
+    public void setLengths(List<BigDecimal> lengths) {
+        this.lengths = lengths;
     }
 
+    public List<BigDecimal> getWidths() {
+        return widths;
+    }
+
+    public void setWidths(List<BigDecimal> widths) {
+        this.widths = widths;
+    }
 
 }

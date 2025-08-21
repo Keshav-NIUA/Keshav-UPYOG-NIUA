@@ -168,6 +168,7 @@ public class CommonFeatureConstants {
     public static final String DA_RAMP_DEFINED = "DA Ramp - Defined or not";
     public static final String DA_RAMP_SLOPE = "DA Ramp - Slope width";
     public static final String DA_RAMP_MAX_SLOPE = "DA Ramp - Maximum Slope";
+    public static final String DA_RAMP_LANDING = "DA Ramp - Landing";
     public static final String DA_ROOM = "DA Room";
     public static final String RAMP_MIN_WIDTH = "Ramp - Minimum Width";
     public static final String RAMP_MAX_SLOPE = "Ramp - Maximum Slope";

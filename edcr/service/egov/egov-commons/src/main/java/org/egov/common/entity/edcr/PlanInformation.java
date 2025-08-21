@@ -54,6 +54,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 //These are the declarations of the applicant in the plan using PLAN_INFO layer.
 public class PlanInformation implements Serializable {
 
@@ -155,6 +157,202 @@ public class PlanInformation implements Serializable {
     private transient String nocNeighbour = NA;
     private transient String nocFromNHAI = NA;
     private transient String indemnityBasement = NA;
+    
+    private BigDecimal twoWheelerSlowCharger = BigDecimal.ZERO;
+    
+  
+    private BigDecimal twoWheelerFastCharger =  BigDecimal.ZERO;
+    
+  
+    private BigDecimal fourWheelerSlowCharger = BigDecimal.ZERO;
+    
+    
+    private BigDecimal fourWheelerFastCharger =  BigDecimal.ZERO;
+    
+    
+    private BigDecimal threeWheelerSlowCharger = BigDecimal.ZERO;
+    
+  
+    private BigDecimal threeWheelerFastCharger = BigDecimal.ZERO;
+    
+   
+    private BigDecimal PVslowCharger = BigDecimal.ZERO;
+    
+   
+    private BigDecimal PVfastCharger = BigDecimal.ZERO;
+    
+  
+    private BigDecimal noOfFourWheelerForSlowCharger = BigDecimal.ZERO;
+    
+  
+    private BigDecimal noOfThreeWheelerForSlowCharger = BigDecimal.ZERO;
+    
+   
+    private BigDecimal noOfTwoWheelerForSlowCharger = BigDecimal.ZERO;
+    
+   
+    private BigDecimal noOfPVForSlowCharger = BigDecimal.ZERO;
+    
+   
+    private BigDecimal noOfFourWheelerForfastCharger = BigDecimal.ZERO;
+    
+   
+    private BigDecimal noOfThreeWheelerForFastCharger = BigDecimal.ZERO;
+    
+    private BigDecimal noOfWheelerResidential = BigDecimal.ZERO;
+    
+    private BigDecimal chargerResidential = BigDecimal.ZERO;
+    
+  
+	public BigDecimal getNoOfWheelerResidential() {
+		return noOfWheelerResidential;
+	}
+
+	public void setNoOfWheelerResidential(BigDecimal noOfWheelerResidential) {
+		this.noOfWheelerResidential = noOfWheelerResidential;
+	}
+
+	public BigDecimal getChargerResidential() {
+		return chargerResidential;
+	}
+
+	public void setChargerResidential(BigDecimal chargerResidential) {
+		this.chargerResidential = chargerResidential;
+	}
+
+	public BigDecimal getTwoWheelerSlowCharger() {
+		return twoWheelerSlowCharger;
+	}
+
+	public void setTwoWheelerSlowCharger(BigDecimal twoWheelerSlowCharger) {
+		this.twoWheelerSlowCharger = twoWheelerSlowCharger;
+	}
+
+	public BigDecimal getTwoWheelerFastCharger() {
+		return twoWheelerFastCharger;
+	}
+
+	public void setTwoWheelerFastCharger(BigDecimal twoWheelerFastCharger) {
+		this.twoWheelerFastCharger = twoWheelerFastCharger;
+	}
+
+	public BigDecimal getFourWheelerSlowCharger() {
+		return fourWheelerSlowCharger;
+	}
+
+	public void setFourWheelerSlowCharger(BigDecimal fourWheelerSlowCharger) {
+		this.fourWheelerSlowCharger = fourWheelerSlowCharger;
+	}
+
+	public BigDecimal getFourWheelerFastCharger() {
+		return fourWheelerFastCharger;
+	}
+
+	public void setFourWheelerFastCharger(BigDecimal fourWheelerFastCharger) {
+		this.fourWheelerFastCharger = fourWheelerFastCharger;
+	}
+
+	public BigDecimal getThreeWheelerSlowCharger() {
+		return threeWheelerSlowCharger;
+	}
+
+	public void setThreeWheelerSlowCharger(BigDecimal threeWheelerSlowCharger) {
+		this.threeWheelerSlowCharger = threeWheelerSlowCharger;
+	}
+
+	public BigDecimal getThreeWheelerFastCharger() {
+		return threeWheelerFastCharger;
+	}
+
+	public void setThreeWheelerFastCharger(BigDecimal threeWheelerFastCharger) {
+		this.threeWheelerFastCharger = threeWheelerFastCharger;
+	}
+
+	public BigDecimal getPVslowCharger() {
+		return PVslowCharger;
+	}
+
+	public void setPVslowCharger(BigDecimal pVslowCharger) {
+		PVslowCharger = pVslowCharger;
+	}
+
+	public BigDecimal getPVfastCharger() {
+		return PVfastCharger;
+	}
+
+	public void setPVfastCharger(BigDecimal pVfastCharger) {
+		PVfastCharger = pVfastCharger;
+	}
+
+	public BigDecimal getNoOfFourWheelerForSlowCharger() {
+		return noOfFourWheelerForSlowCharger;
+	}
+
+	public void setNoOfFourWheelerForSlowCharger(BigDecimal noOfFourWheelerForSlowCharger) {
+		this.noOfFourWheelerForSlowCharger = noOfFourWheelerForSlowCharger;
+	}
+
+	public BigDecimal getNoOfThreeWheelerForSlowCharger() {
+		return noOfThreeWheelerForSlowCharger;
+	}
+
+	public void setNoOfThreeWheelerForSlowCharger(BigDecimal noOfThreeWheelerForSlowCharger) {
+		this.noOfThreeWheelerForSlowCharger = noOfThreeWheelerForSlowCharger;
+	}
+
+	public BigDecimal getNoOfTwoWheelerForSlowCharger() {
+		return noOfTwoWheelerForSlowCharger;
+	}
+
+	public void setNoOfTwoWheelerForSlowCharger(BigDecimal noOfTwoWheelerForSlowCharger) {
+		this.noOfTwoWheelerForSlowCharger = noOfTwoWheelerForSlowCharger;
+	}
+
+	public BigDecimal getNoOfPVForSlowCharger() {
+		return noOfPVForSlowCharger;
+	}
+
+	public void setNoOfPVForSlowCharger(BigDecimal noOfPVForSlowCharger) {
+		this.noOfPVForSlowCharger = noOfPVForSlowCharger;
+	}
+
+	public BigDecimal getNoOfFourWheelerForfastCharger() {
+		return noOfFourWheelerForfastCharger;
+	}
+
+	public void setNoOfFourWheelerForfastCharger(BigDecimal noOfFourWheelerForfastCharger) {
+		this.noOfFourWheelerForfastCharger = noOfFourWheelerForfastCharger;
+	}
+
+	public BigDecimal getNoOfThreeWheelerForFastCharger() {
+		return noOfThreeWheelerForFastCharger;
+	}
+
+	public void setNoOfThreeWheelerForFastCharger(BigDecimal noOfThreeWheelerForFastCharger) {
+		this.noOfThreeWheelerForFastCharger = noOfThreeWheelerForFastCharger;
+	}
+
+	public BigDecimal getNoOfTwoWheelerForFastCharger() {
+		return noOfTwoWheelerForFastCharger;
+	}
+
+	public void setNoOfTwoWheelerForFastCharger(BigDecimal noOfTwoWheelerForFastCharger) {
+		this.noOfTwoWheelerForFastCharger = noOfTwoWheelerForFastCharger;
+	}
+
+	public BigDecimal getNoOfPVForFastCharger() {
+		return noOfPVForFastCharger;
+	}
+
+	public void setNoOfPVForFastCharger(BigDecimal noOfPVForFastCharger) {
+		this.noOfPVForFastCharger = noOfPVForFastCharger;
+	}
+
+	private BigDecimal noOfTwoWheelerForFastCharger = BigDecimal.ZERO;
+    
+  
+    private BigDecimal noOfPVForFastCharger = BigDecimal.ZERO;
+
 
     public String getIndemnityBasement() {
         return indemnityBasement;
@@ -253,9 +451,16 @@ public class PlanInformation implements Serializable {
 
     //YES/NO/NA.Extracted from Plan info. Rain water declared in plan.
     private transient String rwhDeclared = NA;
+	private String plotType;
+	
+	 private BigDecimal noOfRoom;
 
 
-    public Boolean getGovernmentOrAidedSchool() {
+    public void setNoOfRoom(BigDecimal noOfRoom) {
+		this.noOfRoom = noOfRoom;
+	}
+
+	public Boolean getGovernmentOrAidedSchool() {
         return governmentOrAidedSchool;
     }
 
@@ -711,4 +916,16 @@ public class PlanInformation implements Serializable {
         this.rwhDeclared = rwhDeclared;
     }
 
+    public String getPlotType() {
+       
+		return plotType;
+    }
+
+    public void setPlotType(String plotType) {
+        this.plotType = plotType;
+    }
+
+	public BigDecimal getNoOfRoom() {
+				return noOfRoom;
+	}
 }

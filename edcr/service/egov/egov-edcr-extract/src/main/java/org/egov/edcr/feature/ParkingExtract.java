@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -76,6 +77,17 @@ public class ParkingExtract extends FeatureExtract {
                 for (String s : stiltParkLayerNames)
                     Util.getPolyLinesByLayer(pl.getDoc(), s).forEach(
                             stiltPark -> floor.getParking().getStilts().add(new MeasurementDetail(stiltPark, true)));
+                
+                
+                String evParkLayer = layerNames.getLayerName("LAYER_NAME_BLOCK_NAME_PREFIX") + block.getNumber()
+                + "_" + layerNames.getLayerName("LAYER_NAME_FLOOR_NAME_PREFIX") + floor.getNumber() + "_"
+                + layerNames.getLayerName("LAYER_NAME_EV_PARKING");
+                List<String> evParkLayerNames = Util.getLayerNamesLike(pl.getDoc(), evParkLayer);
+	               for (String s : evParkLayerNames)
+	               Util.getPolyLinesByLayer(pl.getDoc(), s).forEach(evPark -> {
+	               
+                    floor.getParking().getEvParking().add(new MeasurementDetail(evPark, true));
+            });
             }
 
             String hallLayer = layerNames.getLayerName("LAYER_NAME_BLOCK_NAME_PREFIX") + block.getNumber() + "_"
@@ -146,9 +158,24 @@ public class ParkingExtract extends FeatureExtract {
                 mechLift -> pl.getParkingDetails().getMechParking().add(new MeasurementDetail(mechLift, true)));
         Util.getPolyLinesByLayer(pl.getDoc(), layerNames.getLayerName("LAYER_NAME_VISITOR_PARKING")).forEach(
                 visitorPark -> pl.getParkingDetails().getVisitors().add(new MeasurementDetail(visitorPark, true)));
-        Util.getPolyLinesByLayer(pl.getDoc(), layerNames.getLayerName("LAYER_NAME_SPECIAL_PARKING")).forEach(
-                specialPark -> pl.getParkingDetails().getSpecial().add(new MeasurementDetail(specialPark, true)));
+	    Util.getPolyLinesByLayer(pl.getDoc(), layerNames.getLayerName("LAYER_NAME_SPECIAL_PARKING")).forEach(
+	                specialPark -> pl.getParkingDetails().getSpecial().add(new MeasurementDetail(specialPark, true)));
+	        
+	        
+	        String minDistance = Util.getMtextByLayerName(pl.getDoc(), layerNames.getLayerName("LAYER_NAME_SPECIAL_PARKING"));
+	        BigDecimal minDistanceSpecial = minDistance != null
+					? BigDecimal
+							.valueOf(Double.valueOf(minDistance.replaceAll("MIN_DISTANCE_SPCL=", "")))
+					: BigDecimal.ZERO;
+	        
 
+	        pl.getParkingDetails().getSpecial().forEach(measurementDetail -> {
+	            measurementDetail.setMinimumDistance(minDistanceSpecial);
+	        });
+
+
+        
+        
         validate(pl);
         
         if (LOGGER.isDebugEnabled())

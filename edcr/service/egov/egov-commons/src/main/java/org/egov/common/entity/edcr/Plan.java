@@ -234,6 +234,79 @@ public class Plan implements Serializable {
     private List<ICT> icts = new ArrayList<>();
     
     private String coreArea;
+    
+    private BigDecimal river = BigDecimal.ZERO;
+    private BigDecimal bharaluMoraBondajan = BigDecimal.ZERO;
+    private BigDecimal otherChannels = BigDecimal.ZERO;
+    private BigDecimal minorDrains = BigDecimal.ZERO;
+    private BigDecimal notifiedWaterBodies = BigDecimal.ZERO;
+	private BigDecimal otherNotifiedWaterBodies = BigDecimal.ZERO;
+    private BigDecimal otherLargePondsOrWaterBody = BigDecimal.ZERO;
+    private BigDecimal smallPonds = BigDecimal.ZERO;
+    
+    public BigDecimal getRiver() {
+		return river;
+	}
+
+	public void setRiver(BigDecimal river) {
+		this.river = river;
+	}
+
+	public BigDecimal getBharaluMoraBondajan() {
+		return bharaluMoraBondajan;
+	}
+
+	public void setBharaluMoraBondajan(BigDecimal bharaluMoraBondajan) {
+		this.bharaluMoraBondajan = bharaluMoraBondajan;
+	}
+
+	public BigDecimal getOtherChannels() {
+		return otherChannels;
+	}
+
+	public void setOtherChannels(BigDecimal otherChannels) {
+		this.otherChannels = otherChannels;
+	}
+
+	public BigDecimal getMinorDrains() {
+		return minorDrains;
+	}
+
+	public void setMinorDrains(BigDecimal minorDrains) {
+		this.minorDrains = minorDrains;
+	}
+
+	public BigDecimal getNotifiedWaterBodies() {
+		return notifiedWaterBodies;
+	}
+
+	public void setNotifiedWaterBodies(BigDecimal notifiedWaterBodies) {
+		this.notifiedWaterBodies = notifiedWaterBodies;
+	}
+
+	public BigDecimal getOtherNotifiedWaterBodies() {
+		return otherNotifiedWaterBodies;
+	}
+
+	public void setOtherNotifiedWaterBodies(BigDecimal otherNotifiedWaterBodies) {
+		this.otherNotifiedWaterBodies = otherNotifiedWaterBodies;
+	}
+
+	public BigDecimal getOtherLargePondsOrWaterBody() {
+		return otherLargePondsOrWaterBody;
+	}
+
+	public void setOtherLargePondsOrWaterBody(BigDecimal otherLargePondsOrWaterBody) {
+		this.otherLargePondsOrWaterBody = otherLargePondsOrWaterBody;
+	}
+
+	public BigDecimal getSmallPonds() {
+		return smallPonds;
+	}
+
+	public void setSmallPonds(BigDecimal smallPonds) {
+		this.smallPonds = smallPonds;
+	}
 
     public List<BigDecimal> getCanopyDistanceFromPlotBoundary() {
         return canopyDistanceFromPlotBoundary;
