@@ -8,12 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.bpa.calculator.config.BPACalculatorConfig;
-import org.egov.bpa.calculator.repository.PreapprovedPlanRepository;
 import org.egov.bpa.calculator.repository.ServiceRequestRepository;
 import org.egov.bpa.calculator.utils.BPACalculatorConstants;
 import org.egov.bpa.calculator.web.models.CalculationReq;
-import org.egov.bpa.calculator.web.models.PreapprovedPlan;
-import org.egov.bpa.calculator.web.models.PreapprovedPlanSearchCriteria;
 import org.egov.bpa.calculator.web.models.bpa.BPA;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MasterDetail;
@@ -47,8 +44,6 @@ public class MDMSService {
 	@Autowired
 	private EDCRService edcrService;
 
-	@Autowired
-	private PreapprovedPlanRepository preapprovedPlanRepository;
 	
     public Object mDMSCall(CalculationReq calculationReq,String tenantId){
         MdmsCriteriaReq mdmsCriteriaReq = getMDMSRequest(calculationReq,tenantId);
@@ -110,24 +105,9 @@ public class MDMSService {
 		JSONArray applicationType = null;
         try {
             List jsonOutput = JsonPath.read(mdmsData, BPACalculatorConstants.MDMS_CALCULATIONTYPE_PATH);
-            if (BPACalculatorConstants.BUSINESSSERVICE_PREAPPROVEDPLAN.equalsIgnoreCase(businessService)) {
-        		//fetch preapproved plan-
-        		PreapprovedPlan preapprovedPlan = fetchPreapprovedPlanFromDrawingNo(bpa.getEdcrNumber());
-        		//responseMap = (LinkedHashMap<String, Object>) preapprovedPlan.getDrawingDetail();
-                Object drawingDetail = preapprovedPlan.getDrawingDetail();
-                
-                // Check if drawingDetail is of type LinkedHashMap<String, Object>
-                if (drawingDetail instanceof LinkedHashMap) {
-                    // Safely cast to LinkedHashMap<String, Object>
-                    responseMap = (LinkedHashMap<String, Object>) drawingDetail;
-                } else if (drawingDetail instanceof Map) {
-                    // Convert to LinkedHashMap if it's some other type of Map
-                    responseMap = new LinkedHashMap<>((Map<String, Object>) drawingDetail);
-                }
-                } 
-            else {
+            
             responseMap = edcrService.getEDCRDetails(requestInfo, bpa);
-            }
+            
             String jsonString = new JSONObject(responseMap).toString();
     		DocumentContext context = JsonPath.using(Configuration.defaultConfiguration()).parse(jsonString);
             if (BPACalculatorConstants.BUSINESSSERVICE_PREAPPROVEDPLAN.equalsIgnoreCase(businessService)) {
@@ -195,16 +175,5 @@ public class MDMSService {
         return defaultMap;
     }
 
-	private PreapprovedPlan fetchPreapprovedPlanFromDrawingNo(String drawingNo) {
-		PreapprovedPlanSearchCriteria criteria = new PreapprovedPlanSearchCriteria();
-		criteria.setDrawingNo(drawingNo);
-		List<PreapprovedPlan> preapprovedPlans = preapprovedPlanRepository.getPreapprovedPlansData(criteria);
-		if (CollectionUtils.isEmpty(preapprovedPlans)) {
-			log.error("No preapproved plan with provided drawingNo:" + drawingNo);
-			throw new CustomException("No preapproved plan with provided drawingNo",
-					"No preapproved plan with provided drawingNo");
-		}
-		return preapprovedPlans.get(0);
-	}
 
 }

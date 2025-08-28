@@ -2,8 +2,6 @@ package org.egov.bpa.calculator.services;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,7 +9,6 @@ import java.util.Map;
 
 import org.egov.bpa.calculator.config.BPACalculatorConfig;
 import org.egov.bpa.calculator.kafka.broker.BPACalculatorProducer;
-import org.egov.bpa.calculator.repository.PreapprovedPlanRepository;
 import org.egov.bpa.calculator.utils.BPACalculatorConstants;
 import org.egov.bpa.calculator.utils.CalculationUtils;
 import org.egov.bpa.calculator.web.models.BillingSlabSearchCriteria;
@@ -19,8 +16,6 @@ import org.egov.bpa.calculator.web.models.Calculation;
 import org.egov.bpa.calculator.web.models.CalculationReq;
 import org.egov.bpa.calculator.web.models.CalculationRes;
 import org.egov.bpa.calculator.web.models.CalulationCriteria;
-import org.egov.bpa.calculator.web.models.PreapprovedPlan;
-import org.egov.bpa.calculator.web.models.PreapprovedPlanSearchCriteria;
 import org.egov.bpa.calculator.web.models.bpa.BPA;
 import org.egov.bpa.calculator.web.models.bpa.EstimatesAndSlabs;
 import org.egov.bpa.calculator.web.models.demand.Category;
@@ -67,9 +62,6 @@ public class CalculationService {
 	@Autowired
 	private BPAService bpaService;
 	
-	@Autowired
-	private PreapprovedPlanRepository preapprovedPlanRepository;
-
 	/**
 	 * Calculates tax estimates and creates demand
 	 * 

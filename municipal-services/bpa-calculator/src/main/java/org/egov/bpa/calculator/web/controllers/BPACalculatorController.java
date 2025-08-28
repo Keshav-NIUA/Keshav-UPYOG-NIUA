@@ -27,21 +27,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BPACalculatorController {
 
-	private ObjectMapper objectMapper;
-
-	private HttpServletRequest request;
-
+	
 	private CalculationService calculationService;
 
-	private DemandService demandService;
-
 	@Autowired
-	public BPACalculatorController(ObjectMapper objectMapper, HttpServletRequest request,
-								CalculationService calculationService,DemandService demandService) {
-		this.objectMapper = objectMapper;
-		this.request = request;
+	public BPACalculatorController(CalculationService calculationService) {
 		this.calculationService=calculationService;
-		this.demandService=demandService;
 	}
 
 	/**
