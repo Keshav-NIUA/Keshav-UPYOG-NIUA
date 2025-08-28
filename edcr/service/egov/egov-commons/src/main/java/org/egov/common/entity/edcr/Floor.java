@@ -87,7 +87,8 @@ public class Floor extends Measurement {
     // Doors for version 1.1.1
     private List<Door> doors = new ArrayList<>();
     private List<Door> nonaHabitationalDoors = new ArrayList<>();
-    
+    private List<ServiceRoom> serviceRooms = new ArrayList<>();
+    private List<ArchitecturalFeature> architecturalFeature = new ArrayList<>();
     private List<Window> windows = new ArrayList<>();
 
     private Room kitchen;
@@ -542,6 +543,14 @@ public class Floor extends Measurement {
         this.regularRooms.add(regularRoom);
     }
 
+    public void addServiceRoom(ServiceRoom serviceRoom) {
+        this.serviceRooms.add(serviceRoom);
+    }
+
+    public void addArchitecturalFeature(ArchitecturalFeature architecture) {
+        this.architecturalFeature.add(architecture);
+    }
+
     /**
      * @param regularRooms the regularRooms to set
      */
@@ -738,4 +747,19 @@ public class Floor extends Measurement {
         this.heightFromFloorToBottomOfBeam = heightFromFloorToBottomOfBeam;
     }
 
+    public List<ServiceRoom> getServiceRooms() {
+        return serviceRooms;
+    }
+
+    public void setServiceRooms(List<ServiceRoom> serviceRooms) {
+        this.serviceRooms = serviceRooms;
+    }
+
+    public List<ArchitecturalFeature> getArchitecturalFeature() {
+        return architecturalFeature;
+    }
+
+    public void setArchitecturalFeature(List<ArchitecturalFeature> architecturalFeature) {
+        this.architecturalFeature = architecturalFeature;
+    }
 }

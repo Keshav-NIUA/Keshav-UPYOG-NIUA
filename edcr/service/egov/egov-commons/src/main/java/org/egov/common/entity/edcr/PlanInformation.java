@@ -157,7 +157,10 @@ public class PlanInformation implements Serializable {
     private transient String nocNeighbour = NA;
     private transient String nocFromNHAI = NA;
     private transient String indemnityBasement = NA;
-    
+
+    //true/false.Does the building have earthquake resistance measures
+    private transient Boolean isEarthquakeResistant = false;
+
     private BigDecimal twoWheelerSlowCharger = BigDecimal.ZERO;
     
   
@@ -928,4 +931,12 @@ public class PlanInformation implements Serializable {
 	public BigDecimal getNoOfRoom() {
 				return noOfRoom;
 	}
+
+    public Boolean isEarthquakeResistant() {
+        return isEarthquakeResistant;
+    }
+
+    public void setEarthquakeResistant(Boolean earthquakeResistant) {
+        isEarthquakeResistant = earthquakeResistant;
+    }
 }

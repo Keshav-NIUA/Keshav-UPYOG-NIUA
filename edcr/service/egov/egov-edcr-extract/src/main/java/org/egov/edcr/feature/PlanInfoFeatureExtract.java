@@ -842,6 +842,19 @@ public class PlanInfoFeatureExtract extends FeatureExtract {
 		if (StringUtils.isNotBlank(city))
 			pi.setCity(city);
 
+        // Extract for earthquake resistance measures
+        String isEarthquakeResistant = planInfoProperties.get(DxfFileConstants.EARTHQUAKE_RESISTANT);
+        if (StringUtils.isNotBlank(isEarthquakeResistant)) {
+            LOG.info("Extracting Earthquake Resistant value from Plan Information layer: " + isEarthquakeResistant);
+            if (isEarthquakeResistant.equalsIgnoreCase(DcrConstants.YES))
+                pi.setEarthquakeResistant(true);
+            else if (isEarthquakeResistant.equalsIgnoreCase(DcrConstants.NO))
+                pi.setEarthquakeResistant(false);
+            else
+                pl.addError(DxfFileConstants.EARTHQUAKE_RESISTANT,
+                        DxfFileConstants.EARTHQUAKE_RESISTANT + " cannot be accepted , should be either YES/NO.");
+        }
+
 //		String mauza = planInfoProperties.get(DxfFileConstants.MAUZA);
 //		if (StringUtils.isNotBlank(mauza))
 //			pi.setMauza(mauza);

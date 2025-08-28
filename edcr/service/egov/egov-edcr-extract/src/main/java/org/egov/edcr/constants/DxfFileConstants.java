@@ -183,6 +183,7 @@ public class DxfFileConstants {
     public static final String NO_OF_THREE_WHEELER_FOR_FAST_CHARGER = "NO_OF_THREE_WHEELER_FOR_FAST_CHARGER";
     public static final String NO_OF_WHEELER_RESIDENTIAL = "NO_OF_WHEELER_RESIDENTIAL";
     public static final String CHARGER_RESIDENTIAL = "CHARGER_RESIDENTIAL";
+    public static final String EARTHQUAKE_RESISTANT = "isEarthquakeResistant";
 
   //  public static final String KHATA_NO = "KHATA_NO";
     public static final String KHASRA_NO = "KHASRA_NO";
