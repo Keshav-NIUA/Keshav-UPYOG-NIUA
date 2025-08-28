@@ -13,8 +13,6 @@ public class BPAConstants {
 
 	public static final String BPA_MODULE_CODE = "BPA";
 	
-	public static final String BUSINESSSERVICE_PREAPPROVEDPLAN = "BPA-PAP";
-	
 	public static final String NOC_BYPASS_DETAILS = "nocBypassDetails";
 	
 	public static final String EDCR_SUGGESTED_REQUIRED_NOCs_PATH="$.edcrDetail[0].planDetail.planInformation.requiredNOCs";

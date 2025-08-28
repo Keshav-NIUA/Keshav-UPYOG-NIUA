@@ -16,8 +16,6 @@ import org.egov.bpa.validator.MDMSValidator;
 import org.egov.bpa.web.model.BPA;
 import org.egov.bpa.web.model.BPARequest;
 import org.egov.bpa.web.model.BPASearchCriteria;
-import org.egov.bpa.web.model.PreapprovedPlan;
-import org.egov.bpa.web.model.PreapprovedPlanSearchCriteria;
 import org.egov.bpa.web.model.edcr.RequestInfo;
 import org.egov.bpa.web.model.edcr.RequestInfoWrapper;
 import org.egov.tracer.model.CustomException;
@@ -49,8 +47,6 @@ public class EDCRService {
 	@Autowired
 	BPARepository bpaRepository;
 	
-	@Autowired
-	private PreapprovedPlanService preapprovedPlanService;
 
 	@Autowired
 	public EDCRService(ServiceRequestRepository serviceRequestRepository, BPAConfiguration config) {
@@ -80,7 +76,7 @@ public class EDCRService {
 		List<BPA> bpas = bpaRepository.getBPAData(criteria, null);
 		if(bpas.size()>0){
 			for(int i=0; i<bpas.size(); i++){
-				if(!bpas.get(i).getStatus().equalsIgnoreCase(BPAConstants.STATUS_REJECTED) && !bpas.get(i).getStatus().equalsIgnoreCase(BPAConstants.STATUS_REVOCATED) && !BPAConstants.BUSINESSSERVICE_PREAPPROVEDPLAN.equalsIgnoreCase(businessservice)){
+				if(!bpas.get(i).getStatus().equalsIgnoreCase(BPAConstants.STATUS_REJECTED) && !bpas.get(i).getStatus().equalsIgnoreCase(BPAConstants.STATUS_REVOCATED)){
 					throw new CustomException(BPAErrorConstants.DUPLICATE_EDCR,
 							" Application already exists with EDCR Number " + bpa.getEdcrNumber());
 				}
@@ -326,29 +322,5 @@ public class EDCRService {
 		return nocsType;
 	}
 	
-	public Map<String, String> getEdcrDetailsForPreapprovedPlan(Map<String, String> edcrResponse, BPARequest bpaRequest) {
-		
-		
-		
-		PreapprovedPlanSearchCriteria preapprovedPlanSearchCriteria = new PreapprovedPlanSearchCriteria();
-		preapprovedPlanSearchCriteria.setDrawingNo(bpaRequest.getBPA().getEdcrNumber());
-		List<PreapprovedPlan> preapprovedPlans = preapprovedPlanService
-				.getPreapprovedPlanFromCriteria(preapprovedPlanSearchCriteria);
-		if (CollectionUtils.isEmpty(preapprovedPlans)) {
-			log.error("no preapproved plan found for provided drawingNo:" + bpaRequest.getBPA().getEdcrNumber());
-			throw new CustomException("no preapproved plan found for provided drawingNo",
-					"no preapproved plan found for provided drawingNo");
-		}
-		PreapprovedPlan preapprovedPlanFromDb = preapprovedPlans.get(0);
-		Map<String, Object> drawingDetail = (Map<String, Object>) preapprovedPlanFromDb.getDrawingDetail();
-		
-		
-		edcrResponse.put(BPAConstants.SERVICETYPE, drawingDetail.get("serviceType") + "");// NEW_CONSTRUCTION
-		edcrResponse.put(BPAConstants.APPLICATIONTYPE, drawingDetail.get("applicationType") + "");// BUILDING_PLAN_SCRUTINY
-		
-		return 	edcrResponse;	
-				 
-	}
-
 
 }

@@ -289,13 +289,10 @@ public class NocService {
 		BPA bpa = bpaRequest.getBPA();
 		String businessServices = bpaRequest.getBPA().getBusinessService(); 
 		Map<String, String> edcrResponse = new HashMap<>();
-		if (StringUtils.isNotEmpty(businessServices) &&  BPAConstants.BUSINESSSERVICE_PREAPPROVEDPLAN.equalsIgnoreCase(businessServices)) {
-			//System.out.println("inside this");
-			edcrResponse = edcrService.getEdcrDetailsForPreapprovedPlan(edcrResponse,bpaRequest);
-		} else {
-			log.info("Edcr api calling..");
-			edcrResponse = edcrService.getEDCRDetails(bpaRequest.getRequestInfo(), bpaRequest.getBPA());
-		}
+		
+		log.info("Edcr api calling..");
+		edcrResponse = edcrService.getEDCRDetails(bpaRequest.getRequestInfo(), bpaRequest.getBPA());
+		
 		String nocPath = BPAConstants.NOC_TRIGGER_STATE_MAP
 				.replace("{1}", edcrResponse.get(BPAConstants.APPLICATIONTYPE))
 				.replace("{2}", edcrResponse.get(BPAConstants.SERVICETYPE))
