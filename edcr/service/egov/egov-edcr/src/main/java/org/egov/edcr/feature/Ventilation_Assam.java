@@ -225,21 +225,12 @@ public class Ventilation_Assam extends Ventilation {
 
 	private void processLaundryRecreationVentilation(Floor floor, ScrutinyDetail scrutinyDetail, Plan pl) {
 	    MeasurementWithHeight laundryVent = floor.getLaundryOrRecreationalVentilation();
-	    if (laundryVent == null || laundryVent.getMeasurements() == null || laundryVent.getMeasurements().isEmpty()) {
-	        ReportScrutinyDetail detail = new ReportScrutinyDetail();
-	        detail.setRuleNo(RULE_VENT_01);
-	        detail.setDescription(LAUNDRY_VENTILATION_DESC);
-	        detail.setRequired(VENTILATION_DEFINED_PERCENT_MSG);
-	        detail.setProvided(VENTILATION_NOT_PROVIDED_AT_FLOOR + floor.getNumber());
-	        detail.setStatus(Result.Not_Accepted.getResultVal());
 
-	        scrutinyDetail.getDetail().add(mapReportDetails(detail));
-	        pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+	    // If not provided in DXF, skip adding to report
+	    if (laundryVent == null || laundryVent.getMeasurements() == null || laundryVent.getMeasurements().isEmpty()) {
 	        return;
 	    }
 
-
-	   
 	    BigDecimal ventilationPercent = BigDecimal.TEN;
 	    List<Object> rules = cache.getFeatureRules(pl, FeatureEnum.VENTILATION.getValue(), false);
 
@@ -252,9 +243,8 @@ public class Ventilation_Assam extends Ventilation {
 	        ventilationPercent = matchedRule.get().getLaundryRecreationPercent();
 	    }
 
-	    BigDecimal roomArea = floor.getArea(); // Floor area
+	    BigDecimal roomArea = floor.getArea();
 	    BigDecimal requiredVentArea = roomArea.multiply(ventilationPercent);
-
 	    BigDecimal providedVentArea = laundryVent.getMeasurements().stream()
 	        .map(Measurement::getArea)
 	        .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -270,25 +260,14 @@ public class Ventilation_Assam extends Ventilation {
 
 	    scrutinyDetail.getDetail().add(mapReportDetails(detail));
 	    pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
-
-
 	}
+
 	
 	private void processCommonRoomVentilation(Floor floor, ScrutinyDetail scrutinyDetail, Plan pl) {
 	    if (floor.getCommonRoom() == null || floor.getCommonRoom().getCommonRoomVentialtion() == null
 	            || floor.getCommonRoom().getCommonRoomVentialtion().isEmpty()) {
-
-	    	ReportScrutinyDetail detail = new ReportScrutinyDetail();
-	    	
-	    	detail.setRuleNo(RULE_VENT_01);
-	    	detail.setDescription(COMMON_ROOM_VENTILATION_OPENING_DESC_PREFIX);
-	    	detail.setRequired(COMMON_ROOM_VENTILATION_DEFINED_PERCENT_MSG);
-	    	detail.setProvided(VENTILATION_NOT_PROVIDED_AT_FLOOR + floor.getNumber());
-	    	detail.setStatus(Result.Not_Accepted.getResultVal());
-
-	    	scrutinyDetail.getDetail().add(mapReportDetails(detail));
-	    	return;
-
+	        // Skip if not provided in DXF
+	        return;
 	    }
 
 	    List<Measurement> roomVent = floor.getCommonRoom().getCommonRoomVentialtion();
@@ -301,14 +280,13 @@ public class Ventilation_Assam extends Ventilation {
 	            .findFirst();
 
 	    if (matchedRule.isPresent()) {
-	    	  ventilationPercent = matchedRule.get().getCommonRoomPercent();
+	        ventilationPercent = matchedRule.get().getCommonRoomPercent();
 	    }
-	    
-	    List<Measurement> commonRoomMeasurements = floor.getCommonRoom().getRooms();
 
+	    List<Measurement> commonRoomMeasurements = floor.getCommonRoom().getRooms();
 	    BigDecimal roomArea = commonRoomMeasurements.stream()
-	    	    .map(Measurement::getArea)
-	    	    .reduce(BigDecimal.ZERO, BigDecimal::add);
+	            .map(Measurement::getArea)
+	            .reduce(BigDecimal.ZERO, BigDecimal::add);
 
 	    BigDecimal requiredVentArea = roomArea.multiply(ventilationPercent);
 	    BigDecimal providedVentArea = roomVent.stream()
@@ -325,7 +303,6 @@ public class Ventilation_Assam extends Ventilation {
 	        : Result.Not_Accepted.getResultVal());
 
 	    scrutinyDetail.getDetail().add(mapReportDetails(detail));
-
 	}
 
 	@Override

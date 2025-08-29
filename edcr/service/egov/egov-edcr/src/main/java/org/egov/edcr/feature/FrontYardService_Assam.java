@@ -200,7 +200,7 @@ public class FrontYardService_Assam extends FrontYardService {
 
 	private Boolean checkFrontYard(Plan pl, Building building, String blockName, Integer level, Plot plot,
 			String frontYardFieldName, BigDecimal min, BigDecimal mean, OccupancyTypeHelper mostRestrictiveOccupancy,
-			FrontYardResult frontYardResult, HashMap<String, String> errors) {
+			FrontYardResult frontYardResult, BigDecimal buildingHeight, HashMap<String, String> errors) {
 		Boolean valid = false;
 		String subRule = "";
 		String rule = FRONT_YARD_DESC;
@@ -213,7 +213,7 @@ public class FrontYardService_Assam extends FrontYardService {
      	occupancyName = fetchEdcrRulesMdms.getOccupancyName(pl);
 		if (A.equalsIgnoreCase(occupancyCode) || F.equalsIgnoreCase(occupancyCode)) {
 			valid = processFrontYardService(blockName, level, min, mean, mostRestrictiveOccupancy, frontYardResult, valid,
-					subRule, rule, minVal, meanVal, depthOfPlot, errors, pl,  occupancyName
+					subRule, rule, minVal, meanVal, depthOfPlot, errors, pl,  occupancyName, buildingHeight
 					);
 			
 		}
@@ -285,7 +285,7 @@ public class FrontYardService_Assam extends FrontYardService {
 
 	        Occupancy occupancy = block.getBuilding().getTotalArea().get(0); // Only first occupancy considered
 	        checkFrontYard(pl, block.getBuilding(), block.getName(), setback.getLevel(), pl.getPlot(),
-	                FRONT_YARD_DESC, min, mean, occupancy.getTypeHelper(), frontYardResult, errors);
+	                FRONT_YARD_DESC, min, mean, occupancy.getTypeHelper(), frontYardResult, buildingHeight, errors);
 
 	        if (errors.isEmpty()) {
 	            Map<String, String> details = buildScrutinyDetailMap(frontYardResult);
@@ -382,7 +382,7 @@ public class FrontYardService_Assam extends FrontYardService {
 	private Boolean processFrontYardService(String blockName, Integer level, BigDecimal min, BigDecimal mean,
 	        OccupancyTypeHelper mostRestrictiveOccupancy, FrontYardResult frontYardResult, Boolean valid,
 	        String subRule, String rule, BigDecimal minVal, BigDecimal meanVal, BigDecimal depthOfPlot,
-	        HashMap<String, String> errors, Plan pl, String occupancyName) {
+	        HashMap<String, String> errors, Plan pl, String occupancyName, BigDecimal buildingHeight) {
 
 	    BigDecimal plotArea = pl.getPlot().getArea();
 	    BigDecimal roadWidth = pl.getPlanInformation().getRoadWidth();
@@ -395,19 +395,20 @@ public class FrontYardService_Assam extends FrontYardService {
 	    }
 
 	    List<Object> rules = cache.getFeatureRules(pl, FeatureEnum.FRONT_SET_BACK.getValue(), false);
-
 	    Optional<FrontSetBackRequirement> matchedRule = rules.stream()
-	            .filter(FrontSetBackRequirement.class::isInstance)
-	            .map(FrontSetBackRequirement.class::cast)
-	            .filter(ruleObj ->                   
-	                    ruleObj.getFromRoadWidth() != null && ruleObj.getToRoadWidth() != null
-	                    && ruleObj.getFromPlotDepth() != null && ruleObj.getToPlotDepth() != null
-	                    && roadWidth.compareTo(ruleObj.getFromRoadWidth()) >= 0
-	                    && roadWidth.compareTo(ruleObj.getToRoadWidth()) < 0
-	                    && depthOfPlot.compareTo(ruleObj.getFromPlotDepth()) >= 0
-	                    && depthOfPlot.compareTo(ruleObj.getToPlotDepth()) < 0
-	                    && Boolean.TRUE.equals(ruleObj.getActive()))
-	            .findFirst();
+	    	    .filter(FrontSetBackRequirement.class::isInstance)
+	    	    .map(FrontSetBackRequirement.class::cast)
+	    	    .filter(ruleObj -> 
+	    	        ruleObj.getFromRoadWidth() != null && ruleObj.getToRoadWidth() != null
+	    	        && ruleObj.getFromBuildingHeight() != null && ruleObj.getToBuildingHeight() != null
+	    	        && roadWidth.compareTo(ruleObj.getFromRoadWidth()) >= 0
+	    	        && roadWidth.compareTo(ruleObj.getToRoadWidth()) < 0
+	    	        && buildingHeight.compareTo(ruleObj.getFromBuildingHeight()) >= 0
+	    	        && buildingHeight.compareTo(ruleObj.getToBuildingHeight()) < 0
+	    	        && Boolean.TRUE.equals(ruleObj.getActive()))
+	    	    .findFirst();
+
+
 
 	    if (matchedRule.isPresent()) {
 	        FrontSetBackRequirement mdmsRule = matchedRule.get();

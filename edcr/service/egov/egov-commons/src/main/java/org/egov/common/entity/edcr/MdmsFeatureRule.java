@@ -46,7 +46,7 @@ public class MdmsFeatureRule {
     @JsonProperty("fromBuildingHeight")
     private BigDecimal fromBuildingHeight;
 
-    @JsonProperty("toBuildingHeigh")
+    @JsonProperty("toBuildingHeight")
     private BigDecimal toBuildingHeight;
 
     @JsonProperty("subOccupancy")
