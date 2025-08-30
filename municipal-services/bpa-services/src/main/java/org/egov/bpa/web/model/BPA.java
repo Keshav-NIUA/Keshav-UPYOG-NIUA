@@ -104,7 +104,7 @@ public class BPA {
 
   /** List of documents attached by the owner for exemption. */
   @Valid
-  private List<Document> documents;
+  private List<Document> documents = new ArrayList<>();
 
   /** Land information associated with the application. */
   private LandInfo landInfo;

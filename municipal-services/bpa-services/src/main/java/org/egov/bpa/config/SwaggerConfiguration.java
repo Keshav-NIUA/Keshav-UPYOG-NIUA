@@ -32,7 +32,7 @@ public class SwaggerConfiguration {
 	}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("Community Hall Booking API")
-				.description("API details of community hall booking service").version("1.0").build();
+		return new ApiInfoBuilder().title("BPA Service API")
+				.description("API details of building plan application service").version("1.0").build();
 	}
 }
