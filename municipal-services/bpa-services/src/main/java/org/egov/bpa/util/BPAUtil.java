@@ -12,12 +12,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gson.Gson;
 import org.egov.bpa.config.BPAConfiguration;
 import org.egov.bpa.repository.ServiceRequestRepository;
 import org.egov.bpa.web.model.AuditDetails;
 import org.egov.bpa.web.model.BPA;
 import org.egov.bpa.web.model.BPARequest;
 import org.egov.bpa.web.model.RequestInfoWrapper;
+import org.egov.bpa.web.model.landInfo.LandInfo;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteria;
@@ -277,4 +279,16 @@ public class BPAUtil {
 		
 	}
 
+	public String getLandInfoAsString(LandInfo landInfo) {
+		if (landInfo == null) {
+			return null;
+		}
+		try {
+			// Using Gson to convert the object to a JSON string
+			Gson gson = new Gson();
+			return gson.toJson(landInfo);
+		} catch (Exception e) {
+			throw new CustomException("JSON_CONVERSION_ERROR", "Failed to convert LandInfo to JSON string: " + e.getMessage());
+		}
+	}
 }

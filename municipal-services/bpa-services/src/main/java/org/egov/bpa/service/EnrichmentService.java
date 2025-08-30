@@ -90,9 +90,9 @@ public class EnrichmentService {
 	 *
 	 * @param bpaRequest
 	 * @param mdmsData
-	 * @param values
+	 * @param edcrValues
 	 */
-	public void enrichBPACreateRequest(BPARequest bpaRequest, Object mdmsData, Map<String, String> values) {
+	public void enrichBPACreateRequest(BPARequest bpaRequest, Object mdmsData, Map<String, String> edcrValues) {
 		RequestInfo requestInfo = bpaRequest.getRequestInfo();
 		AuditDetails auditDetails = bpaUtil.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
 		bpaRequest.getBPA().setAuditDetails(auditDetails);
@@ -102,9 +102,9 @@ public class EnrichmentService {
                 : new HashMap<String, String>();
 
 		bpaRequest.getBPA().setAccountId(bpaRequest.getBPA().getAuditDetails().getCreatedBy());
-		String applicationType = values.get(BPAConstants.APPLICATIONTYPE);
+	//	String applicationType = values.get(BPAConstants.APPLICATIONTYPE);
 
-		if (applicationType.equalsIgnoreCase(BPAConstants.BUILDING_PLAN)) {
+	/*if (applicationType.equalsIgnoreCase(BPAConstants.BUILDING_PLAN)) {
 		
 			if (!bpaRequest.getBPA().getRiskType().equalsIgnoreCase(BPAConstants.LOW_RISKTYPE)) {
 				bpaRequest.getBPA().setBusinessService(BPAConstants.BPA_MODULE_CODE);
@@ -114,7 +114,7 @@ public class EnrichmentService {
 		} else {
 			bpaRequest.getBPA().setBusinessService(BPAConstants.BPA_OC_MODULE_CODE);
 			bpaRequest.getBPA().setLandId(values.get("landId"));
-		}
+		}*/
 		if (bpaRequest.getBPA().getLandInfo() != null) {
 			bpaRequest.getBPA().setLandId(bpaRequest.getBPA().getLandInfo().getId());
 		}
@@ -122,12 +122,20 @@ public class EnrichmentService {
             additionalDetails.put(BPAConstants.RISKTYPE, bpaRequest.getBPA().getRiskType());
         }
 
+		bpaRequest.getBPA().getRtpDetails().setId(UUID.randomUUID().toString());
+
+		//Land info is incomplete here so adding landinfo to additional details
+		//Will send request to land service once data is complete
+		String landInfo = bpaUtil.getLandInfoAsString(bpaRequest.getBPA().getLandInfo());
+		additionalDetails.put("landInfo", landInfo);
+
 //		 BPA Documents
 		if (!CollectionUtils.isEmpty(bpaRequest.getBPA().getDocuments()))
 			bpaRequest.getBPA().getDocuments().forEach(document -> {
-				if (document.getId() == null) {
+				//TODO uncomment this if this check required in future
+			//	if (document.getId() == null) {
 					document.setId(UUID.randomUUID().toString());
-				}
+			//	}
 			});
 		setIdgenIds(bpaRequest);
 	}

@@ -1,9 +1,5 @@
 package org.egov.bpa.repository.querybuilder;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
-
 import org.egov.bpa.config.BPAConfiguration;
 import org.egov.bpa.web.model.BPASearchCriteria;
 import org.egov.common.utils.MultiStateInstanceUtil;
@@ -17,48 +13,54 @@ import java.util.List;
 
 @Component
 public class BPAQueryBuilder {
-	
-	@Autowired
+
+    @Autowired
     private MultiStateInstanceUtil centralInstanceUtil;
 
-	@Autowired
-	private BPAConfiguration config;
+    @Autowired
+    private BPAConfiguration config;
 
-    private static final String LEFT_OUTER_JOIN_STRING = " LEFT OUTER JOIN ";
+    private static final String LEFT_OUTER_JOIN = " LEFT OUTER JOIN ";
 
-	private static final String QUERY = "SELECT bpa.*,bpadoc.*,bpa.id as bpa_id,bpa.tenantid as bpa_tenantId,bpa.lastModifiedTime as "
-			+ "bpa_lastModifiedTime,bpa.createdBy as bpa_createdBy,bpa.lastModifiedBy as bpa_lastModifiedBy,bpa.createdTime as "
-			+ "bpa_createdTime,bpa.additionalDetails,bpa.landId as bpa_landId, bpadoc.id as bpa_doc_id, bpadoc.additionalDetails as doc_details, bpadoc.documenttype as bpa_doc_documenttype,bpadoc.filestoreid as bpa_doc_filestore"
-			+ " FROM eg_bpa_buildingplan bpa"
-			+ LEFT_OUTER_JOIN_STRING
-			+ "eg_bpa_document bpadoc ON bpadoc.buildingplanid = bpa.id";;
+    //Updated base query with snake_case + new table names
+    private static final String QUERY = "SELECT bpa.*, bpadoc.*, " +
+            "bpa.id AS bpa_id, " +
+            "bpa.tenant_id AS bpa_tenant_id, " +
+            "bpa.last_modified_time AS bpa_last_modified_time, " +
+            "bpa.created_by AS bpa_created_by, " +
+            "bpa.last_modified_by AS bpa_last_modified_by, " +
+            "bpa.created_time AS bpa_created_time, " +
+            "bpa.additional_details, " +
+            "bpa.land_id AS bpa_land_id, " +
+            "bpadoc.id AS bpa_doc_id, " +
+            "bpadoc.additional_details AS doc_details, " +
+            "bpadoc.document_type AS bpa_doc_document_type, " +
+            "bpadoc.filestore_id AS bpa_doc_filestore " +
+            "FROM eg_bpa_buildingplans bpa " +
+            LEFT_OUTER_JOIN +
+            "eg_bpa_documents bpadoc ON bpadoc.buildingplan_id = bpa.id";
 
-    private final String paginationWrapper = "SELECT * FROM "
-            + "(SELECT *, DENSE_RANK() OVER (ORDER BY bpa_lastModifiedTime DESC) offset_ FROM " + "({})"
-            + " result) result_offset " + "WHERE offset_ > ? AND offset_ <= ?";
-    
-    private final String countWrapper = "SELECT COUNT(DISTINCT(bpa_id)) FROM ({INTERNAL_QUERY}) as bpa_count";
+    private final String paginationWrapper = "SELECT * FROM " +
+            "(SELECT *, DENSE_RANK() OVER (ORDER BY bpa_last_modified_time DESC) offset_ FROM ({}) result) result_offset " +
+            "WHERE offset_ > ? AND offset_ <= ?";
+
+    private final String countWrapper = "SELECT COUNT(DISTINCT(bpa_id)) FROM ({INTERNAL_QUERY}) AS bpa_count";
 
     /**
-     * To give the Search query based on the requirements.
-     * 
-     * @param criteria BPA search criteria
-     * @param preparedStmtList values to be replased on the query
-     * @return Final Search Query
+     * To build the search query based on given criteria
      */
     public String getBPASearchQuery(BPASearchCriteria criteria, List<Object> preparedStmtList, List<String> edcrNos, boolean isCount) {
 
         StringBuilder builder = new StringBuilder(QUERY);
 
-		if (criteria.getTenantId() != null) {
-			if (criteria.getTenantId().split("\\.").length == 1) {
-
+        if (criteria.getTenantId() != null) {
+            if (criteria.getTenantId().split("\\.").length == 1) {
                 addClauseIfRequired(preparedStmtList, builder);
-                builder.append(" bpa.tenantid like ?");
+                builder.append(" bpa.tenant_id LIKE ?");
                 preparedStmtList.add('%' + criteria.getTenantId() + '%');
             } else {
                 addClauseIfRequired(preparedStmtList, builder);
-                builder.append(" bpa.tenantid=? ");
+                builder.append(" bpa.tenant_id = ? ");
                 preparedStmtList.add(criteria.getTenantId());
             }
         }
@@ -74,7 +76,7 @@ public class BPAQueryBuilder {
         if (edcrNumber != null) {
             List<String> edcrNumbers = Arrays.asList(edcrNumber.split(","));
             addClauseIfRequired(preparedStmtList, builder);
-            builder.append(" bpa.edcrNumber IN (").append(createQuery(edcrNumbers)).append(")");
+            builder.append(" bpa.edcr_number IN (").append(createQuery(edcrNumbers)).append(")");
             addToPreparedStatement(preparedStmtList, edcrNumbers);
         }
 
@@ -83,10 +85,10 @@ public class BPAQueryBuilder {
             List<String> applicationNos = Arrays.asList(applicationNo.split(","));
             addClauseIfRequired(preparedStmtList, builder);
             builder.append("(");
-            for(int i=0; i<applicationNos.size(); i++){ 
-                builder.append("bpa.applicationNo LIKE ?");
+            for (int i = 0; i < applicationNos.size(); i++) {
+                builder.append(" bpa.application_no LIKE ?");
                 preparedStmtList.add("%" + applicationNos.get(i).trim() + "%");
-                if(i < applicationNos.size()-1){
+                if (i < applicationNos.size() - 1) {
                     builder.append(" OR ");
                 }
             }
@@ -97,7 +99,7 @@ public class BPAQueryBuilder {
         if (approvalNo != null) {
             List<String> approvalNos = Arrays.asList(approvalNo.split(","));
             addClauseIfRequired(preparedStmtList, builder);
-            builder.append(" bpa.approvalNo IN (").append(createQuery(approvalNos)).append(")");
+            builder.append(" bpa.approval_no IN (").append(createQuery(approvalNos)).append(")");
             addToPreparedStatement(preparedStmtList, approvalNos);
         }
 
@@ -107,68 +109,59 @@ public class BPAQueryBuilder {
             addClauseIfRequired(preparedStmtList, builder);
             builder.append(" bpa.status IN (").append(createQuery(statuses)).append(")");
             addToPreparedStatement(preparedStmtList, statuses);
-
         }
+
         String applicationType = criteria.getApplicationType();
-        if(applicationType != null) {
+        if (applicationType != null) {
             List<String> applicationTypes = Arrays.asList(applicationType.split(","));
             addClauseIfRequired(preparedStmtList, builder);
-            builder.append(" bpa.additionaldetails ->>'applicationType' IN (").append(createQuery(applicationTypes)).append(")");
+            builder.append(" bpa.application_type IN (").append(createQuery(applicationTypes)).append(")");
             addToPreparedStatement(preparedStmtList, applicationTypes);
         }
-        
-        String serviceType = criteria.getServiceType();
-        if(serviceType != null) {
-            List<String> serviceTypes = Arrays.asList(serviceType.split(","));
-            addClauseIfRequired(preparedStmtList, builder);
-            builder.append(" bpa.additionaldetails ->>'serviceType' IN (").append(createQuery(serviceTypes)).append(")");
-            addToPreparedStatement(preparedStmtList, serviceTypes);
-        }
-        
-        String pemritNumber = criteria.getPermitNumber();
-        if(pemritNumber != null) {
-            List<String> pemritNumbers = Arrays.asList(pemritNumber.split(","));
-            addClauseIfRequired(preparedStmtList, builder);
-            builder.append(" bpa.additionaldetails ->>'permitNumber' IN (").append(createQuery(pemritNumbers)).append(")");
-            addToPreparedStatement(preparedStmtList, pemritNumbers);
-        }
-        
-        Long permitDt = criteria.getApprovalDate();
-        if (permitDt != null) {
 
+        String riskType = criteria.getRiskType();
+        if (riskType != null) {
+            List<String> riskTypes = Arrays.asList(riskType.split(","));
+            addClauseIfRequired(preparedStmtList, builder);
+            builder.append(" bpa.risk_type IN (").append(createQuery(riskTypes)).append(")");
+            addToPreparedStatement(preparedStmtList, riskTypes);
+        }
+
+        Long approvalDate = criteria.getApprovalDate();
+        if (approvalDate != null) {
             Calendar permitDate = Calendar.getInstance();
-            permitDate.setTimeInMillis(permitDt);
+            permitDate.setTimeInMillis(approvalDate);
 
             int year = permitDate.get(Calendar.YEAR);
             int month = permitDate.get(Calendar.MONTH);
             int day = permitDate.get(Calendar.DATE);
 
-            Calendar permitStrDate = Calendar.getInstance();
-            permitStrDate.setTimeInMillis(0);
-            permitStrDate.set(year, month, day, 0, 0, 0);
+            Calendar start = Calendar.getInstance();
+            start.set(year, month, day, 0, 0, 0);
 
-            Calendar permitEndDate = Calendar.getInstance();
-            permitEndDate.setTimeInMillis(0);
-            permitEndDate.set(year, month, day, 23, 59, 59);
+            Calendar end = Calendar.getInstance();
+            end.set(year, month, day, 23, 59, 59);
+
             addClauseIfRequired(preparedStmtList, builder);
-            builder.append(" bpa.approvalDate BETWEEN ").append(permitStrDate.getTimeInMillis()).append(" AND ")
-                    .append(permitEndDate.getTimeInMillis());
+            builder.append(" bpa.approval_date BETWEEN ")
+                    .append(start.getTimeInMillis()).append(" AND ").append(end.getTimeInMillis());
         }
+
         if (criteria.getFromDate() != null && criteria.getToDate() != null) {
             addClauseIfRequired(preparedStmtList, builder);
-            builder.append(" bpa.createdtime BETWEEN ").append(criteria.getFromDate()).append(" AND ")
-                    .append(criteria.getToDate());
-        } else if (criteria.getFromDate() != null && criteria.getToDate() == null) {
+            builder.append(" bpa.created_time BETWEEN ").append(criteria.getFromDate()).append(" AND ").append(criteria.getToDate());
+        } else if (criteria.getFromDate() != null) {
             addClauseIfRequired(preparedStmtList, builder);
-            builder.append(" bpa.createdtime >= ").append(criteria.getFromDate());
+            builder.append(" bpa.created_time >= ").append(criteria.getFromDate());
         }
 
         List<String> businessService = criteria.getBusinessService();
         if (!CollectionUtils.isEmpty(businessService)) {
             addClauseIfRequired(preparedStmtList, builder);
-            builder.append(" bpa.businessService IN (").append(createQuery(businessService)).append(")");
+            builder.append(" bpa.business_service IN (").append(createQuery(businessService)).append(")");
             addToPreparedStatement(preparedStmtList, businessService);
         }
+
         List<String> landId = criteria.getLandId();
         List<String> createdBy = criteria.getCreatedBy();
         if (!CollectionUtils.isEmpty(landId)) {
@@ -176,7 +169,7 @@ public class BPAQueryBuilder {
             if (!CollectionUtils.isEmpty(createdBy)) {
                 builder.append("(");
             }
-            builder.append(" bpa.landId IN (").append(createQuery(landId)).append(")");
+            builder.append(" bpa.land_id IN (").append(createQuery(landId)).append(")");
             addToPreparedStatement(preparedStmtList, landId);
         }
 
@@ -186,23 +179,20 @@ public class BPAQueryBuilder {
             } else {
                 addClauseIfRequired(preparedStmtList, builder);
             }
-            builder.append(" bpa.createdby IN (").append(createQuery(createdBy)).append(")");
+            builder.append(" bpa.created_by IN (").append(createQuery(createdBy)).append(")");
             if (!CollectionUtils.isEmpty(landId)) {
                 builder.append(")");
             }
             addToPreparedStatement(preparedStmtList, createdBy);
         }
-        if(isCount)
-            return addCountWrapper(builder.toString());
-        
-        return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
 
+        if (isCount)
+            return addCountWrapper(builder.toString());
+
+        return addPaginationWrapper(builder.toString(), preparedStmtList, criteria);
     }
-    
-    private String addCountWrapper(String query) {
-        return countWrapper.replace("{INTERNAL_QUERY}", query);
-    }
-    
+
+
     public String getBPASearchQueryForPlainSearch(BPASearchCriteria criteria, List<Object> preparedStmtList, List<String> edcrNos, boolean isCount) {
 
         StringBuilder builder = new StringBuilder(QUERY);
@@ -228,22 +218,17 @@ public class BPAQueryBuilder {
 
     }
 
+    private String addCountWrapper(String query) {
+        return countWrapper.replace("{INTERNAL_QUERY}", query);
+    }
 
-    /**
-     * 
-     * @param query prepared Query
-     * @param preparedStmtList values to be replased on the query
-     * @param criteria bpa search criteria
-     * @return the query by replacing the placeholders with preparedStmtList
-     */
     private String addPaginationWrapper(String query, List<Object> preparedStmtList, BPASearchCriteria criteria) {
+        int limit = config.getDefaultLimit();
+        int offset = config.getDefaultOffset();
+        String finalQuery = paginationWrapper.replace("{}", query);
 
-		int limit = config.getDefaultLimit();
-		int offset = config.getDefaultOffset();
-		String finalQuery = paginationWrapper.replace("{}", query);
-
-		if (criteria.getLimit() != null && criteria.getLimit() <= config.getMaxSearchLimit())
-			limit = criteria.getLimit();
+        if (criteria.getLimit() != null && criteria.getLimit() <= config.getMaxSearchLimit())
+            limit = criteria.getLimit();
 
         if (criteria.getLimit() != null && criteria.getLimit() > config.getMaxSearchLimit()) {
             limit = config.getMaxSearchLimit();
@@ -260,47 +245,27 @@ public class BPAQueryBuilder {
         }
 
         return finalQuery;
-
     }
 
-    /**
-     * add if clause to the Statement if required or elese AND
-     * @param values
-     * @param queryString
-     */
     private void addClauseIfRequired(List<Object> values, StringBuilder queryString) {
         if (values.isEmpty())
             queryString.append(" WHERE ");
-        else {
-            queryString.append(" AND");
-        }
+        else
+            queryString.append(" AND ");
     }
 
-    /**
-     * add values to the preparedStatment List
-     * @param preparedStmtList
-     * @param ids
-     */
     private void addToPreparedStatement(List<Object> preparedStmtList, List<String> ids) {
-        ids.forEach(id -> {
-            preparedStmtList.add(id);
-        });
-
+        ids.forEach(preparedStmtList::add);
     }
 
-	/**
-	 * produce a query input for the multiple values
-	 * @param ids
-	 * @return
-	 */
-	private Object createQuery(List<String> ids) {
-		StringBuilder builder = new StringBuilder();
-		int length = ids.size();
-		for (int i = 0; i < length; i++) {
-			builder.append(" ?");
-			if (i != length - 1)
-				builder.append(",");
-		}
-		return builder.toString();
-	}
+    private Object createQuery(List<String> ids) {
+        StringBuilder builder = new StringBuilder();
+        int length = ids.size();
+        for (int i = 0; i < length; i++) {
+            builder.append(" ?");
+            if (i != length - 1)
+                builder.append(",");
+        }
+        return builder.toString();
+    }
 }

@@ -52,7 +52,15 @@ public class BPAValidator {
 	
 	@Autowired
 	private NocService nocService;
-	
+
+	/**
+	 * Validates the BPA request during creation.
+	 * Ensures that MDMS data, application documents, and risk type are valid.
+	 *
+	 * @param bpaRequest The BPA request object.
+	 * @param mdmsData The MDMS data for validation.
+	 * @param values Additional values for validation.
+	 */
 	public void validateCreate(BPARequest bpaRequest, Object mdmsData, Map<String, String> values) {
         @SuppressWarnings("unchecked")
 		Map<String, String> additionalDetails = bpaRequest.getBPA().getAdditionalDetails() != null
@@ -68,11 +76,13 @@ public class BPAValidator {
 
 
 	/**
-	 * Validates the application documents of the BPA comparing the document types configured in the mdms
-	 * @param request
-	 * @param mdmsData
-	 * @param currentState
-	 * @param values
+	 * Validates the application documents in the BPA request against MDMS data.
+	 * Ensures that required documents are present and valid.
+	 *
+	 * @param request The BPA request object.
+	 * @param mdmsData The MDMS data for validation.
+	 * @param currentState The current state of the workflow.
+	 * @param values Additional values for validation.
 	 */
 	private void validateApplicationDocuments(BPARequest request, Object mdmsData, String currentState, Map<String, String> values) {
 		Map<String, List<String>> masterData = mdmsValidator.getAttributeValues(mdmsData);
@@ -155,9 +165,11 @@ public class BPAValidator {
 
 	}
 
-	/** 
-	 * validate duplicates documents in the bpa request
-	 * @param request
+	/**
+	 * Validates that there are no duplicate documents in the BPA request.
+	 * Ensures that each document has a unique file store ID.
+	 *
+	 * @param request The BPA request object.
 	 */
 	private void validateDuplicateDocuments(BPARequest request) {
 		if (request.getBPA().getDocuments() != null) {
@@ -172,12 +184,11 @@ public class BPAValidator {
 	}
 
 	/**
-	 * Validates if the search parameters are valid
-	 * 
-	 * @param requestInfo
-	 *            The requestInfo of the incoming request
-	 * @param criteria
-	 *            The BPASearch Criteria
+	 * Validates the search criteria for BPA search requests.
+	 * Ensures that the search parameters are valid based on user type and configuration.
+	 *
+	 * @param requestInfo The request info containing user details.
+	 * @param criteria The BPA search criteria.
 	 */
 //TODO need to make the changes in the data
 	public void validateSearch(RequestInfo requestInfo, BPASearchCriteria criteria) {
@@ -211,12 +222,10 @@ public class BPAValidator {
 	}
 
 	/**
-	 * Validates if the paramters coming in search are allowed
-	 * 
-	 * @param criteria
-	 *            BPA search criteria
-	 * @param allowedParams
-	 *            Allowed Params for search
+	 * Validates individual search parameters against allowed parameters.
+	 *
+	 * @param criteria The BPA search criteria.
+	 * @param allowedParams The list of allowed search parameters.
 	 */
 	private void validateSearchParams(BPASearchCriteria criteria, List<String> allowedParams) {
 
@@ -272,7 +281,7 @@ public class BPAValidator {
 	}
 
 	/**
-	 * set the fields from search response to the bpaRequest for furhter processing
+	 * Set the fields from search result to the bpaRequest
 	 * @param bpaRequest
 	 * @param searchResult
 	 * @param mdmsData
@@ -294,7 +303,7 @@ public class BPAValidator {
 
 
 	/**
-	 * Validate the ids of the search results
+	 * validate all the ids in the search result
 	 * @param searchResult
 	 * @param bpa
 	 */
@@ -326,7 +335,7 @@ public class BPAValidator {
 
 
 	/**
-	 * validate the fields inspection checlist data populated by the user against the mdms
+	 * validate the checklist questions and documents
 	 * @param mdmsData
 	 * @param bpaRequest
 	 * @param wfState
@@ -346,7 +355,7 @@ public class BPAValidator {
 
 	
 	/**
-	 * validate the fields insepction report questions agains the MDMS
+	 * Validate the checklist questions from the request with the MDMS data
 	 * @param mdmsData
 	 * @param bpa
 	 * @param wfState

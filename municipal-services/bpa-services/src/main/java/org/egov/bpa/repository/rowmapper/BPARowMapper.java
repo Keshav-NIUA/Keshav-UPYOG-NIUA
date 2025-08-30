@@ -43,32 +43,32 @@ public class BPARowMapper implements ResultSetExtractor<List<BPA>> {
 
 		while (rs.next()) {
 			String id = rs.getString("bpa_id");
-			String applicationNo = rs.getString("applicationno");
-			String approvalNo = rs.getString("approvalNo");
+			String applicationNo = rs.getString("application_no");
+			String approvalNo = rs.getString("approval_no");
 			BPA currentbpa = buildingMap.get(id);
-			String tenantId = rs.getString("bpa_tenantId");
+			String tenantId = rs.getString("bpa_tenant_id");
 			if (currentbpa == null) {
-				Long lastModifiedTime = rs.getLong("bpa_lastModifiedTime");
+				Long lastModifiedTime = rs.getLong("bpa_last_modified_time");
 				if (rs.wasNull()) {
 					lastModifiedTime = null;
 				}
 
-				Object additionalDetails = new Gson().fromJson(rs.getString("additionalDetails").equals("{}")
-						|| rs.getString("additionalDetails").equals("null") ? null : rs.getString("additionalDetails"),
+				Object additionalDetails = new Gson().fromJson(rs.getString("additional_details").equals("{}")
+						|| rs.getString("additional_details").equals("null") ? null : rs.getString("additional_details"),
 						Object.class);
 				
-				AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("bpa_createdBy"))
-						.createdTime(rs.getLong("bpa_createdTime")).lastModifiedBy(rs.getString("bpa_lastModifiedBy"))
+				AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("bpa_created_by"))
+						.createdTime(rs.getLong("bpa_created_time")).lastModifiedBy(rs.getString("bpa_last_modified_by"))
 						.lastModifiedTime(lastModifiedTime).build();
 
 				JsonObject jsonObject = new Gson().fromJson(
-						rs.getString("additionalDetails").equals("{}") || rs.getString("additionalDetails").equals("null") ? "{}" : rs.getString("additionalDetails"),
+						rs.getString("additional_details").equals("{}") || rs.getString("additional_details").equals("null") ? "{}" : rs.getString("additional_details"),
 					    JsonObject.class
 					);
 
 					String riskType = null;
-					if (jsonObject.has("riskType")) {
-					    JsonElement riskTypeElement = jsonObject.get("riskType");
+					if (jsonObject.has("risk_type")) {
+					    JsonElement riskTypeElement = jsonObject.get("risk_type");
 					    if (riskTypeElement != null && !riskTypeElement.isJsonNull()) {
 					        riskType = riskTypeElement.getAsString();
 					    }
@@ -81,14 +81,14 @@ public class BPARowMapper implements ResultSetExtractor<List<BPA>> {
 						.status(rs.getString("status"))
 						.tenantId(tenantId)
 						.approvalNo(approvalNo)
-						.edcrNumber(rs.getString("edcrnumber"))
-						.approvalDate(rs.getLong("approvalDate"))
-						.accountId(rs.getString("accountId"))
-						.landId(rs.getString("landId"))
-						.applicationDate(rs.getLong("applicationDate"))
+						.edcrNumber(rs.getString("edcr_number"))
+						.approvalDate(rs.getLong("approval_date"))
+						.accountId(rs.getString("account_id"))
+						.landId(rs.getString("land_id"))
+						.applicationDate(rs.getLong("application_date"))
 						.id(id)
 						.additionalDetails(additionalDetails)
-						.businessService(rs.getString("businessService"))
+						.businessService(rs.getString("business_service"))
 						.riskType(riskType)
 						.build();
 
@@ -112,12 +112,12 @@ public class BPARowMapper implements ResultSetExtractor<List<BPA>> {
 	private void addChildrenToProperty(ResultSet rs, BPA bpa) throws SQLException {
 
 		String tenantId = bpa.getTenantId();
-		AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("bpa_createdBy"))
-				.createdTime(rs.getLong("bpa_createdTime")).lastModifiedBy(rs.getString("bpa_lastModifiedBy"))
-				.lastModifiedTime(rs.getLong("bpa_lastModifiedTime")).build();
+		AuditDetails auditdetails = AuditDetails.builder().createdBy(rs.getString("bpa_created_by"))
+				.createdTime(rs.getLong("bpa_created_time")).lastModifiedBy(rs.getString("bpa_last_modified_by"))
+				.lastModifiedTime(rs.getLong("bpa_last_modified_time")).build();
 
 		if (bpa == null) {
-			PGobject pgObj = (PGobject) rs.getObject("additionaldetail");
+			PGobject pgObj = (PGobject) rs.getObject("additional_detail");
 			JsonNode additionalDetail = null;
 			try {
 				additionalDetail = mapper.readTree(pgObj.getValue());
@@ -137,12 +137,12 @@ public class BPARowMapper implements ResultSetExtractor<List<BPA>> {
 		}
 		
 		if (documentId != null) {
-			Document document = Document.builder().documentType(rs.getString("bpa_doc_documenttype"))
+			Document document = Document.builder().documentType(rs.getString("bpa_doc_document_type"))
 					.fileStoreId(rs.getString("bpa_doc_filestore"))
 					.id(documentId)
 					.additionalDetails(docDetails)
-					.documentUid(rs.getString("documentUid")).build();
-			bpa.addDocumentsItem(document);
+					.documentUid(rs.getString("document_uid")).build();
+			bpa.getDocuments().add(document);
 		}
 	}
 }

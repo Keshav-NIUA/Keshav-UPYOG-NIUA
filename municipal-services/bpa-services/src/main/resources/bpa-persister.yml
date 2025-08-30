@@ -1,312 +1,121 @@
 serviceMaps:
- serviceName: bpa-services
- mappings:
- - version: 1.0
-   description: Persists buildingplan details in EG_BPA_BuildingPlan  table
-   fromTopic: save-bpa-buildingplan
-   isTransaction: true
-   queryMaps:
-
-       - query: INSERT INTO eg_bpa_buildingplan(id, applicationNo, landId, accountId, edcrNumber, tenantId, status, approvalDate, businessService, additionalDetails, createdBy, lastmodifiedBy, createdTime, lastmodifiedTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); 
-         basePath: BPA
-         jsonMaps:
-          - jsonPath: $.BPA.id
-
-          - jsonPath: $.BPA.applicationNo
-          
-          - jsonPath: $.BPA.landId
-          
-          - jsonPath: $.BPA.accountId
-
-          - jsonPath: $.BPA.edcrNumber
-          
-          - jsonPath: $.BPA.tenantId
-          
-          - jsonPath: $.BPA.status
-          
-          - jsonPath: $.BPA.approvalDate
-          
-          - jsonPath: $.BPA.businessService
-
-          - jsonPath: $.BPA.additionalDetails
-            type: JSON
-            dbType: JSONB
-
-          - jsonPath: $.BPA.auditDetails.createdBy
-
-          - jsonPath: $.BPA.auditDetails.lastModifiedBy
-
-          - jsonPath: $.BPA.auditDetails.createdTime
-
-          - jsonPath: $.BPA.auditDetails.lastModifiedTime
-
-
-       - query: INSERT INTO eg_bpa_document( id, documenttype, fileStoreId, buildingplanid, documentuid, additionalDetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-         basePath: BPA.documents.*
-         jsonMaps:
-          - jsonPath: $.BPA.documents.*.id
-
-          - jsonPath: $.BPA.documents.*.documentType
-
-          - jsonPath: $.BPA.documents.*.fileStoreId
-
-          - jsonPath: $.BPA.id
-
-          - jsonPath: $.BPA.documents.*.documentUid
-
-          - jsonPath: $.BPA.documents.*.additionalDetails
-            type: JSON
-            dbType: JSONB
-
-          - jsonPath: $.BPA.auditDetails.createdBy
-
-          - jsonPath: $.BPA.auditDetails.lastModifiedBy
-
-          - jsonPath: $.BPA.auditDetails.createdTime
-
-          - jsonPath: $.BPA.auditDetails.lastModifiedTime
-
-
-
-       - query: INSERT INTO eg_bpa_auditdetails SELECT * FROM eg_bpa_buildingplan WHERE id =?;
-         basePath: BPA
-         jsonMaps:
-
-          - jsonPath: $.BPA.id
-  
-
-
-
- - version: 1.0
-   description: update buildingplan details in EG_BPA_BuildingPlan  table
-   fromTopic: update-bpa-buildingplan
-   isTransaction: true
-   queryMaps:
-
-       - query: UPDATE eg_bpa_buildingplan SET applicationno=?, approvalNo=?, applicationDate=?, status=?, additionaldetails=?, lastmodifiedby=?, lastmodifiedtime=?, approvalDate=? WHERE id=?;
-         basePath: BPA
-         jsonMaps:
-          - jsonPath: $.BPA.applicationNo
-          
-          - jsonPath: $.BPA.approvalNo
-          
-          - jsonPath: $.BPA.applicationDate
-
-          - jsonPath: $.BPA.status
-
-          - jsonPath: $.BPA.additionalDetails
-            type: JSON
-            dbType: JSONB
-
-          - jsonPath: $.BPA.auditDetails.lastModifiedBy
-
-          - jsonPath: $.BPA.auditDetails.lastModifiedTime
-
-          - jsonPath: $.BPA.approvalDate
-
-          - jsonPath: $.BPA.id
-
-
-       - query: INSERT INTO eg_bpa_auditdetails SELECT * FROM eg_bpa_buildingplan WHERE id =?;
-         basePath: BPA
-         jsonMaps:
-
-           - jsonPath: $.BPA.id
-
-        
-       - query: INSERT INTO eg_bpa_document(id, documenttype, fileStoreId, buildingplanid, documentuid, additionalDetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET documenttype =?,  fileStoreId =?, additionalDetails=?, lastmodifiedby =?, lastmodifiedtime =?;
-         basePath: BPA.documents.*
-         jsonMaps:
-          
-           - jsonPath: $.BPA.documents.*.id
-  
-           - jsonPath: $.BPA.documents.*.documentType
-  
-           - jsonPath: $.BPA.documents.*.fileStoreId
-  
-           - jsonPath: $.BPA.id
-  
-           - jsonPath: $.BPA.documents.*.documentUid
-  
-           - jsonPath: $.BPA.documents.*.additionalDetails
-             type: JSON
-             dbType: JSONB
-  
-           - jsonPath: $.BPA.auditDetails.createdBy
-  
-           - jsonPath: $.BPA.auditDetails.lastModifiedBy
-  
-           - jsonPath: $.BPA.auditDetails.createdTime
-
-           - jsonPath: $.BPA.auditDetails.lastModifiedTime
-
-           - jsonPath: $.BPA.documents.*.documentType
-
-           - jsonPath: $.BPA.documents.*.fileStoreId
-  
-           - jsonPath: $.BPA.documents.*.additionalDetails
-             type: JSON
-             dbType: JSONB
-
-           - jsonPath: $.BPA.auditDetails.lastModifiedBy
-
-           - jsonPath: $.BPA.auditDetails.lastModifiedTime
-          
- - version: 1.0
-   description: update buildingplan details in EG_BPA_BuildingPlan  table
-   fromTopic: update-bpa-workflow
-   isTransaction: true
-   queryMaps:
-   
-          
-       - query: INSERT INTO eg_bpa_document(id, documentType, fileStoreId, buildingplanid, documentUid, additionalDetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET documenttype =?,  fileStoreId =?, additionalDetails=?, lastmodifiedby =?, lastmodifiedtime =?;
-         basePath: BPA.documents.*
-         jsonMaps:
-          
-           - jsonPath: $.BPA.documents.*.id
-  
-           - jsonPath: $.BPA.documents.*.documentType
-  
-           - jsonPath: $.BPA.documents.*.fileStoreId
-  
-           - jsonPath: $.BPA.id
-  
-           - jsonPath: $.BPA.documents.*.documentUid
-  
-           - jsonPath: $.BPA.documents.*.additionalDetails
-             type: JSON
-             dbType: JSONB
-  
-           - jsonPath: $.BPA.auditDetails.createdBy
-  
-           - jsonPath: $.BPA.auditDetails.lastModifiedBy
-  
-           - jsonPath: $.BPA.auditDetails.createdTime
-
-           - jsonPath: $.BPA.auditDetails.lastModifiedTime
-
-           - jsonPath: $.BPA.documents.*.documentType
-
-           - jsonPath: $.BPA.documents.*.fileStoreId
-  
-           - jsonPath: $.BPA.documents.*.additionalDetails
-             type: JSON
-             dbType: JSONB
-
-           - jsonPath: $.BPA.auditDetails.lastModifiedBy
-
-           - jsonPath: $.BPA.auditDetails.lastModifiedTime
-           
-           
-       - query: INSERT INTO eg_bpa_auditdetails SELECT * FROM eg_bpa_buildingplan WHERE id =?;
-         basePath: BPA
-         jsonMaps:
-
-           - jsonPath: $.BPA.id
-
-
-       - query: UPDATE eg_bpa_buildingplan SET applicationno=?, approvalNo=?, applicationDate=?, status=?, additionaldetails=?, lastmodifiedby=?, lastmodifiedtime=?, approvalDate=? WHERE id=?;
-         basePath: BPA
-         jsonMaps:
-          - jsonPath: $.BPA.applicationNo
-          
-          - jsonPath: $.BPA.approvalNo
-          
-          - jsonPath: $.BPA.applicationDate
-
-          - jsonPath: $.BPA.status
-
-          - jsonPath: $.BPA.additionalDetails
-            type: JSON
-            dbType: JSONB
-
-          - jsonPath: $.BPA.auditDetails.lastModifiedBy
-
-          - jsonPath: $.BPA.auditDetails.lastModifiedTime
-
-          - jsonPath: $.BPA.approvalDate
-
-          - jsonPath: $.BPA.id
-
- - version: 1.0
-   description: Persists preapproved plan details in EG_BPA_preapprovedPlan  table
-   fromTopic: save-preapproved-plan
-   isTransaction: true
-   queryMaps:
-
-       - query: INSERT INTO eg_bpa_preapprovedplan(id, drawing_number, tenantid, plot_length, plot_width, road_width, drawing_detail, active, additional_details, createdBy, lastmodifiedBy, createdTime, lastmodifiedTime, plot_length_in_feet, plot_width_in_feet,preapproved_code) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?); 
-         basePath: preapprovedPlan
-         jsonMaps:
-          - jsonPath: $.preapprovedPlan.id
-
-          - jsonPath: $.preapprovedPlan.drawingNo
-          
-          - jsonPath: $.preapprovedPlan.tenantId
-          
-          - jsonPath: $.preapprovedPlan.plotLength
-
-          - jsonPath: $.preapprovedPlan.plotWidth
-          
-          - jsonPath: $.preapprovedPlan.roadWidth
-          
-          - jsonPath: $.preapprovedPlan.drawingDetail
-            type: JSON
-            dbType: JSONB
-          
-          - jsonPath: $.preapprovedPlan.active
-
-          - jsonPath: $.preapprovedPlan.additionalDetails
-            type: JSON
-            dbType: JSONB
-
-          - jsonPath: $.preapprovedPlan.auditDetails.createdBy
-
-          - jsonPath: $.preapprovedPlan.auditDetails.lastModifiedBy
-
-          - jsonPath: $.preapprovedPlan.auditDetails.createdTime
-
-          - jsonPath: $.preapprovedPlan.auditDetails.lastModifiedTime
-          
-          - jsonPath: $.preapprovedPlan.plotLengthInFeet
-
-          - jsonPath: $.preapprovedPlan.plotWidthInFeet
-          
-          - jsonPath: $.preapprovedPlan.preApprovedCode
-
-       - query: INSERT INTO eg_bpa_preapprovedplan_documents( id, documenttype, fileStoreId, preapprovedplanid, documentuid, additionalDetails, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-         basePath: preapprovedPlan.documents.*
-         jsonMaps:
-          - jsonPath: $.preapprovedPlan.documents.*.id
-
-          - jsonPath: $.preapprovedPlan.documents.*.documentType
-
-          - jsonPath: $.preapprovedPlan.documents.*.fileStoreId
-
-          - jsonPath: $.preapprovedPlan.id
-
-          - jsonPath: $.preapprovedPlan.documents.*.documentUid
-
-          - jsonPath: $.preapprovedPlan.documents.*.additionalDetails
-            type: JSON
-            dbType: JSONB
-
-          - jsonPath: $.preapprovedPlan.auditDetails.createdBy
-
-          - jsonPath: $.preapprovedPlan.auditDetails.lastModifiedBy
-
-          - jsonPath: $.preapprovedPlan.auditDetails.createdTime
-
-          - jsonPath: $.preapprovedPlan.auditDetails.lastModifiedTime
-
- - version: 1.0
-   description: update preapproved plan details in EG_BPA_PreapprovedPlan  table
-   fromTopic: update-preapproved-plan
-   isTransaction: true
-   queryMaps:
-
-       - query: UPDATE eg_bpa_preapprovedplan SET active=? WHERE id=?;
-         basePath: preapprovedPlan
-         jsonMaps:
-          - jsonPath: $.preapprovedPlan.active
-          
-          - jsonPath: $.preapprovedPlan.id
+  serviceName: bpa-service
+  mappings:
+
+    - version: 1.0
+      description: Creates BPA application in eg_bpa_buildingplans
+      fromTopic: save-bpa-buildingplan
+      isTransaction: true
+      queryMaps:
+
+        - query: >
+            INSERT INTO public.eg_bpa_buildingplans
+            (id, application_no, tenant_id, edcr_number, status, application_date,
+             approval_no, approval_date, business_service, account_id, application_type,
+             risk_type, land_id, created_by, created_time, last_modified_by, last_modified_time, additional_details)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::JSONB);
+          basePath: BPAApplication
+          jsonMaps:
+            - jsonPath: $.BPAApplication.id
+            - jsonPath: $.BPAApplication.applicationNo
+            - jsonPath: $.BPAApplication.tenantId
+            - jsonPath: $.BPAApplication.edcrNumber
+            - jsonPath: $.BPAApplication.status
+            - jsonPath: $.BPAApplication.applicationDate
+            - jsonPath: $.BPAApplication.approvalNo
+            - jsonPath: $.BPAApplication.approvalDate
+            - jsonPath: $.BPAApplication.businessService
+            - jsonPath: $.BPAApplication.accountId
+            - jsonPath: $.BPAApplication.applicationType
+            - jsonPath: $.BPAApplication.riskType
+            - jsonPath: $.BPAApplication.landId
+            - jsonPath: $.BPAApplication.auditDetails.createdBy
+            - jsonPath: $.BPAApplication.auditDetails.createdTime
+            - jsonPath: $.BPAApplication.auditDetails.lastModifiedBy
+            - jsonPath: $.BPAApplication.auditDetails.lastModifiedTime
+            - jsonPath: $.BPAApplication.additionalDetails
+              type: JSON
+              dbType: JSONB
+
+        - query: >
+            INSERT INTO public.eg_bpa_documents
+            (id, document_type, filestore_id, document_uid, buildingplan_id,
+             created_by, created_time, last_modified_by, last_modified_time, additional_details)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?::JSONB);
+          basePath: BPAApplication.documents.*
+          jsonMaps:
+            - jsonPath: $.BPAApplication.documents.*.id
+            - jsonPath: $.BPAApplication.documents.*.documentType
+            - jsonPath: $.BPAApplication.documents.*.fileStoreId
+            - jsonPath: $.BPAApplication.documents.*.documentUid
+            - jsonPath: $.BPAApplication.id
+            - jsonPath: $.BPAApplication.auditDetails.createdBy
+            - jsonPath: $.BPAApplication.auditDetails.createdTime
+            - jsonPath: $.BPAApplication.auditDetails.lastModifiedBy
+            - jsonPath: $.BPAApplication.auditDetails.lastModifiedTime
+            - jsonPath: $.BPAApplication.documents.*.additionalDetails
+              type: JSON
+              dbType: JSONB
+
+        - query: >
+            INSERT INTO public.ug_bpa_rtp_details
+            (id, buildingplan_id, rtp_category, rtp_id, rtp_name,
+             assignment_status, assignment_date, expiry_date,
+             created_by, created_time, last_modified_by, last_modified_time, additional_details)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::JSONB);
+          basePath: BPAApplication.rtpDetails.*
+          jsonMaps:
+            - jsonPath: $.BPAApplication.rtpDetails.*.id
+            - jsonPath: $.BPAApplication.id
+            - jsonPath: $.BPAApplication.rtpDetails.*.rtpCategory
+            - jsonPath: $.BPAApplication.rtpDetails.*.rtpId
+            - jsonPath: $.BPAApplication.rtpDetails.*.rtpName
+            - jsonPath: $.BPAApplication.rtpDetails.*.assignmentStatus
+            - jsonPath: $.BPAApplication.rtpDetails.*.assignmentDate
+            - jsonPath: $.BPAApplication.rtpDetails.*.expiryDate
+            - jsonPath: $.BPAApplication.auditDetails.createdBy
+            - jsonPath: $.BPAApplication.auditDetails.createdTime
+            - jsonPath: $.BPAApplication.auditDetails.lastModifiedBy
+            - jsonPath: $.BPAApplication.auditDetails.lastModifiedTime
+            - jsonPath: $.BPAApplication.rtpDetails.*.additionalDetails
+              type: JSON
+              dbType: JSONB
+
+    - version: 1.0
+      description: Updates BPA application and maintains audit trail
+      fromTopic: update-bpa-buildingplan
+      isTransaction: true
+      queryMaps:
+
+        - query: >
+            UPDATE public.eg_bpa_buildingplans
+            SET status = ?, approval_no = ?, approval_date = ?, risk_type = ?,
+                last_modified_by = ?, last_modified_time = ?, additional_details = ?::JSONB
+            WHERE id = ?;
+          basePath: BPAApplication
+          jsonMaps:
+            - jsonPath: $.BPAApplication.status
+            - jsonPath: $.BPAApplication.approvalNo
+            - jsonPath: $.BPAApplication.approvalDate
+            - jsonPath: $.BPAApplication.riskType
+            - jsonPath: $.BPAApplication.auditDetails.lastModifiedBy
+            - jsonPath: $.BPAApplication.auditDetails.lastModifiedTime
+            - jsonPath: $.BPAApplication.additionalDetails
+              type: JSON
+              dbType: JSONB
+            - jsonPath: $.BPAApplication.id
+
+        - query: INSERT INTO public.eg_bpa_buildingplans_audit SELECT * FROM public.eg_bpa_buildingplans WHERE id = ?;
+          basePath: BPAApplication
+          jsonMaps:
+            - jsonPath: $.BPAApplication.id
+
+        - query: INSERT INTO public.eg_bpa_documents_audit SELECT * FROM public.eg_bpa_documents WHERE id = ?;
+          basePath: BPAApplication.documents.*
+          jsonMaps:
+            - jsonPath: $.BPAApplication.documents.*.id
+
+        - query: INSERT INTO public.ug_bpa_rtp_details_audit SELECT * FROM public.ug_bpa_rtp_details WHERE id = ?;
+          basePath: BPAApplication.rtpDetails.*
+          jsonMaps:
+            - jsonPath: $.BPAApplication.rtpDetails.*.id
