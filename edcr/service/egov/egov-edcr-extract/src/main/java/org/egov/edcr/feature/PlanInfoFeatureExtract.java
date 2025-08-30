@@ -715,6 +715,19 @@ public class PlanInfoFeatureExtract extends FeatureExtract {
 		if (StringUtils.isNotBlank(subZone))
 			pi.setSubZone(subZone);
 		
+		String dagNo = planInfoProperties.get(DxfFileConstants.DAGNO);
+		if (StringUtils.isNotBlank(dagNo))
+			pi.setDagNo(dagNo);
+		
+		String wardNo = planInfoProperties.get(DxfFileConstants.WARDNO);
+		if (StringUtils.isNotBlank(dagNo))
+			pi.setWardNo(wardNo);
+		
+		String developementZone = planInfoProperties.get(DxfFileConstants.DEVELOPMENTZONE);
+		if (StringUtils.isNotBlank(developementZone))
+			pi.setDevelopementZone(developementZone);
+		
+		
 		String twoWheelerSlowCharger = planInfoProperties.get(DxfFileConstants.TWO_WHEELER_SLOW_CHARGER);
 		if (StringUtils.isNotBlank(twoWheelerSlowCharger)) {
 			twoWheelerSlowCharger = twoWheelerSlowCharger.replaceAll(digitsRegex, "");

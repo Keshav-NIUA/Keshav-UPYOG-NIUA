@@ -447,7 +447,7 @@
 					<font size="8"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA["SURRENDER ROAD WIDTH AREA in  m²"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["DEVELOPMENT ZONE"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="418" y="309" width="130" height="21" uuid="a732c1c1-fd0a-4f6b-aa1c-b42c329c4479"/>
@@ -462,7 +462,7 @@
 					<font size="8"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{surrenderRoadArea}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{planInformation}.getDevelopementZone()]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="142" y="123" width="406" height="21" uuid="0c9dd40a-5542-435b-b664-4f5295233d85"/>
@@ -644,6 +644,9 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{planInformation}.getKhasraNo()]]></textFieldExpression>
 			</textField>
+<!-- DAG NO row -->
+
+	
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="418" y="123" width="130" height="21" uuid="7776029d-8555-4904-8dbe-2a76cae77301"/>
 				<box>
@@ -717,7 +720,7 @@
 					<font size="8"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA["KHATUNI NO"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["DAG NO"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="142" y="246" width="146" height="21" uuid="83458a69-6cf0-44af-b9f1-d27925ba674b"/>
@@ -732,7 +735,7 @@
 					<font size="8"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{planInformation}.getKhatuniNo()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{planInformation}.getDagNo()]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="142" y="165" width="406" height="21" uuid="eb3c9a40-3143-4f3c-b8a7-1bc769be2c4d"/>
@@ -897,7 +900,7 @@
 					<font size="8"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA["PLOT AREA (As per declaration) in m²"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["DISTRICT"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="142" y="267" width="146" height="21" uuid="2280df2e-7f1e-480c-a703-d2fb9a872d0b"/>
@@ -912,7 +915,7 @@
 					<font size="8"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{planInformation}.getPlotArea()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{planInformation}.getDistrict()]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement x="12" y="370" width="16" height="25" uuid="0b650422-ec24-4c2f-8bad-e98a7a96f8dd"/>
@@ -1467,7 +1470,7 @@
 					<font size="8"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{planInformation}.getDemolitionArea()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{planInformation}.getWardNo()]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement x="288" y="330" width="16" height="21" uuid="9102bb24-54f2-451c-9595-f75d0d4f4c60"/>
@@ -1497,14 +1500,17 @@
 					<font size="8"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA["DEMOLITION AREA in m²"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["WARD NO"]]></textFieldExpression>
 			</textField>
+			<!-- DAG NO row -->
+
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="12" y="62" width="537" height="28" isRemoveLineWhenBlank="true" uuid="283d9cc4-203f-4c6b-9cbe-a1f081f3c94e">
 					<printWhenExpression><![CDATA[$P{planPermissionNumber}  != null && $P{bpaApplicationDate} != null]]></printWhenExpression>
 				</reportElement>
 				<textFieldExpression><![CDATA["The occupancy certificate plan is scrutinised with the by-laws which were prevailing on the date "+  $P{bpaApplicationDate}+" on which the eDCR scrutiny of the building permit application with plan permission number "+ $P{planPermissionNumber} +" was done"]]></textFieldExpression>
 			</textField>
+			
 			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement x="304" y="186" width="114" height="21" uuid="a174acc9-e176-4a25-8fa9-d465d96e1cf7"/>
 				<box>

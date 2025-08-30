@@ -39,12 +39,21 @@ public class FrontSetBackRequirement extends MdmsFeatureRule {
 	    @JsonProperty("permissibleFlattered")
 	    private BigDecimal permissibleFlattered;
 
-		@Override
-		public String toString() {
-			return "RearSetBackRequirement [permissibleLight=" + permissibleLight + ", permissibleMedium="
-					+ permissibleMedium + ", permissibleFlattered=" + permissibleFlattered + "]";
-		}
-	    
+	    @Override
+	    public String toString() {
+	        return "FrontSetBackRequirement [fromRoadWidth=" + getFromRoadWidth() +
+	               ", toRoadWidth=" + getToRoadWidth() +
+	               ", fromBuildingHeight=" + getFromBuildingHeight() +
+	               ", toBuildingHeight=" + getToBuildingHeight() +
+	               ", permissible=" + getPermissible() +
+	               ", active=" + getActive() +
+	               ", permissibleLight=" + permissibleLight +
+	               ", permissibleMedium=" + permissibleMedium +
+	               ", permissibleFlattered=" + permissibleFlattered + "]";
+	    }
+
+
+		
 
 
 }

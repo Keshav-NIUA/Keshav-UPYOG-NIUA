@@ -394,6 +394,36 @@ public class PlanInformation implements Serializable {
     //Extracted from Plan info.Khata number.
     //private String khataNo;
 
+  private String dagNo;
+    
+    private String wardNo;
+    
+    private String developementZone;
+    
+   
+    public String getDagNo() {
+		return dagNo;
+	}
+
+	public void setDagNo(String dagNo) {
+		this.dagNo = dagNo;
+	}
+
+	public String getWardNo() {
+		return wardNo;
+	}
+
+	public void setWardNo(String wardNo) {
+		this.wardNo = wardNo;
+	}
+
+	public String getDevelopementZone() {
+		return developementZone;
+	}
+
+	public void setDevelopementZone(String developementZone) {
+		this.developementZone = developementZone;
+	}
     //Extracted from Plan info.Khasra number.
     private String khasraNo;
 
