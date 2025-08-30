@@ -1,5 +1,6 @@
 package org.egov.bpa.web.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -118,4 +119,12 @@ public class BPA {
 
   /** JSON object to capture custom fields. */
   private Object additionalDetails;
+
+  public BPA addDocument(Document documentsItem) {
+    if (this.documents == null) {
+      this.documents = new ArrayList<>();
+    }
+    this.documents.add(documentsItem);
+    return this;
+  }
 }

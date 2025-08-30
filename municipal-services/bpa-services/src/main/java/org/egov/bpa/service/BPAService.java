@@ -7,14 +7,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.egov.bpa.config.BPAConfiguration;
 import org.egov.bpa.repository.BPARepository;
@@ -217,7 +210,7 @@ public class BPAService {
      */
     public List<BPA> search(BPASearchCriteria criteria, RequestInfo requestInfo) {
         List<BPA> bpas = new LinkedList<>();
-        bpaValidator.validateSearch(requestInfo, criteria);
+     //   bpaValidator.validateSearch(requestInfo, criteria);
         LandSearchCriteria landcriteria = new LandSearchCriteria();
         landcriteria.setTenantId(criteria.getTenantId());
         landcriteria.setLocality(criteria.getLocality());
@@ -237,9 +230,20 @@ public class BPAService {
                 bpas = getBPAFromCriteria(criteria, requestInfo, edcrNos);
                 ArrayList<String> landIds = new ArrayList<>();
                 if (!bpas.isEmpty()) {
-                    for (int i = 0; i < bpas.size(); i++) {
+                   /* for (int i = 0; i < bpas.size(); i++) {
                         landIds.add(bpas.get(i).getLandId());
+                    }*/
+                    /*
+                     * Filter landids that are not null*/
+
+                    landIds = bpas.stream().map(BPA::getLandId).
+                            filter(Objects::nonNull).distinct().
+                            collect(java.util.stream.Collectors.toCollection(ArrayList::new));
+                    log.info("land ids for bpa application : {}", landIds);
+                    if(landIds.isEmpty()){
+                        return bpas;
                     }
+
                     landcriteria.setIds(landIds);
                     landcriteria.setTenantId(bpas.get(0).getTenantId());
                     log.debug("Call with tenantId to Land::" + landcriteria.getTenantId());

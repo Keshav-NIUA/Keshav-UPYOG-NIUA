@@ -142,7 +142,7 @@ public class BPARowMapper implements ResultSetExtractor<List<BPA>> {
 					.id(documentId)
 					.additionalDetails(docDetails)
 					.documentUid(rs.getString("document_uid")).build();
-			bpa.getDocuments().add(document);
+			bpa.addDocument(document);
 		}
 	}
 }
