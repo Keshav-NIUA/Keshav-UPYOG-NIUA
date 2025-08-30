@@ -74,7 +74,9 @@ public enum FeatureEnum {
 	    COVERAGE("Coverage"), 
 	    DOORS("Doors"), 
 	    FRONT_SET_BACK("FrontSetBack"),
-	    ADDITIONAL_FEATURE("AdditionalFeature");
+	    ADDITIONAL_FEATURE("AdditionalFeature"),
+	    EV_CHARGING("EVChargingInfra"),
+	    DISTANCE_FROM_WATERBODIES("DistanceFromWaterBodies");
 
 	    private final String value;
 

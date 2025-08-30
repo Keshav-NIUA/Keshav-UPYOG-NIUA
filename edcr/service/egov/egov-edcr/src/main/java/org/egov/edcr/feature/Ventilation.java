@@ -193,38 +193,6 @@ public class Ventilation extends FeatureProcess {
 	    }
 	}
 
-	/**
-	 * Processes bathroom ventilation requirements for a specific floor.
-	 * Validates bathroom ventilation area against minimum requirements and generates
-	 * scrutiny details with compliance status.
-	 *
-	 * @param floor The floor containing bathroom ventilation measurements
-	 * @param requiredArea The minimum required bathroom ventilation area
-	 * @param scrutinyDetail The scrutiny detail object to add results to
-	 * @param pl The building plan for adding scrutiny details to report
-	 */
-	private void processBathroomVentilation(Floor floor, BigDecimal requiredArea,
-		            ScrutinyDetail scrutinyDetail, Plan pl) {
-		ReportScrutinyDetail detail = new ReportScrutinyDetail();
-		detail.setRuleNo(RULE_43);
-		detail.setDescription(LIGHT_VENTILATION_DESCRIPTION);
-		if (floor.getBathVentilaion() != null &&
-		floor.getBathVentilaion().getMeasurements() != null &&
-		!floor.getBathVentilaion().getMeasurements().isEmpty()) {
-			BigDecimal totalVentilationArea = floor.getBathVentilaion().getMeasurements().stream()
-			.map(Measurement::getArea).reduce(BigDecimal.ZERO, BigDecimal::add);
-			detail.setRequired(requiredArea.toString());
-			detail.setProvided(BATH_VENTILATION_AREA + totalVentilationArea + AT_FLOOR + floor.getNumber());
-			detail.setStatus(totalVentilationArea.compareTo(requiredArea) >= 0 ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal());
-		} else {
-			detail.setRequired(requiredArea.toString());
-			detail.setProvided(BATH_VENTILATION_NOT_DEFINED + floor.getNumber());
-			detail.setStatus(Result.Not_Accepted.getResultVal());
-		}
-
-		Map<String, String> details = mapReportDetails(detail);
-		addScrutinyDetailtoPlan(scrutinyDetail, pl, details);
-		}
 
 	/**
 	 * Returns amendment dates for ventilation rules.

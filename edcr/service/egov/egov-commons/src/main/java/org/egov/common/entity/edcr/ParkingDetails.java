@@ -61,6 +61,15 @@ public class ParkingDetails implements Serializable {
 	private static final long serialVersionUID = 8L;
 	private List<Measurement> cars = new ArrayList<>();
 	private List<Measurement> openCars = new ArrayList<>();
+	private List<Measurement> evParking = new ArrayList<>();
+	public List<Measurement> getEvParking() {
+		return evParking;
+	}
+
+	public void setEvParking(List<Measurement> evParking) {
+		this.evParking = evParking;
+	}
+
 	private List<Measurement> coverCars = new ArrayList<>();
 	private List<Measurement> basementCars = new ArrayList<>();
 	private List<Measurement> visitors = new ArrayList<>();

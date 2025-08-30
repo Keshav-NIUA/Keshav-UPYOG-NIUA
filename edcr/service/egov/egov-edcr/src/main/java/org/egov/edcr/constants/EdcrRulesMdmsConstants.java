@@ -7,6 +7,7 @@ public class EdcrRulesMdmsConstants {
     public static final String RESIDENTIAL = "residential";
     public static final String COMMERCIAL = "commercial";
     public static final String INDUSTRIAL = "industrial";
+    public static final String PUBLIC = "government";
     public static final String MEDICAL = "medical";
     public static final String STORAGE = "storage";
     public static final String BUSINESS = "business";

@@ -168,6 +168,7 @@ public class CommonFeatureConstants {
     public static final String DA_RAMP_DEFINED = "DA Ramp - Defined or not";
     public static final String DA_RAMP_SLOPE = "DA Ramp - Slope width";
     public static final String DA_RAMP_MAX_SLOPE = "DA Ramp - Maximum Slope";
+    public static final String DA_RAMP_LANDING = "DA Ramp - Landing";
     public static final String DA_ROOM = "DA Room";
     public static final String RAMP_MIN_WIDTH = "Ramp - Minimum Width";
     public static final String RAMP_MAX_SLOPE = "Ramp - Maximum Slope";
@@ -306,4 +307,6 @@ public class CommonFeatureConstants {
     public static final String AC_ROOM = "AC_ROOM";
     public static final String REGULAR_ROOM = "REGULAR_ROOM";
 
+    public static final String CLEARANCE_FROM_STATE_SERVICE_MANDATORY = "Clearance from State Fire Service is mandatory for buildings above 15.8m.";
+    public static final String HEIGHT_SUBJECT_TO_CIVIL_AVIATION_AUTHORITY = "Height is subject to Civil Aviation Authority clearance.";
 }
