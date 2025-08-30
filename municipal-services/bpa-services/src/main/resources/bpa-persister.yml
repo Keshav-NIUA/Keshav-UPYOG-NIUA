@@ -14,26 +14,26 @@ serviceMaps:
              approval_no, approval_date, business_service, account_id, application_type,
              risk_type, land_id, created_by, created_time, last_modified_by, last_modified_time, additional_details)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::JSONB);
-          basePath: BPAApplication
+          basePath: BPA
           jsonMaps:
-            - jsonPath: $.BPAApplication.id
-            - jsonPath: $.BPAApplication.applicationNo
-            - jsonPath: $.BPAApplication.tenantId
-            - jsonPath: $.BPAApplication.edcrNumber
-            - jsonPath: $.BPAApplication.status
-            - jsonPath: $.BPAApplication.applicationDate
-            - jsonPath: $.BPAApplication.approvalNo
-            - jsonPath: $.BPAApplication.approvalDate
-            - jsonPath: $.BPAApplication.businessService
-            - jsonPath: $.BPAApplication.accountId
-            - jsonPath: $.BPAApplication.applicationType
-            - jsonPath: $.BPAApplication.riskType
-            - jsonPath: $.BPAApplication.landId
-            - jsonPath: $.BPAApplication.auditDetails.createdBy
-            - jsonPath: $.BPAApplication.auditDetails.createdTime
-            - jsonPath: $.BPAApplication.auditDetails.lastModifiedBy
-            - jsonPath: $.BPAApplication.auditDetails.lastModifiedTime
-            - jsonPath: $.BPAApplication.additionalDetails
+            - jsonPath: $.BPA.id
+            - jsonPath: $.BPA.applicationNo
+            - jsonPath: $.BPA.tenantId
+            - jsonPath: $.BPA.edcrNumber
+            - jsonPath: $.BPA.status
+            - jsonPath: $.BPA.applicationDate
+            - jsonPath: $.BPA.approvalNo
+            - jsonPath: $.BPA.approvalDate
+            - jsonPath: $.BPA.businessService
+            - jsonPath: $.BPA.accountId
+            - jsonPath: $.BPA.applicationType
+            - jsonPath: $.BPA.riskType
+            - jsonPath: $.BPA.landId
+            - jsonPath: $.BPA.auditDetails.createdBy
+            - jsonPath: $.BPA.auditDetails.createdTime
+            - jsonPath: $.BPA.auditDetails.lastModifiedBy
+            - jsonPath: $.BPA.auditDetails.lastModifiedTime
+            - jsonPath: $.BPA.additionalDetails
               type: JSON
               dbType: JSONB
 
@@ -42,18 +42,18 @@ serviceMaps:
             (id, document_type, filestore_id, document_uid, buildingplan_id,
              created_by, created_time, last_modified_by, last_modified_time, additional_details)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?::JSONB);
-          basePath: BPAApplication.documents.*
+          basePath: BPA.documents.*
           jsonMaps:
-            - jsonPath: $.BPAApplication.documents.*.id
-            - jsonPath: $.BPAApplication.documents.*.documentType
-            - jsonPath: $.BPAApplication.documents.*.fileStoreId
-            - jsonPath: $.BPAApplication.documents.*.documentUid
-            - jsonPath: $.BPAApplication.id
-            - jsonPath: $.BPAApplication.auditDetails.createdBy
-            - jsonPath: $.BPAApplication.auditDetails.createdTime
-            - jsonPath: $.BPAApplication.auditDetails.lastModifiedBy
-            - jsonPath: $.BPAApplication.auditDetails.lastModifiedTime
-            - jsonPath: $.BPAApplication.documents.*.additionalDetails
+            - jsonPath: $.BPA.documents.*.id
+            - jsonPath: $.BPA.documents.*.documentType
+            - jsonPath: $.BPA.documents.*.fileStoreId
+            - jsonPath: $.BPA.documents.*.documentUid
+            - jsonPath: $.BPA.id
+            - jsonPath: $.BPA.auditDetails.createdBy
+            - jsonPath: $.BPA.auditDetails.createdTime
+            - jsonPath: $.BPA.auditDetails.lastModifiedBy
+            - jsonPath: $.BPA.auditDetails.lastModifiedTime
+            - jsonPath: $.BPA.documents.*.additionalDetails
               type: JSON
               dbType: JSONB
 
@@ -63,21 +63,21 @@ serviceMaps:
              assignment_status, assignment_date, expiry_date,
              created_by, created_time, last_modified_by, last_modified_time, additional_details)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::JSONB);
-          basePath: BPAApplication.rtpDetails.*
+          basePath: BPA.rtpDetails
           jsonMaps:
-            - jsonPath: $.BPAApplication.rtpDetails.*.id
-            - jsonPath: $.BPAApplication.id
-            - jsonPath: $.BPAApplication.rtpDetails.*.rtpCategory
-            - jsonPath: $.BPAApplication.rtpDetails.*.rtpId
-            - jsonPath: $.BPAApplication.rtpDetails.*.rtpName
-            - jsonPath: $.BPAApplication.rtpDetails.*.assignmentStatus
-            - jsonPath: $.BPAApplication.rtpDetails.*.assignmentDate
-            - jsonPath: $.BPAApplication.rtpDetails.*.expiryDate
-            - jsonPath: $.BPAApplication.auditDetails.createdBy
-            - jsonPath: $.BPAApplication.auditDetails.createdTime
-            - jsonPath: $.BPAApplication.auditDetails.lastModifiedBy
-            - jsonPath: $.BPAApplication.auditDetails.lastModifiedTime
-            - jsonPath: $.BPAApplication.rtpDetails.*.additionalDetails
+            - jsonPath: $.BPA.rtpDetails.id
+            - jsonPath: $.BPA.id
+            - jsonPath: $.BPA.rtpDetails.rtpCategory
+            - jsonPath: $.BPA.rtpDetails.rtpUUID
+            - jsonPath: $.BPA.rtpDetails.rtpName
+            - jsonPath: $.BPA.rtpDetails.assignmentStatus
+            - jsonPath: $.BPA.rtpDetails.assignmentDate
+            - jsonPath: $.BPA.rtpDetails.expiryDate
+            - jsonPath: $.BPA.auditDetails.createdBy
+            - jsonPath: $.BPA.auditDetails.createdTime
+            - jsonPath: $.BPA.auditDetails.lastModifiedBy
+            - jsonPath: $.BPA.auditDetails.lastModifiedTime
+            - jsonPath: $.BPA.rtpDetails.*.additionalDetails
               type: JSON
               dbType: JSONB
 
@@ -92,30 +92,30 @@ serviceMaps:
             SET status = ?, approval_no = ?, approval_date = ?, risk_type = ?,
                 last_modified_by = ?, last_modified_time = ?, additional_details = ?::JSONB
             WHERE id = ?;
-          basePath: BPAApplication
+          basePath: BPA
           jsonMaps:
-            - jsonPath: $.BPAApplication.status
-            - jsonPath: $.BPAApplication.approvalNo
-            - jsonPath: $.BPAApplication.approvalDate
-            - jsonPath: $.BPAApplication.riskType
-            - jsonPath: $.BPAApplication.auditDetails.lastModifiedBy
-            - jsonPath: $.BPAApplication.auditDetails.lastModifiedTime
-            - jsonPath: $.BPAApplication.additionalDetails
+            - jsonPath: $.BPA.status
+            - jsonPath: $.BPA.approvalNo
+            - jsonPath: $.BPA.approvalDate
+            - jsonPath: $.BPA.riskType
+            - jsonPath: $.BPA.auditDetails.lastModifiedBy
+            - jsonPath: $.BPA.auditDetails.lastModifiedTime
+            - jsonPath: $.BPA.additionalDetails
               type: JSON
               dbType: JSONB
-            - jsonPath: $.BPAApplication.id
+            - jsonPath: $.BPA.id
 
         - query: INSERT INTO public.eg_bpa_buildingplans_audit SELECT * FROM public.eg_bpa_buildingplans WHERE id = ?;
-          basePath: BPAApplication
+          basePath: BPA
           jsonMaps:
-            - jsonPath: $.BPAApplication.id
+            - jsonPath: $.BPA.id
 
         - query: INSERT INTO public.eg_bpa_documents_audit SELECT * FROM public.eg_bpa_documents WHERE id = ?;
-          basePath: BPAApplication.documents.*
+          basePath: BPA.documents.*
           jsonMaps:
-            - jsonPath: $.BPAApplication.documents.*.id
+            - jsonPath: $.BPA.documents.*.id
 
         - query: INSERT INTO public.ug_bpa_rtp_details_audit SELECT * FROM public.ug_bpa_rtp_details WHERE id = ?;
-          basePath: BPAApplication.rtpDetails.*
+          basePath: BPA.rtpDetails.*
           jsonMaps:
-            - jsonPath: $.BPAApplication.rtpDetails.*.id
+            - jsonPath: $.BPA.rtpDetails.*.id
