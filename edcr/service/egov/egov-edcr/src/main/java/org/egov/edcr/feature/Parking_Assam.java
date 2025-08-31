@@ -402,6 +402,10 @@ public class Parking_Assam extends Parking {
 		BigDecimal totalCarpetArea = getTotalCarpetAreaByOccupancy(pl, occupancyType);
 		BigDecimal totalBuiltupArea = pl.getOccupancies().stream().map(Occupancy::getBuiltUpArea)
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
+		BigDecimal basement = BigDecimal.ZERO;
+		BigDecimal open = BigDecimal.ZERO;
+		BigDecimal stilt = BigDecimal.ZERO;
+		double ecsArea = 0d;
 
 		double builtupArea = totalBuiltupArea.doubleValue();
 
@@ -409,6 +413,21 @@ public class Parking_Assam extends Parking {
 			pl.addError("Car parking", "No carpet area found for occupancy type: " + occupancyType);
 			return 0;
 		}
+		
+	 	open = pl.getParkingDetails().getOpenCars().stream().map(Measurement::getArea).reduce(BigDecimal.ZERO,
+				BigDecimal::add);
+
+	   stilt = pl.getParkingDetails().getStilts().stream().map(Measurement::getArea).reduce(BigDecimal.ZERO,
+				BigDecimal::add);
+		
+	   for (Block block : pl.getBlocks()) {
+			for (Floor floor : block.getBuilding().getFloors()) {
+				
+				basement = basement.add(floor.getParking().getBasementCars().stream().map(Measurement::getArea)
+						.reduce(BigDecimal.ZERO, BigDecimal::add)).setScale(2, RoundingMode.UP);
+			}
+		}
+	 
 
 		double carpetArea = totalCarpetArea.doubleValue();
 		BigDecimal plotArea = pl.getPlot() != null ? pl.getPlot().getArea() : BigDecimal.ZERO;
@@ -430,6 +449,7 @@ public class Parking_Assam extends Parking {
 				: null;
 
 		double requiredCarParkingArea = 0d;
+		
 
 		// Helper lambda for common calculation
 		java.util.function.BiFunction<Double, Double, Double> calculateRequiredECS = (units, perUnit) -> {
@@ -441,7 +461,19 @@ public class Parking_Assam extends Parking {
 		if (A.equals(typeCode)) { // Residential
 			double perArea = ruleResult.getPerAreaCar();
 			double noOfParking = ruleResult.getNoOfRequiredParking();
-			double ecsArea = ruleResult.getPermissibleCar();
+			
+			if (open.doubleValue() > 0 && basement.doubleValue() > 0 ) {
+			
+			 ecsArea = ruleResult.getPermissibleCarBasement();
+			}else if (open.doubleValue() > 0) {
+				 ecsArea = ruleResult.getPermissibleCarOpen();
+			}
+			else if (stilt.doubleValue() > 0) {
+				 ecsArea = ruleResult.getPermissibleCarStilt();
+			}
+			else if (basement.doubleValue() > 0) {
+				 ecsArea = ruleResult.getPermissibleCarBasement();
+			}
 
 			if (carpetArea <= ecsArea) {
 				noOfParking = 0;
@@ -453,8 +485,19 @@ public class Parking_Assam extends Parking {
 
 		} else if (F.equals(typeCode)) {
 			double noOfParking = ruleResult.getNoOfRequiredParking();
-			double ecsArea = ruleResult.getPermissibleCar();
-
+			if (open.doubleValue() > 0 && basement.doubleValue() > 0 ) {
+				
+				 ecsArea = ruleResult.getPermissibleCarBasement();
+				}else if (open.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarOpen();
+				}
+				else if (stilt.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarStilt();
+				}
+				else if (basement.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarBasement();
+				}
+			
 			if (F_CB.equals(subtypeCode)) {
 				double perArea = ruleResult.getPerAreaCommercialShopsCar();
 				double ecsPerUnit = builtupArea / perArea;
@@ -521,7 +564,18 @@ public class Parking_Assam extends Parking {
 				requiredCarParkingArea = requiredCarParkingAreaPerRoom + requiredCarParkingAreaPerArea;
 			}
 		} else if (K.equals(typeCode)) { // Govt
-			double ecsArea = ruleResult.getPermissibleCar();
+			if (open.doubleValue() > 0 && basement.doubleValue() > 0 ) {
+				
+				 ecsArea = ruleResult.getPermissibleCarBasement();
+				}else if (open.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarOpen();
+				}
+				else if (stilt.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarStilt();
+				}
+				else if (basement.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarBasement();
+				}
 			double noOfParking = ruleResult.getNoOfRequiredParking();
 			double perArea = ruleResult.getPerAreaInstitutionalPSPCar();
 
@@ -531,7 +585,18 @@ public class Parking_Assam extends Parking {
 
 		} else if (C.equals(typeCode)) { // Medical / Hospital
 			double noOfParking = ruleResult.getNoOfRequiredParking();
-			double ecsArea = ruleResult.getPermissibleCar();
+			if (open.doubleValue() > 0 && basement.doubleValue() > 0 ) {
+				
+				 ecsArea = ruleResult.getPermissibleCarBasement();
+				}else if (open.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarOpen();
+				}
+				else if (stilt.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarStilt();
+				}
+				else if (basement.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarBasement();
+				}
 
 			double perArea = ruleResult.getPerAreaInstitutionalMedicalCar();
 			double ecsPerUnitArea = builtupArea / perArea;
@@ -549,7 +614,18 @@ public class Parking_Assam extends Parking {
 
 		} else if (E_NS.equals(subtypeCode)) { // Educational Nursery
 			double noOfParking = ruleResult.getNoOfRequiredParking();
-			double ecsArea = ruleResult.getPermissibleCar();
+			if (open.doubleValue() > 0 && basement.doubleValue() > 0 ) {
+				
+				 ecsArea = ruleResult.getPermissibleCarBasement();
+				}else if (open.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarOpen();
+				}
+				else if (stilt.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarStilt();
+				}
+				else if (basement.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarBasement();
+				}
 			double perArea = ruleResult.getPerAreaEducationalNurseryCar();
 
 			double ecsPerUnit = (builtupArea * perArea / 100.0) / ecsArea;
@@ -558,7 +634,18 @@ public class Parking_Assam extends Parking {
 
 		} else if (E_CLG.equals(subtypeCode)) { // Educational College
 			double noOfParking = ruleResult.getNoOfRequiredParking();
-			double ecsArea = ruleResult.getPermissibleCar();
+			if (open.doubleValue() > 0 && basement.doubleValue() > 0 ) {
+				
+				 ecsArea = ruleResult.getPermissibleCarBasement();
+				}else if (open.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarOpen();
+				}
+				else if (stilt.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarStilt();
+				}
+				else if (basement.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarBasement();
+				}
 			double perArea = ruleResult.getPerAreaEducationalSchoolsCar();
 
 			double ecsPerUnit = (builtupArea * perArea / 100.0) / ecsArea;
@@ -570,7 +657,18 @@ public class Parking_Assam extends Parking {
 			BigDecimal noOfSeats = seatCount != null ? BigDecimal.valueOf(seatCount) : BigDecimal.ZERO;
 			if (noOfSeats != null) {
 				double noOfParking = ruleResult.getNoOfRequiredParking();
-				double ecsArea = ruleResult.getPermissibleCar();
+				if (open.doubleValue() > 0 && basement.doubleValue() > 0 ) {
+					
+					 ecsArea = ruleResult.getPermissibleCarBasement();
+					}else if (open.doubleValue() > 0) {
+						 ecsArea = ruleResult.getPermissibleCarOpen();
+					}
+					else if (stilt.doubleValue() > 0) {
+						 ecsArea = ruleResult.getPermissibleCarStilt();
+					}
+					else if (basement.doubleValue() > 0) {
+						 ecsArea = ruleResult.getPermissibleCarBasement();
+					}
 				double perSeat = ruleResult.getPerSeatAssemblyCinemaCar();
 
 				double ecsPerUnit = noOfSeats.doubleValue() / perSeat;
@@ -580,7 +678,18 @@ public class Parking_Assam extends Parking {
 
 		} else if (S_BH.equals(subtypeCode) || S_CRC.equals(subtypeCode)) { // Assembly - Community Hall/Banquet
 			double noOfParking = ruleResult.getNoOfRequiredParking();
-			double ecsArea = ruleResult.getPermissibleCar();
+			if (open.doubleValue() > 0 && basement.doubleValue() > 0 ) {
+				
+				 ecsArea = ruleResult.getPermissibleCarBasement();
+				}else if (open.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarOpen();
+				}
+				else if (stilt.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarStilt();
+				}
+				else if (basement.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarBasement();
+				}
 			double perArea = ruleResult.getPerPlotAreaAssemblyCommunityCar();
 
 			double ecsPerUnit = plotArea.doubleValue() / perArea;
@@ -592,7 +701,18 @@ public class Parking_Assam extends Parking {
 			BigDecimal noOfSeats = seatCount != null ? BigDecimal.valueOf(seatCount) : BigDecimal.ZERO;
 			if (noOfSeats != null) {
 				double noOfParking = ruleResult.getNoOfRequiredParking();
-				double ecsArea = ruleResult.getPermissibleCar();
+				if (open.doubleValue() > 0 && basement.doubleValue() > 0 ) {
+					
+					 ecsArea = ruleResult.getPermissibleCarBasement();
+					}else if (open.doubleValue() > 0) {
+						 ecsArea = ruleResult.getPermissibleCarOpen();
+					}
+					else if (stilt.doubleValue() > 0) {
+						 ecsArea = ruleResult.getPermissibleCarStilt();
+					}
+					else if (basement.doubleValue() > 0) {
+						 ecsArea = ruleResult.getPermissibleCarBasement();
+					}
 				double perSeat = ruleResult.getPerSeatAssemblyStadiumCar();
 
 				double ecsPerUnit = noOfSeats.doubleValue() / perSeat;
@@ -602,7 +722,18 @@ public class Parking_Assam extends Parking {
 
 		} else if (G.equals(typeCode)) { // Industrial
 			double noOfParking = ruleResult.getNoOfRequiredParking();
-			double ecsArea = ruleResult.getPermissibleCar();
+			if (open.doubleValue() > 0 && basement.doubleValue() > 0 ) {
+				
+				 ecsArea = ruleResult.getPermissibleCarBasement();
+				}else if (open.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarOpen();
+				}
+				else if (stilt.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarStilt();
+				}
+				else if (basement.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarBasement();
+				}
 			double perArea = ruleResult.getPerAreaIndustrialCar();
 
 			double ecsPerUnit = builtupArea / perArea;
@@ -611,7 +742,18 @@ public class Parking_Assam extends Parking {
 
 		} else if (H.equals(typeCode)) { // Wholesale
 			double noOfParking = ruleResult.getNoOfRequiredParking();
-			double ecsArea = ruleResult.getPermissibleCar();
+			if (open.doubleValue() > 0 && basement.doubleValue() > 0 ) {
+				
+				 ecsArea = ruleResult.getPermissibleCarBasement();
+				}else if (open.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarOpen();
+				}
+				else if (stilt.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarStilt();
+				}
+				else if (basement.doubleValue() > 0) {
+					 ecsArea = ruleResult.getPermissibleCarBasement();
+				}
 			double perArea = ruleResult.getPerAreaWholesaleCar();
 
 			double ecsPerUnit = builtupArea / perArea;
@@ -972,6 +1114,9 @@ public class Parking_Assam extends Parking {
 		// Initialize all variables with null to detect first non-null value
 		Double noOfParking = null;
 		Double permissibleCar = null;
+		Double permissibleCarOpen = null;
+		Double permissibleCarBasement = null;
+		Double permissibleCarStilt = null;
 		Double permissibleTwoWheeler = null;
 		Double permissibleVisitor = null;
 		Double perAreaCar = null;
@@ -1017,6 +1162,12 @@ public class Parking_Assam extends Parking {
 					noOfParking = pr.getNoOfParking().doubleValue();
 				if (permissibleCar == null && pr.getPermissibleCar() != null)
 					permissibleCar = pr.getPermissibleCar().doubleValue();
+				if (permissibleCarOpen == null && pr.getPermissibleCarOpen() != null)
+					permissibleCarOpen = pr.getPermissibleCarOpen().doubleValue();
+				if (permissibleCarStilt == null && pr.getPermissibleCarStilt() != null)
+					permissibleCarStilt = pr.getPermissibleCarStilt().doubleValue();
+				if (permissibleCarBasement == null && pr.getPermissibleCarBasement() != null)
+					permissibleCarBasement = pr.getPermissibleCarBasement().doubleValue();
 				if (permissibleTwoWheeler == null && pr.getPermissibleTwoWheeler() != null)
 					permissibleTwoWheeler = pr.getPermissibleTwoWheeler().doubleValue();
 				if (permissibleVisitor == null && pr.getPermissibleVisitor() != null)
@@ -1087,6 +1238,9 @@ public class Parking_Assam extends Parking {
 
 		return new ParkingRuleResult(noOfParking != null ? noOfParking : 0d,
 				permissibleCar != null ? permissibleCar : 0d,
+				permissibleCarOpen != null ? permissibleCarOpen : 0d,
+				permissibleCarBasement != null ? permissibleCarBasement : 0d,
+				permissibleCarStilt != null ? permissibleCarStilt : 0d,
 				permissibleTwoWheeler != null ? permissibleTwoWheeler : 0d,
 				permissibleVisitor != null ? permissibleVisitor : 0d, perAreaCar != null ? perAreaCar : 0d,
 				perAreaTwoWheeler != null ? perAreaTwoWheeler : 0d, perAreaVisitor != null ? perAreaVisitor : 0d,
@@ -1265,6 +1419,9 @@ public class Parking_Assam extends Parking {
 		// ----- Common / Configurable Values -----
 		private double noOfRequiredParking;
 		private double permissibleCar;
+		private double permissibleCarOpen;
+		private double permissibleCarStilt;
+		private double permissibleCarBasement;
 		private double permissibleTwoWheeler;
 		private double permissibleVisitor;
 
@@ -1280,7 +1437,8 @@ public class Parking_Assam extends Parking {
 		private double perAreaInstitutionalPSPVisitor;
 
 		// ----- Constructor -----
-		public ParkingRuleResult(double noOfRequiredParking, double permissibleCar, double permissibleTwoWheeler,
+		public ParkingRuleResult(double noOfRequiredParking, double permissibleCar,  double permissibleCarOpen,  double permissibleCarStilt,
+				double permissibleTwoWheeler,  double permissibleCarBasement,
 				double permissibleVisitor, double perAreaCar, double perAreaTwoWheeler, double perAreaVisitor,
 
 				// Hotel
@@ -1312,6 +1470,9 @@ public class Parking_Assam extends Parking {
 				double perAreaInstitutionalMedicalVisitor, double perAreaInstitutionalPSPVisitor) {
 			this.noOfRequiredParking = noOfRequiredParking;
 			this.permissibleCar = permissibleCar;
+			this.permissibleCarOpen = permissibleCarOpen;
+			this.permissibleCarStilt = permissibleCarStilt;
+			this.permissibleCarBasement = permissibleCarBasement;
 			this.permissibleTwoWheeler = permissibleTwoWheeler;
 			this.permissibleVisitor = permissibleVisitor;
 
@@ -1503,7 +1664,32 @@ public class Parking_Assam extends Parking {
 		public void setPermissibleCar(double v) {
 			this.permissibleCar = v;
 		}
+		
+		public double getPermissibleCarOpen() {
+			return permissibleCarOpen;
+		}
 
+		public void setPermissibleCarOpen(double v) {
+			this.permissibleCarOpen = v;
+		}
+
+		public double getPermissibleCarStilt() {
+			return permissibleCarStilt;
+		}
+
+		public void setPermissibleCarStilt(double v) {
+			this.permissibleCarStilt = v;
+		}
+
+		public double getPermissibleCarBasement() {
+			return permissibleCarBasement;
+		}
+
+		public void setPermissibleCarBasement(double v) {
+			this.permissibleCarBasement = v;
+		}
+
+		
 		public double getPermissibleTwoWheeler() {
 			return permissibleTwoWheeler;
 		}
@@ -2049,13 +2235,24 @@ public class Parking_Assam extends Parking {
 	}
 
 	private BigDecimal getTotalCarpetAreaByOccupancy(Plan pl, String occupancyType) {
-		BigDecimal totalArea = BigDecimal.ZERO;
-		for (Block b : pl.getBlocks())
-			for (Occupancy occupancy : b.getBuilding().getTotalArea())
-				if (occupancy.getTypeHelper().getType().getName().equals(occupancyType))
-					totalArea = totalArea.add(occupancy.getCarpetArea());
-		return totalArea;
+	    BigDecimal totalArea = BigDecimal.ZERO;
+
+	    for (Block b : pl.getBlocks()) {
+	        for (Occupancy occupancy : b.getBuilding().getTotalArea()) {
+	            if (occupancy != null
+	                    && occupancy.getTypeHelper() != null
+	                   ) {
+	                
+	                totalArea = totalArea.add(
+	                        occupancy.getCarpetArea() == null ? BigDecimal.ZERO : occupancy.getCarpetArea()
+	                );
+	            }
+	        }
+	    }
+
+	    return totalArea;
 	}
+
 
 	private void checkAreaForLoadUnloadSpaces(Plan pl) {
 		double providedArea = 0;

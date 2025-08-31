@@ -24,6 +24,12 @@ import org.springframework.stereotype.Service;
 import static org.egov.edcr.constants.CommonFeatureConstants.*;
 import static org.egov.edcr.constants.CommonFeatureConstants.FLOOR;
 import static org.egov.edcr.constants.CommonKeyConstants.*;
+import static org.egov.edcr.constants.DxfFileConstants.B;
+import static org.egov.edcr.constants.DxfFileConstants.D;
+import static org.egov.edcr.constants.DxfFileConstants.C;
+import static org.egov.edcr.constants.DxfFileConstants.G;
+import static org.egov.edcr.constants.DxfFileConstants.H;
+import static org.egov.edcr.constants.DxfFileConstants.I;
 import static org.egov.edcr.constants.EdcrReportConstants.*;
 import static org.egov.edcr.service.FeatureUtil.addScrutinyDetailtoPlan;
 import static org.egov.edcr.service.FeatureUtil.mapReportDetails;
@@ -62,7 +68,11 @@ public class GeneralStair_Assam extends FeatureProcess {
 	 * @param errors The map to collect validation errors.
 	 */
 	private void processBlock(Plan plan, Block block, HashMap<String, String> errors) {
+		
+		
 	    LOG.info("Started processing Block: {}", block.getNumber());
+	    
+	    
 
 	    int generalStairCount = 0;
 	    BigDecimal flrHt = BigDecimal.ZERO;
@@ -84,6 +94,17 @@ public class GeneralStair_Assam extends FeatureProcess {
 
 	    OccupancyTypeHelper mostRestrictiveOccupancyType = block.getBuilding().getMostRestrictiveFarHelper();
 	    LOG.info("Most restrictive occupancy type for Block {}: {}", block.getNumber(), mostRestrictiveOccupancyType);
+	    
+	    if (requiresTwoStaircases(plan, block, mostRestrictiveOccupancyType) && generalStairCount < 2) {
+	        String errKey = MINIMUM_TWO_STAIRCASES_REQUIRED + "_BLOCK_" + block.getNumber();
+	        String errMsg = "Block " + block.getNumber() + " " + MINIMUM_TWO_STAIRCASES_REQUIRED_MSG;
+
+	        errors.put(errKey, errMsg);
+	        plan.addErrors(errors);
+	        LOG.error("Error added: {}", errMsg);
+	    }
+
+
 
 	    List<Floor> floors = block.getBuilding().getFloors();
 	    LOG.info("Total floors in Block {}: {}", block.getNumber(), floors.size());
@@ -235,26 +256,36 @@ public class GeneralStair_Assam extends FeatureProcess {
 	 * @param scrutinyDetail4  ScrutinyDetail object for riser height validation.
 	 */
 	private void validateRiserHeight(Plan plan, Block block, BigDecimal flrHt, BigDecimal totalSteps, ScrutinyDetail scrutinyDetail4) {
-	    LOG.info("Validating riser height for Block: {}", block != null ? block.getNumber() : "N/A");
+	    LOG.info("Validating riser height for Block: {}", block.getName());
 
 	    BigDecimal value = getPermissibleRiserHeight(plan);
-	    LOG.info("Permissible riser height from rules: {}", value);
+	    LOG.info("Permissible riser height: {}", value);
 
-	    if (flrHt != null) {
-	    	LOG.info("Floor height provided: {}, Total steps: {}", flrHt, totalSteps);
+	    if (flrHt != null && totalSteps != null && totalSteps.compareTo(BigDecimal.ZERO) > 0) {
+	        LOG.info("Floor height: {}, Total steps: {}", flrHt, totalSteps);
 
 	        BigDecimal riserHeight = flrHt.divide(totalSteps, 2, RoundingMode.HALF_UP);
 	        LOG.info("Calculated riser height: {}", riserHeight);
 
-	        String result = (riserHeight.compareTo(value) <= 0) ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal();
-	        LOG.info("Validation result for riser height: {}", result);
+	        for (Floor floor : block.getBuilding().getFloors()) {
+	            String floorValue = FLOOR_SPACED + floor.getNumber();
+	            LOG.info("Processing Floor: {}", floorValue);
 
-	        setReportOutputDetailsFloorStairWise(plan, RULE_4_4_4, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING + value, EMPTY_STRING + riserHeight, result, scrutinyDetail4);
-	        LOG.info("Report output details set for riser height check.");
+	            String result = (riserHeight.compareTo(value) <= 0)
+	                    ? Result.Accepted.getResultVal()
+	                    : Result.Not_Accepted.getResultVal();
+
+	            LOG.info("Result for Floor {}: {} (Permissible: {}, Provided: {})", 
+	                    floorValue, result, value, riserHeight);
+
+	            setReportOutputDetailsFloorStairWise(plan, RULE_4_4_4, floorValue, RISER_HEIGHT_DESC, 
+	                    EMPTY_STRING + value, EMPTY_STRING + riserHeight, result, scrutinyDetail4);
+	        }
 	    } else {
-	    	LOG.info("Floor height is null. Skipping riser height validation.");
+	        LOG.warn("Floor height or total steps is null/invalid for Block: {}", block.getName());
 	    }
 	}
+
 
 	/**
 	 * Retrieves the permissible riser height from the rule cache.
@@ -438,6 +469,67 @@ public class GeneralStair_Assam extends FeatureProcess {
 
 	        handleMissingFlights(plan, errors, block, floor);
 	    }
+	    
+	    
+	}
+
+	/**
+	 * Determines whether a block requires two staircases based on building height 
+	 * and occupancy type conditions.
+	 * <p>
+	 * The conditions for requiring two staircases are:
+	 * <ul>
+	 *   <li><b>Condition 1:</b> If the building height is greater than 15.8 meters.</li>
+	 *   <li><b>Condition 2:</b> If the most restrictive occupancy type belongs to 
+	 *       certain categories (Educational, Assembly, Medical/Institutional, 
+	 *       Industrial, Storage, Hazardous) AND the plot area is greater than 500 sqm.</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param pl The {@link Plan} object containing plot details.
+	 * @param block The {@link Block} under consideration.
+	 * @param mostRestrictiveOccupancyType The most restrictive {@link OccupancyTypeHelper}
+	 *                                     for the block, used to determine occupancy category.
+	 * @return {@code true} if the block requires two staircases, 
+	 *         {@code false} otherwise.
+	 */
+	
+	private boolean requiresTwoStaircases(Plan pl, Block block, OccupancyTypeHelper mostRestrictiveOccupancyType) {
+	    BigDecimal buildingHeight = block.getBuilding().getBuildingHeight();
+	    LOG.info("Building height for Block {}: {}", block.getNumber(), buildingHeight);
+
+	    // Condition 1: Height > 15.8m
+	    if (buildingHeight != null && buildingHeight.compareTo(BigDecimal.valueOf(15.8)) > 0) {
+	        LOG.info("Block {} requires two staircases because height is greater than 15.8m", block.getNumber());
+	        return true;
+	    }
+
+	    // Condition 2: Occupancy categories with floor area > 500 sqm
+	    if (mostRestrictiveOccupancyType != null 
+	            && mostRestrictiveOccupancyType.getType() != null 
+	            && mostRestrictiveOccupancyType.getType().getCode() != null) {
+
+	        String occCode = mostRestrictiveOccupancyType.getType().getCode();
+
+	        if (B.equalsIgnoreCase(occCode)  // Educational
+	                || D.equalsIgnoreCase(occCode)  // Assembly
+	                || C.equalsIgnoreCase(occCode)  // Medical / Institutional
+	                || G.equalsIgnoreCase(occCode)  // Industrial
+	                || H.equalsIgnoreCase(occCode)  // Storage
+	                || I.equalsIgnoreCase(occCode))  // Hazardous
+	                
+	        {
+	           BigDecimal plotArea =  pl.getPlot().getArea();	
+	            if (plotArea != null && plotArea.compareTo(BigDecimal.valueOf(500)) > 0) {
+	                    LOG.info("Block {} requires two staircases because occupancy {} has area {}", 
+	                             block.getNumber(), occCode, plotArea);
+	                    return true;
+	                
+	            }
+	        }
+	    }
+
+	    return false;
 	}
 
 	

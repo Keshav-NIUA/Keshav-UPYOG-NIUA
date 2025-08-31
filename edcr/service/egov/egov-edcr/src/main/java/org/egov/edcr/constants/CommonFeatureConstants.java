@@ -75,6 +75,7 @@ public class CommonFeatureConstants {
     public static final String FTM_NOT_INSIDE = "Fire tender movement for block ";
     public static final String IS_NOT_INSIDE = " is not inside ";
     public static final String EMPTY_STRING = "";
+    public static final String RISER_HEIGHT_DESC = "Minimum Riser Height";
     public static final String SINGLE_SPACE_STRING = " ";
     public static final String INVALID_VALUE_MESSAGE = "The value for %s '%s' Is Invalid";
     public static final String PLOT_AREA_ERROR = "Plot Area Error:";
@@ -172,6 +173,7 @@ public class CommonFeatureConstants {
     public static final String DA_ROOM = "DA Room";
     public static final String RAMP_MIN_WIDTH = "Ramp - Minimum Width";
     public static final String RAMP_MAX_SLOPE = "Ramp - Maximum Slope";
+    public static final String RAMP_LENGTH_WIDTH= "Ramp - Length and width";
     public static final String MIN_NUMBER_DA_ROOMS = "Minimum number of da rooms";
     public static final String LESS_THAN_SLOPE = "Less than 0.08 for all da ramps";
     public static final String RAMP_POLYLINE_ERROR = " number of ramp polyline not having only 4 points in layer ";

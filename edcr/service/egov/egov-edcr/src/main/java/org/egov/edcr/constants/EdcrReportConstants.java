@@ -290,8 +290,11 @@ public class EdcrReportConstants {
     public static final String RULE9 = "4.4.4 (ix)";
     public static final String SUBRULE_41_II_B = "41-ii-b";
 
+    public static final String ERR_NARROW_ROAD_RULE =
+            "On 2.40m road width, only G+1 floors are permitted. Found: %s";
     public static final String RULE_AC_DESC = "Minimum height of ac room";
     public static final String RULE_REGULAR_DESC = "Minimum height of regular room";
+    public static final String RULE_ROOM_DESC = "NonInhabitational room";
     public static final String SUBRULE_41_II_B_AREA_DESC = "Total area of rooms";
     public static final String SUBRULE_41_II_B_TOTAL_WIDTH = "Minimum Width of room";
 
@@ -318,7 +321,8 @@ public class EdcrReportConstants {
 
 
     public static String subRuleDoor = "6.4.1";
-    public static String subRuleDesc = "Minimum Area and Width of Room";
+  
+    public static String RULE_REGULAR_ROOM = "Minimum Area and Width of Room";
     public static String subRuleDesc1 = "Room Wise Ventialtion";
     public static String subRuleDesc5 = "Door Ventialtion";
     public static String subRuleDesc2 = "Room Wise Window Area";
@@ -389,6 +393,29 @@ public class EdcrReportConstants {
     // Report output messages
     public static final String EV_PARKING_REQUIRED = "Minimum 20% EV parking required";
     public static final String EV_PARKING_PROVIDED = "%.2f%% EV parking provided";
+    public static final String FIELD_RIVER = "river";
+    public static final String DESC_RIVER = "Distance from River";
+    
+
+    public static final String FIELD_BHARALU_MORA_BONDAJAN = "bharaluMoraBondajan";
+    public static final String DESC_BHARALU_MORA_BONDAJAN = "Distance from Bharalu/Mora/Bondajan";
+   
+
+    public static final String FIELD_OTHER_CHANNELS = "otherChannels";
+    public static final String DESC_OTHER_CHANNELS = "Distance from Other Channels";
+  
+
+    public static final String FIELD_NOTIFIED_WATER_BODIES = "notifiedWaterBodies";
+    public static final String DESC_NOTIFIED_WATER_BODIES = "Distance from Notified Water Bodies";
+    public static final String RULE_NOTIFIED_WATER_BODIES = "44(ix)";
+
+    public static final String FIELD_OTHER_NOTIFIED_WATER_BODIES = "otherNotifiedWaterBodies";
+    public static final String DESC_OTHER_NOTIFIED_WATER_BODIES = "Distance from Other Notified Water Bodies";
+   
+
+    public static final String FIELD_OTHER_LARGE_PONDS_WATER_BODIES = "otherLargePondsWaterBodies";
+    public static final String DESC_OTHER_LARGE_PONDS_WATER_BODIES = "Distance from Other Large Ponds/Water Bodies";
+   
 
     // Constants for rule identifiers and descriptions
     public static final String RULE_20 = "20";
@@ -499,6 +526,17 @@ public class EdcrReportConstants {
     public static final String SUBRULE_50_C_4_B_DESCRIPTION = "Maximum slope of ramp %s";
     public static final String SUBRULE_50_C_4_B_SLOPE_DESCRIPTION = "Maximum Slope of DA Ramp %s";
     public static final String SUBRULE_50_C_4_B_SLOPE_MAN_DESC = "Slope of DA Ramp";
+    public static final String RULE_RAMP_LENGTH = "RAMP_LENGTH_RULE";
+    public static final String RULE_RAMP_WIDTH  = "RAMP_WIDTH_RULE";
+
+    public static final String DESC_RAMP_LENGTH = "Ramp length shall not exceed 9.0 m between landings";
+    public static final String DESC_RAMP_WIDTH  = "Ramp width shall be minimum 1.5 m with handrails on either side";
+
+    public static final String PERMISSIBLE_LENGTH = "≤ 9.0 m";
+    public static final String PERMISSIBLE_WIDTH  = "≥ 1.5 m";
+
+    public static final String NOT_DEFINED = "Not Defined";
+
     // Rule Numbers
     public static final String RULE_91_D = "91 d";
   

@@ -93,6 +93,7 @@ import static org.egov.edcr.constants.EdcrReportConstants.BUILDING_HEIGHT;
 import static org.egov.edcr.constants.EdcrReportConstants.BUILDING_HEIGHT_SCHOOL;
 import static org.egov.edcr.constants.EdcrReportConstants.MINIMUMLABEL;
 import static org.egov.edcr.constants.EdcrReportConstants.PLOTAREA_300;
+import static org.egov.edcr.constants.EdcrReportConstants.SUB_RULE_SIDE_YARD;
 import static org.egov.edcr.constants.EdcrReportConstants.PLOT_AREA_802_SQM;
 import static org.egov.edcr.constants.EdcrReportConstants.ROAD_WIDTH_TWELVE_POINTTWO;
 import static org.egov.edcr.constants.EdcrReportConstants.RULE_35_T9;
@@ -125,13 +126,13 @@ import static org.egov.edcr.constants.EdcrReportConstants.SIDEVALUE_TWO;
 import static org.egov.edcr.constants.EdcrReportConstants.SIDEVALUE_TWOPOINTFIVE;
 import static org.egov.edcr.constants.EdcrReportConstants.SIDE_YARD_1_NOTDEFINED;
 import static org.egov.edcr.constants.EdcrReportConstants.SIDE_YARD_2_NOTDEFINED;
-import static org.egov.edcr.constants.EdcrReportConstants.SUB_RULE_SIDE_YARD;
 import static org.egov.edcr.service.FeatureUtil.addScrutinyDetailtoPlan;
 import static org.egov.edcr.service.FeatureUtil.mapReportDetails;
 import static org.egov.edcr.utility.DcrConstants.OBJECTNOTDEFINED;
 import static org.egov.edcr.utility.DcrConstants.SIDE_YARD1_DESC;
 import static org.egov.edcr.utility.DcrConstants.SIDE_YARD2_DESC;
 import static org.egov.edcr.utility.DcrConstants.SIDE_YARD_DESC;
+import static org.egov.edcr.constants.EdcrReportConstants.ERR_NARROW_ROAD_RULE;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -267,7 +268,7 @@ public class SideYardService_Assam extends SideYardService {
 							&& block.getBuilding().getFloorsAboveGround().compareTo(BigDecimal.valueOf(3)) <= 0) {
 						checkSideYardCommon(pl, block, block.getBuilding(), buildingHeight, block.getName(),
 								setback.getLevel(), pl.getPlot(), minMax[0], minMax[1], occupancy.getTypeHelper(),
-								sideYard1Result, sideYard2Result);
+								sideYard1Result, sideYard2Result, errors);
 					}
 				}
 
@@ -328,6 +329,99 @@ public class SideYardService_Assam extends SideYardService {
 			return block.getBuilding().getBuildingHeight();
 		}
 	}
+	
+	/**
+	 * Applies special rules for side yard requirements when the building is located 
+	 * on a narrow road (specifically a 2.40m wide road).
+	 * <p>
+	 * The rule is applicable only when the plot area falls within specific ranges:
+	 * <ul>
+	 *   <li><b>53.56 – 93.73 sqm:</b> Minimum side setback of 0.90m (mean setback also 0.90m).</li>
+	 *   <li><b>93.73 – 134 sqm:</b> Minimum side setback of 2.00m.</li>
+	 * </ul>
+	 * </p>
+	 * <p>
+	 * The method validates the provided side yard distances against the permissible 
+	 * values, updates the {@link SideYardResult}, and logs errors if requirements are not met.
+	 * </p>
+	 *
+	 * @param pl The {@link Plan} object containing overall plan details.
+	 * @param building The {@link Building} under consideration.
+	 * @param blockName The name of the block being validated.
+	 * @param level The level/floor number being checked.
+	 * @param plot The {@link Plot} object containing plot details such as area.
+	 * @param mostRestrictiveOccupancy The most restrictive {@link OccupancyTypeHelper} 
+	 *                                 applicable to this block.
+	 * @param sideYard1Result The {@link SideYardResult} for the first side yard.
+	 * @param sideYard2Result The {@link SideYardResult} for the second side yard.
+	 * @param buildingHeight The height of the building.
+	 * @param errors A {@link HashMap} for collecting error messages (block-specific).
+	 * @param roadWidth The width of the road adjacent to the plot.
+	 * @param plotArea The area of the plot.
+	 * @param min The minimum permissible value to be compared against.
+	 * @return {@code true} if both side yards satisfy the special setback rule, 
+	 *         {@code false} otherwise.
+	 */
+	
+	private Boolean applySpecialRuleForNarrowRoadSideYard(Plan pl, Building building, String blockName, Integer level,
+	        Plot plot, OccupancyTypeHelper mostRestrictiveOccupancy, SideYardResult sideYard1Result,
+	        SideYardResult sideYard2Result, BigDecimal buildingHeight, HashMap<String, String> errors,
+	        BigDecimal roadWidth, BigDecimal plotArea, final double min) {
+
+	    LOG.info("Applying special narrow road rule (Side Yard, 2.40m road) for Block: {}, Level: {}, Plot Area: {}",
+	            blockName, level, plotArea);
+
+	    BigDecimal minVal = BigDecimal.ZERO;
+	    BigDecimal meanVal = BigDecimal.ZERO;
+	    String subRule = "";
+	    String rule = SIDE_YARD_DESC;
+
+	    if (plotArea.compareTo(BigDecimal.valueOf(53.56)) >= 0
+	            && plotArea.compareTo(BigDecimal.valueOf(93.73)) <= 0) {
+
+	        minVal = BigDecimal.valueOf(0.90);
+	        meanVal = BigDecimal.valueOf(0.90);
+	        subRule = "Side setback: 1.50 m";
+	        LOG.info("Matched Plot Area range 53.56 - 93.73 sqm → {}", subRule);
+
+	    } else if (plotArea.compareTo(BigDecimal.valueOf(93.73)) > 0
+	            && plotArea.compareTo(BigDecimal.valueOf(134)) <= 0) {
+
+	        minVal = BigDecimal.ZERO;
+	        subRule = "Side setback: 2.00 m";
+	        LOG.info("Matched Plot Area range 93.73 - 134 sqm → {}", subRule);
+	    }
+
+	    BigDecimal providedMin1 = sideYard1Result.actualDistance;
+	    BigDecimal providedMin2 = sideYard2Result.actualDistance;
+
+	    Boolean valid = (providedMin1 != null && providedMin1.compareTo(minVal) >= 0)
+	            && (providedMin2 != null && providedMin2.compareTo(minVal) >= 0);
+	    compareSideYardResult(
+	    	    blockName,
+	    	    minVal,                          
+	    	    BigDecimal.valueOf(min),         
+	    	    mostRestrictiveOccupancy,
+	    	    subRule,
+	    	    rule,
+	    	    valid,
+	    	    level,
+	    	    sideYard1Result,
+	    	    sideYard2Result
+	    	);
+
+	    if (!valid) {
+	        errors.put(blockName + "_SideYard",
+	                "Side setback must be at least " + minVal + " m (provided "
+	                        + providedMin1 + " m, " + providedMin2 + " m)");
+	    }
+
+	    LOG.info("Special side yard rule applied → RequiredMin: {}, ProvidedMin1: {}, ProvidedMin2: {}, Status: {}",
+	            minVal, providedMin1, providedMin2, valid);
+
+	    return valid;
+	}
+
 
 	/**
 	 * Extracts minimum and maximum distances from the two side yards.
@@ -372,13 +466,39 @@ public class SideYardService_Assam extends SideYardService {
 	private void checkSideYardCommon(final Plan pl, Block block, Building building, BigDecimal buildingHeight,
 			String blockName, Integer level, final Plot plot, final double min, final double max,
 			final OccupancyTypeHelper mostRestrictiveOccupancy, SideYardResult sideYard1Result,
-			SideYardResult sideYard2Result) {
+			SideYardResult sideYard2Result, HashMap<String, String> errors) {
 
 		BigDecimal plotArea = pl.getPlot().getArea();
 		String rule = SIDE_YARD_DESC;
 		String subRule = RULE_35_T9;
 		String occupancyCode = mostRestrictiveOccupancy.getType().getCode();
 		Boolean valid = false;
+		BigDecimal roadWidth = pl.getPlanInformation().getRoadWidth();
+		   if (roadWidth != null && roadWidth.compareTo(BigDecimal.valueOf(2.40)) == 0) {
+		        LOG.info("Checking special narrow road rule (SideYard) for Block: {}, Level: {}, RoadWidth: {}",
+		                blockName, level, roadWidth);
+
+		        BigDecimal allowedFloors = BigDecimal.valueOf(2); // G + 1 floors
+		        BigDecimal actualFloors = building.getTotalFloors();
+
+		        if (actualFloors.compareTo(allowedFloors) > 0) {
+		            errors.put("NARROW_ROAD_RULE", String.format(ERR_NARROW_ROAD_RULE, actualFloors));
+		            LOG.warn("Narrow road violation (SideYard): Allowed = {}, Actual = {}", allowedFloors, actualFloors);
+		            return; 
+		        }
+
+		        Boolean specialValid = applySpecialRuleForNarrowRoadSideYard(
+		                pl, building, blockName, level, plot,
+		                mostRestrictiveOccupancy, sideYard1Result, sideYard2Result,
+		                buildingHeight, errors, roadWidth, plotArea, min);
+
+		        if (specialValid != null) {
+		            LOG.info("Special narrow road rule applied for SideYard. Result = {}", specialValid);
+		            return; 
+		        } else {
+		            LOG.info("Special narrow road rule not applicable for SideYard, continuing normal checks.");
+		        }
+		    }
 
 		if (A.equalsIgnoreCase(occupancyCode) || H.equalsIgnoreCase(occupancyCode)) {
 

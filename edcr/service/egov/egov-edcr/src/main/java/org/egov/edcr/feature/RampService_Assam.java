@@ -59,6 +59,7 @@ import static org.egov.edcr.constants.CommonFeatureConstants.LESS_THAN_SLOPE;
 import static org.egov.edcr.constants.CommonFeatureConstants.MIN_NUMBER_DA_ROOMS;
 import static org.egov.edcr.constants.CommonFeatureConstants.RAMP_MAX_SLOPE;
 import static org.egov.edcr.constants.CommonFeatureConstants.RAMP_MIN_WIDTH;
+import static org.egov.edcr.constants.CommonFeatureConstants.RAMP_LENGTH_WIDTH;
 import static org.egov.edcr.constants.CommonFeatureConstants.RAMP_POLYLINE_ERROR;
 import static org.egov.edcr.constants.CommonFeatureConstants.UNDERSCORE;
 import static org.egov.edcr.constants.CommonKeyConstants.BLOCK;
@@ -70,7 +71,13 @@ import static org.egov.edcr.constants.EdcrReportConstants.SUBRULE_50_C_4_B_SLOPE
 import static org.egov.edcr.constants.EdcrReportConstants.SUBRULE_50_C_4_B_SLOPE_MAN_DESC;
 import static org.egov.edcr.service.FeatureUtil.addScrutinyDetailtoPlan;
 import static org.egov.edcr.service.FeatureUtil.mapReportDetails;
-
+import static org.egov.edcr.constants.EdcrReportConstants.RULE_RAMP_LENGTH;
+import static org.egov.edcr.constants.EdcrReportConstants.DESC_RAMP_WIDTH;
+import static org.egov.edcr.constants.EdcrReportConstants.RULE_RAMP_WIDTH;
+import static org.egov.edcr.constants.EdcrReportConstants.PERMISSIBLE_WIDTH;
+import static org.egov.edcr.constants.EdcrReportConstants.NOT_DEFINED;
+import static org.egov.edcr.constants.EdcrReportConstants.DESC_RAMP_LENGTH;
+import static org.egov.edcr.constants.EdcrReportConstants.PERMISSIBLE_LENGTH;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
@@ -388,6 +395,7 @@ public class RampService_Assam extends RampService {
                 ScrutinyDetail scrutinyDetail3 = createScrutinyDetail(DA_ROOM, block.getNumber(), true);
                 ScrutinyDetail scrutinyDetail4 = createScrutinyDetail(RAMP_MIN_WIDTH, block.getNumber(), true);
                 ScrutinyDetail scrutinyDetail5 = createScrutinyDetail(RAMP_MAX_SLOPE, block.getNumber(), true);
+                ScrutinyDetail scrutinyDetail7 = createScrutinyDetail(RAMP_LENGTH_WIDTH, block.getNumber(), true);
                 ScrutinyDetail scrutinyDetail6 = createScrutinyDetail("Ramp - Minimum Entrance Height", block.getNumber(), true);
 
 
@@ -418,6 +426,8 @@ public class RampService_Assam extends RampService {
                 processDARoomValidation(pl, block, rampServiceBuildingHeight, scrutinyDetail3);
                 
                 validateMinHeightEntrance(pl, block, rampServiceMinHeightEntrance, scrutinyDetail6);
+                
+                validateDARampDimensions(pl, block, scrutinyDetail7);
 
             }
         }
@@ -575,6 +585,94 @@ public class RampService_Assam extends RampService {
             }
         }
     }
+    
+    /**
+     * Validates DA ramp dimensions:
+     * - Length shall not exceed 9 m between landings
+     * - Width shall not be less than 1.5 m with handrails on either side
+     */
+    private void validateDARampDimensions(Plan pl, Block block, ScrutinyDetail scrutinyDetail) {
+        LOGGER.info("Validating DA Ramp dimensions for Block: {}", block.getNumber());
+
+        for (DARamp daRamp : block.getDARamps()) {
+        	LOGGER.info("Processing DA Ramp: {}", daRamp);
+
+            if (daRamp.getMeasurements() != null && !daRamp.getMeasurements().isEmpty()) {
+                for (Measurement m : daRamp.getMeasurements()) {
+                    BigDecimal length = m.getLength();
+                    BigDecimal width  = m.getWidth();
+
+                    String providedLength = (length != null) ? length.toString() : NOT_DEFINED;
+                    String providedWidth  = (width  != null) ? width.toString()  : NOT_DEFINED;
+
+                    LOGGER.info("Ramp Measurement → Length: {}, Width: {}", providedLength, providedWidth);
+
+                    BigDecimal rampServiceMaxLength = BigDecimal.valueOf(9);   // default
+                    BigDecimal rampServiceMinWidth  = BigDecimal.valueOf(1.5); // default
+
+                    List<Object> rules = cache.getFeatureRules(pl, FeatureEnum.RAMP_SERVICE.getValue(), false);
+                    Optional<RampServiceRequirement> matchedRule = rules.stream()
+                            .filter(RampServiceRequirement.class::isInstance)
+                            .map(RampServiceRequirement.class::cast)
+                            .findFirst();
+
+                    if (matchedRule.isPresent()) {
+                        RampServiceRequirement rule = matchedRule.get();
+                        if (rule.getRampServiceMaxLength() != null || rule.getRampServiceMinWidth() != null) {
+                            rampServiceMaxLength = rule.getRampServiceMaxLength();
+                            rampServiceMinWidth  = rule.getRampServiceMinWidth();
+                            LOGGER.info("Matched rule → MaxLength: {}, MinWidth: {}", rampServiceMaxLength, rampServiceMinWidth);
+                        }
+                    }
+
+                    // Length check
+                    if (length == null || length.compareTo(rampServiceMaxLength) > 0) {
+                    	LOGGER.info("Ramp length validation failed. Required ≤ {}, Provided: {}", rampServiceMaxLength, providedLength);
+                        setReportOutputDetails(pl,
+                                RULE_RAMP_LENGTH,
+                                DESC_RAMP_LENGTH,
+                                PERMISSIBLE_LENGTH,
+                                providedLength,
+                                Result.Not_Accepted.getResultVal(),
+                                scrutinyDetail);
+                    } else {
+                    	LOGGER.info("Ramp length validation passed. Required ≤ {}, Provided: {}", rampServiceMaxLength, providedLength);
+                        setReportOutputDetails(pl,
+                                RULE_RAMP_LENGTH,
+                                DESC_RAMP_LENGTH,
+                                PERMISSIBLE_LENGTH,
+                                providedLength,
+                                Result.Accepted.getResultVal(),
+                                scrutinyDetail);
+                    }
+
+                    // Width check
+                    if (width == null || width.compareTo(rampServiceMinWidth) < 0) {
+                    	LOGGER.info("Ramp width validation failed. Required ≥ {}, Provided: {}", rampServiceMinWidth, providedWidth);
+                        setReportOutputDetails(pl,
+                                RULE_RAMP_WIDTH,
+                                DESC_RAMP_WIDTH,
+                                PERMISSIBLE_WIDTH,
+                                providedWidth,
+                                Result.Not_Accepted.getResultVal(),
+                                scrutinyDetail);
+                    } else {
+                    	LOGGER.info("Ramp width validation passed. Required ≥ {}, Provided: {}", rampServiceMinWidth, providedWidth);
+                        setReportOutputDetails(pl,
+                                RULE_RAMP_WIDTH,
+                                DESC_RAMP_WIDTH,
+                                PERMISSIBLE_WIDTH,
+                                providedWidth,
+                                Result.Accepted.getResultVal(),
+                                scrutinyDetail);
+                    }
+                }
+            } else {
+            	LOGGER.warn("No measurements found for DA Ramp in Block: {}", block.getNumber());
+            }
+        }
+    }
+
 
 
     private void processDARoomValidation(Plan pl, Block block, BigDecimal rampServiceBuildingHeight, ScrutinyDetail scrutinyDetail3) {

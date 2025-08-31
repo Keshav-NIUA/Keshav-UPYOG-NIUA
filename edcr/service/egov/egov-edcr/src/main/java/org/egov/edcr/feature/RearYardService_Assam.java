@@ -76,6 +76,7 @@ import static org.egov.edcr.utility.DcrConstants.FRONT_YARD_DESC;
 import static org.egov.edcr.utility.DcrConstants.OBJECTNOTDEFINED;
 import static org.egov.edcr.utility.DcrConstants.REAR_YARD_DESC;
 import static org.egov.edcr.utility.DcrConstants.YES;
+import static org.egov.edcr.constants.EdcrReportConstants.ERR_NARROW_ROAD_RULE; 
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -171,7 +172,7 @@ public class RearYardService_Assam extends RearYardService {
 						if (buildingHeight != null && (min.doubleValue() > 0 || mean.doubleValue() > 0)) {
 							checkRearYard(pl, block.getBuilding(), block, setback.getLevel(), plot,
 									REAR_YARD_DESC, min, mean, occupancy.getTypeHelper(), rearYardResult,
-									buildingHeight);
+									buildingHeight, errors);
 							addRearYardResult(pl, errors, rearYardResult);
 			
 									/*
@@ -1163,7 +1164,7 @@ public class RearYardService_Assam extends RearYardService {
 	        final BigDecimal mean,
 	        final OccupancyTypeHelper mostRestrictiveOccupancy,
 	        RearYardResult rearYardResult,
-	        BigDecimal buildingHeight) {
+	        BigDecimal buildingHeight, HashMap<String, String> errors) {
 
 	    String subRule = "";
 	    String rule = REAR_YARD_DESC;
@@ -1176,6 +1177,38 @@ public class RearYardService_Assam extends RearYardService {
 	    String subOccupancyCode = mostRestrictiveOccupancy.getSubtype().getCode();
 	    String occupancyName = mostRestrictiveOccupancy.getType().getName();
 
+	    BigDecimal roadWidth = pl.getPlanInformation().getRoadWidth();
+	    BigDecimal plotArea = plot.getArea();
+
+	    // Check Narrow Road Special Rule First
+	    if (roadWidth != null && roadWidth.compareTo(BigDecimal.valueOf(2.40)) == 0) {
+	        LOG.info("Checking special narrow road rule for REAR yard → Block: {}, Level: {}, RoadWidth: {}", 
+	                  block.getName(), level, roadWidth);
+
+	        BigDecimal allowedFloors = BigDecimal.valueOf(2); // G + 1
+	        BigDecimal actualFloors = building.getTotalFloors();
+
+	        if (actualFloors.compareTo(allowedFloors) > 0) {
+	            errors.put(ERR_NARROW_ROAD_RULE,
+	                    String.format(ERR_NARROW_ROAD_RULE, actualFloors));
+	            LOG.warn("Narrow road violation (Rear Yard): Allowed = {}, Actual = {}", allowedFloors, actualFloors);
+	            return false; 
+	        }
+
+	        Boolean specialValid = applySpecialRuleForNarrowRoadRear(
+	                pl, building, block.getName(), level, plot,
+	                mostRestrictiveOccupancy, rearYardResult, 
+	                buildingHeight, errors, roadWidth, plotArea);
+
+	        if (specialValid != null) {
+	            LOG.info("Special narrow road rule (Rear Yard) applied. Result = {}", specialValid);
+	            return specialValid; 
+	        } else {
+	            LOG.info("Special narrow road rule (Rear Yard) not applicable, continuing with normal checks.");
+	        }
+	    }
+	    
+	    
 	    if (A.equalsIgnoreCase(occupancyCode) || H.equalsIgnoreCase(occupancyCode)) {
 	        // Residential
 	        valid = processRearYardResidential(
@@ -1238,6 +1271,90 @@ public class RearYardService_Assam extends RearYardService {
 	            pl, block, level, min, mean, mostRestrictiveOccupancy, rearYardResult,
 	            subRule, rule, minVal, meanVal, buildingHeight, valid, occupancyName);
 	    }
+
+	    return valid;
+	}
+
+	/**
+	 * Applies special rules for rear yard requirements when the building 
+	 * is located on a narrow road (specifically when road width = 2.40m).
+	 * <p>
+	 * The rule is applicable only when the plot area falls within specific ranges:
+	 * <ul>
+	 *   <li><b>53.56 – 93.73 sqm:</b> Minimum rear setback of 1.80m (mean also 1.80m).</li>
+	 *   <li><b>93.73 – 134 sqm:</b> Minimum rear setback of 2.00m, and side setback of 1.00m.</li>
+	 * </ul>
+	 * </p>
+	 * <p>
+	 * The method validates the provided rear yard distances against the 
+	 * permissible values, updates the {@link RearYardResult}, and logs 
+	 * errors if requirements are not met.
+	 * </p>
+	 *
+	 * @param pl The {@link Plan} object containing the overall plan details.
+	 * @param building The {@link Building} under consideration.
+	 * @param blockName The name of the block being validated.
+	 * @param level The floor/level of the block being checked.
+	 * @param plot The {@link Plot} object containing plot details such as area.
+	 * @param mostRestrictiveOccupancy The most restrictive {@link OccupancyTypeHelper} 
+	 *                                 applicable to this block.
+	 * @param rearYardResult The {@link RearYardResult} object holding measured rear yard values.
+	 * @param buildingHeight The height of the building.
+	 * @param errors A {@link HashMap} to collect error messages keyed by block name.
+	 * @param roadWidth The width of the road adjacent to the plot (special rules apply when 2.40m).
+	 * @param plotArea The total area of the plot.
+	 * @return {@code true} if the rear yard meets the special setback rules, 
+	 *         {@code false} otherwise.
+	 */
+	
+	
+	private Boolean applySpecialRuleForNarrowRoadRear(
+	        Plan pl, Building building, String blockName, Integer level, Plot plot,
+	        OccupancyTypeHelper mostRestrictiveOccupancy, RearYardResult rearYardResult,
+	        BigDecimal buildingHeight, HashMap<String, String> errors,
+	        BigDecimal roadWidth, BigDecimal plotArea) {
+
+	    LOG.info("Applying special narrow road rule (Road Width = 2.40m) for Rear Yard → Block: {}, Level: {}, Plot Area: {}", 
+	             blockName, level, plotArea);
+
+	    BigDecimal minVal = BigDecimal.ZERO;  
+	    BigDecimal meanVal = BigDecimal.ZERO;  
+	    String subRule = "";
+	    String rule = REAR_YARD_DESC;
+
+	    if (plotArea.compareTo(BigDecimal.valueOf(53.56)) >= 0 
+	            && plotArea.compareTo(BigDecimal.valueOf(93.73)) <= 0) {
+
+	        minVal = BigDecimal.valueOf(1.80);  
+	        meanVal = BigDecimal.valueOf(1.80); 
+	        subRule = "Rear setback";
+	        LOG.info("Rear Yard → Matched Plot Area 53.56 - 93.73 sqm → {}", subRule);
+
+	    } else if (plotArea.compareTo(BigDecimal.valueOf(93.73)) > 0 
+	            && plotArea.compareTo(BigDecimal.valueOf(134)) <= 0) {
+
+	        minVal = BigDecimal.valueOf(2.00);  
+	        meanVal = BigDecimal.valueOf(1.00); 
+	        subRule = "Rear setback";
+	        LOG.info("Rear Yard → Matched Plot Area 93.73 - 134 sqm → {}", subRule);
+	    }
+
+	    BigDecimal providedMin = rearYardResult.actualMinDistance;   
+	    BigDecimal providedMean = rearYardResult.actualMeanDistance;
+
+	    Boolean valid = (providedMin != null && providedMin.compareTo(minVal) >= 0);
+
+	    compareRearYardResult(blockName, providedMin, providedMean,
+	            mostRestrictiveOccupancy, rearYardResult, valid,
+	            subRule, rule, minVal, meanVal, level);
+
+	    if (!valid) {
+	        errors.put(blockName + "_RearYard", 
+	            "Rear setback must be at least " + minVal + " m (provided " + providedMin + " m)");
+	    }
+
+	    LOG.info("Rear Yard special rule applied → ProvidedMin: {}, RequiredMin: {}, Status: {}", 
+	             providedMin, minVal, valid);
 
 	    return valid;
 	}

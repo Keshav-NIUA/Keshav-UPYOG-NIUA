@@ -13,8 +13,36 @@ public class ParkingRequirement extends MdmsFeatureRule {
 
     @JsonProperty("permissibleCar")
     private BigDecimal permissibleCar;
+    
+    @JsonProperty("permissibleCarOpen")
+    private BigDecimal permissibleCarOpen;
+    
+    @JsonProperty("permissibleCarStilt")
+    private BigDecimal permissibleCarStilt;
+    
+    @JsonProperty("permissibleCarBasement")
+    private BigDecimal permissibleCarBasement;
 
-    @JsonProperty("permissibleTwoWheeler")
+    public BigDecimal getPermissibleCarOpen() {
+		return permissibleCarOpen;
+	}
+	public void setPermissibleCarOpen(BigDecimal permissibleCarOpen) {
+		this.permissibleCarOpen = permissibleCarOpen;
+	}
+	public BigDecimal getPermissibleCarStilt() {
+		return permissibleCarStilt;
+	}
+	public void setPermissibleCarStilt(BigDecimal permissibleCarStilt) {
+		this.permissibleCarStilt = permissibleCarStilt;
+	}
+	public BigDecimal getPermissibleCarBasement() {
+		return permissibleCarBasement;
+	}
+	public void setPermissibleCarBasement(BigDecimal permissibleCarBasement) {
+		this.permissibleCarBasement = permissibleCarBasement;
+	}
+
+	@JsonProperty("permissibleTwoWheeler")
     private BigDecimal permissibleTwoWheeler;
 
     @JsonProperty("permissibleVisitor")
@@ -215,20 +243,21 @@ public class ParkingRequirement extends MdmsFeatureRule {
     @Override
 	public String toString() {
 		return "ParkingRequirement [noOfParking=" + noOfParking + ", perArea=" + perArea + ", permissibleCar="
-				+ permissibleCar + ", permissibleTwoWheeler=" + permissibleTwoWheeler + ", permissibleVisitor="
-				+ permissibleVisitor + ", perAreaCar=" + perAreaCar + ", perAreaTwoWheeler=" + perAreaTwoWheeler
-				+ ", perAreaVisitor=" + perAreaVisitor + ", perAreaHotelWithoutBanquetCar="
-				+ perAreaHotelWithoutBanquetCar + ", perRoomHotelWithoutBanquetCar=" + perRoomHotelWithoutBanquetCar
-				+ ", perAreaHotelBanquetCar=" + perAreaHotelBanquetCar + ", perRoomHotelBanquetCar="
-				+ perRoomHotelBanquetCar + ", perRoomHotelsCar=" + perRoomHotelsCar + ", perAreaCommercialBusinessCar="
-				+ perAreaCommercialBusinessCar + ", perAreaCommercialShopsCar=" + perAreaCommercialShopsCar
-				+ ", perAreaInstitutionalPSPCar=" + perAreaInstitutionalPSPCar + ", perAreaInstitutionalMedicalCar="
-				+ perAreaInstitutionalMedicalCar + ", perBedInstitutionalMedicalCar=" + perBedInstitutionalMedicalCar
-				+ ", perAreaEducationalNurseryCar=" + perAreaEducationalNurseryCar + ", perAreaEducationalSchoolsCar="
-				+ perAreaEducationalSchoolsCar + ", perSeatAssemblyCinemaCar=" + perSeatAssemblyCinemaCar
-				+ ", perPlotAreaAssemblyCommunityCar=" + perPlotAreaAssemblyCommunityCar
-				+ ", perSeatAssemblyStadiumCar=" + perSeatAssemblyStadiumCar + ", perAreaIndustrialCar="
-				+ perAreaIndustrialCar + ", perAreaWholesaleCar=" + perAreaWholesaleCar
+				+ permissibleCar + ", permissibleCarOpen=" + permissibleCarOpen + ", permissibleCarStilt="
+				+ permissibleCarStilt + ", permissibleCarBasement=" + permissibleCarBasement
+				+ ", permissibleTwoWheeler=" + permissibleTwoWheeler + ", permissibleVisitor=" + permissibleVisitor
+				+ ", perAreaCar=" + perAreaCar + ", perAreaTwoWheeler=" + perAreaTwoWheeler + ", perAreaVisitor="
+				+ perAreaVisitor + ", perAreaHotelWithoutBanquetCar=" + perAreaHotelWithoutBanquetCar
+				+ ", perRoomHotelWithoutBanquetCar=" + perRoomHotelWithoutBanquetCar + ", perAreaHotelBanquetCar="
+				+ perAreaHotelBanquetCar + ", perRoomHotelBanquetCar=" + perRoomHotelBanquetCar + ", perRoomHotelsCar="
+				+ perRoomHotelsCar + ", perAreaCommercialBusinessCar=" + perAreaCommercialBusinessCar
+				+ ", perAreaCommercialShopsCar=" + perAreaCommercialShopsCar + ", perAreaInstitutionalPSPCar="
+				+ perAreaInstitutionalPSPCar + ", perAreaInstitutionalMedicalCar=" + perAreaInstitutionalMedicalCar
+				+ ", perBedInstitutionalMedicalCar=" + perBedInstitutionalMedicalCar + ", perAreaEducationalNurseryCar="
+				+ perAreaEducationalNurseryCar + ", perAreaEducationalSchoolsCar=" + perAreaEducationalSchoolsCar
+				+ ", perSeatAssemblyCinemaCar=" + perSeatAssemblyCinemaCar + ", perPlotAreaAssemblyCommunityCar="
+				+ perPlotAreaAssemblyCommunityCar + ", perSeatAssemblyStadiumCar=" + perSeatAssemblyStadiumCar
+				+ ", perAreaIndustrialCar=" + perAreaIndustrialCar + ", perAreaWholesaleCar=" + perAreaWholesaleCar
 				+ ", perAreaIndustrialTwoWheeler=" + perAreaIndustrialTwoWheeler
 				+ ", perAreaInstitutionalPSPTwoWheeler=" + perAreaInstitutionalPSPTwoWheeler
 				+ ", perBedInstitutionalMedicalTwoWheeler=" + perBedInstitutionalMedicalTwoWheeler
