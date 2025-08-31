@@ -56,6 +56,7 @@ import { WTModule, WTLinks, WTComponents } from "@nudmcdgnpm/upyog-ui-module-wt"
 import { VENDORComponents, VENDORLinks, VENDORModule } from "@nudmcdgnpm/upyog-ui-module-vendor";
 import { PGRAIComponents, PGRAILinks, PGRAIModule } from "@nudmcdgnpm/upyog-ui-module-pgrai";
 // import { initReportsComponents } from "@upyog/digit-ui-module-reports";
+import { initOBPSV2Components } from "@upyog/digit-ui-module-obps";
 
 initLibraries();
 
@@ -93,7 +94,8 @@ const enabledModules = [
   "VENDOR",
   "MT",
   "PGRAI",
-  "TP"
+  "TP",
+  "OBPSV2"
 ];
 window.Digit.ComponentRegistryService.setupRegistry({
   ...paymentConfigs,
@@ -145,6 +147,7 @@ initHRMSComponents();
 initTLComponents();
 initReceiptsComponents();
 initOBPSComponents();
+initOBPSV2Components();
 initNOCComponents();
 initEngagementComponents();
 initWSComponents();

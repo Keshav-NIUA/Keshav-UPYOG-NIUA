@@ -45,6 +45,7 @@ import {ADSModule,ADSLinks,ADSComponents} from "@upyog/upyog-ui-module-ads";
 import { WTModule, WTLinks, WTComponents } from "@nudmcdgnpm/upyog-ui-module-wt";
 import { VENDORComponents, VENDORLinks, VENDORModule } from "@nudmcdgnpm/upyog-ui-module-vendor";
 import { PGRAIComponents, PGRAILinks, PGRAIModule } from "@nudmcdgnpm/upyog-ui-module-pgrai";
+import { initOBPSV2Components } from "@upyog/digit-ui-module-obpsv2";
 // import * as comps from "@upyog/digit-ui-react-components";
 
 // import { subFormRegistry } from "@upyog/digit-ui-libraries";
@@ -87,7 +88,8 @@ const enabledModules = [
   "VENDOR",
   "MT",
   "PGRAI",
-  "TP"
+  "TP",
+  "OBPSV2"
 ];
 
 const initTokens = (stateCode) => {
@@ -171,6 +173,7 @@ const initDigitUI = () => {
   initReceiptsComponents();
   // initReportsComponents();
   initOBPSComponents();
+  initOBPSV2Components();
   initEngagementComponents();
   initNOCComponents();
   initWSComponents();

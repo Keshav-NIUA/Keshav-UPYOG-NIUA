@@ -11,7 +11,8 @@
     "packages/modules/common",
     "packages/modules/vendor",
     "packages/modules/chb",
-    "packages/modules/obps"
+    "packages/modules/obps",
+    "packages/modules/obpsv2"
   ],
   "license": "MIT",
   "private": true,
@@ -54,6 +55,7 @@
     "dev:wt": "cd packages/modules/wt && yarn start",
     "dev:vendor": "cd packages/modules/vendor && yarn start",
     "dev:pgrai": "cd packages/modules/pgrai && yarn start",
+    "dev:obpsv2": "cd packages/modules/obpsv2 && yarn start",
     "build": "run-p build:**",
     "build:libraries": "cd packages/libraries && yarn build",
     "buildD:asset": "cd packages/modules/asset && yarn build",
@@ -83,6 +85,7 @@
     "buildD:wt": "cd packages/modules/wt && yarn build",
     "build:vendor": "cd packages/modules/vendor && yarn build",
     "buildD:pgrai": "cd packages/modules/pgrai && yarn build",
+    "build:obpsv2": "cd packages/modules/obpsv2 && yarn build",
     "buildR:reports": "cd packages/modules/reports && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh"
   },
