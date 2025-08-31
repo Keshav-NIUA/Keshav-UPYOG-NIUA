@@ -160,6 +160,7 @@ public class PlanInformation implements Serializable {
 
     //true/false.Does the building have earthquake resistance measures
     private transient Boolean isEarthquakeResistant = false;
+    private transient BigDecimal noOfAccessRoads = BigDecimal.ZERO;
 
     private BigDecimal twoWheelerSlowCharger = BigDecimal.ZERO;
     
@@ -968,5 +969,13 @@ public class PlanInformation implements Serializable {
 
     public void setEarthquakeResistant(Boolean earthquakeResistant) {
         isEarthquakeResistant = earthquakeResistant;
+    }
+
+    public BigDecimal getNoOfAccessRoads() {
+        return noOfAccessRoads;
+    }
+
+    public void setNoOfAccessRoads(BigDecimal noOfAccessRoads) {
+        this.noOfAccessRoads = noOfAccessRoads;
     }
 }

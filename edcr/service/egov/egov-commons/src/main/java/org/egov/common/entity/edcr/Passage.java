@@ -14,6 +14,8 @@ public class Passage extends Measurement {
 
 	private List<BigDecimal> passageStairHeight = new ArrayList<>();
 
+    private BigDecimal passageLength = BigDecimal.ZERO;
+
 	public List<BigDecimal> getPassageStairDimensions() {
 		return passageStairDimensions;
 	}
@@ -60,4 +62,11 @@ public class Passage extends Measurement {
 		this.passageStairHeight = passageStairHeight;
 	}
 
+    public BigDecimal getPassageLength() {
+        return passageLength;
+    }
+
+    public void setPassageLength(BigDecimal passageLength) {
+        this.passageLength = passageLength;
+    }
 }

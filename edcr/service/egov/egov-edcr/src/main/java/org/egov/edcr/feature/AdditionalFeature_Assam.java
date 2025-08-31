@@ -382,45 +382,50 @@ public class AdditionalFeature_Assam extends FeatureProcess {
             String ruleNo = RULE_4_4_4;
             LOG.info("Validating height of building for block: " + block.getNumber());
 
-            ScrutinyDetail scrutinyDetail = getNewScrutinyDetailBuildingHeight(
-                    BLOCK + block.getNumber() + UNDERSCORE + HEIGHT_OF_BUILDING);
-            String requiredBuildingHeight = StringUtils.EMPTY;
+            if(block.getBuilding().getBuildingHeight().compareTo(BigDecimal.valueOf(12)) >= 0 || block.getBuilding().getFloors().size() >= 4)
+            {
+                ScrutinyDetail scrutinyDetail = getNewScrutinyDetailBuildingHeight(
+                        BLOCK + block.getNumber() + UNDERSCORE + HEIGHT_OF_BUILDING);
+                String requiredBuildingHeight = StringUtils.EMPTY;
 
-            // Get building height excluding exempted components
-            BigDecimal buildingHeight = calculateEffectiveBuildingHeight(pl, block);
-
-            // Calculate maximum permitted height based on road width and setback
-            List<SetBack> setBacks = block.getSetBacks();
-            BigDecimal maxPermittedHeight = calculateMaxPermittedHeight(roadWidth, setBacks);
-
-            // Check if building requires lift (≥12m or ≥4 floors)
-            if (buildingHeight.compareTo(BigDecimal.valueOf(12)) >= 0 ||
-//                    block.getBuilding().getFloorsAboveGround().compareTo(BigDecimal.valueOf(4)) >= 0) {
-                    block.getBuilding().getFloors().size() >= 4) {
+                // Check if building requires lift (≥12m or ≥4 floors)
                 validateLiftRequirement(pl, errors, block);
-            }
 
-            // Validate height against maximum permitted
-            isAccepted = buildingHeight.compareTo(maxPermittedHeight) <= 0;
-            requiredBuildingHeight = LESS_THAN_EQUAL_TO + maxPermittedHeight.toString();
+                // Get building height excluding exempted components
+                BigDecimal buildingHeight = calculateEffectiveBuildingHeight(pl, block);
 
-            if (errors.isEmpty() && StringUtils.isNotBlank(requiredBuildingHeight)) {
-                ReportScrutinyDetail detail = new ReportScrutinyDetail();
-                detail.setRuleNo(ruleNo);
-                detail.setDescription(HEIGHT_BUILDING);
-                detail.setPermissible(requiredBuildingHeight);
-                detail.setProvided(String.valueOf(buildingHeight));
-                detail.setStatus(isAccepted ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal());
-                detail.setRemarks((buildingHeight.compareTo(BigDecimal.valueOf(15.8)) > 0
-                        ? CLEARANCE_FROM_STATE_SERVICE_MANDATORY + "\n"
-                        : EMPTY_STRING)
-                        + (pl.getPlanInformation().getNocNearDefenceAerodomes().equals(YES)
-                        ? HEIGHT_SUBJECT_TO_CIVIL_AVIATION_AUTHORITY
-                        : EMPTY_STRING)
-                );
+                // Calculate maximum permitted height based on road width and setback
+                List<SetBack> setBacks = block.getSetBacks();
+                BigDecimal maxPermittedHeight = calculateMaxPermittedHeight(roadWidth, setBacks);
 
-                Map<String, String> details = mapReportDetails(detail);
-                addScrutinyDetailtoPlan(scrutinyDetail, pl, details);
+                // Check if building requires lift (≥12m or ≥4 floors)
+//                if (buildingHeight.compareTo(BigDecimal.valueOf(12)) >= 0 ||
+//                        block.getBuilding().getFloors().size() >= 4) {
+//                    validateLiftRequirement(pl, errors, block);
+//                }
+
+                // Validate height against maximum permitted
+                isAccepted = buildingHeight.compareTo(maxPermittedHeight) <= 0;
+                requiredBuildingHeight = LESS_THAN_EQUAL_TO + maxPermittedHeight.toString();
+
+                if (errors.isEmpty() && StringUtils.isNotBlank(requiredBuildingHeight)) {
+                    ReportScrutinyDetail detail = new ReportScrutinyDetail();
+                    detail.setRuleNo(ruleNo);
+                    detail.setDescription(HEIGHT_BUILDING);
+                    detail.setPermissible(requiredBuildingHeight);
+                    detail.setProvided(String.valueOf(buildingHeight));
+                    detail.setStatus(isAccepted ? Result.Accepted.getResultVal() : Result.Not_Accepted.getResultVal());
+                    detail.setRemarks((buildingHeight.compareTo(BigDecimal.valueOf(15.8)) > 0
+                            ? CLEARANCE_FROM_STATE_SERVICE_MANDATORY + "\n"
+                            : EMPTY_STRING)
+                            + (pl.getPlanInformation().getNocNearDefenceAerodomes().equals(YES)
+                            ? HEIGHT_SUBJECT_TO_CIVIL_AVIATION_AUTHORITY
+                            : EMPTY_STRING)
+                    );
+
+                    Map<String, String> details = mapReportDetails(detail);
+                    addScrutinyDetailtoPlan(scrutinyDetail, pl, details);
+                }
             }
         }
     }
@@ -489,6 +494,7 @@ public class AdditionalFeature_Assam extends FeatureProcess {
                     rwhHeight = rwh.getHeight();
             }
 
+            // To be discussed about how to get the roof area
             BigDecimal maxRoofArea = BigDecimal.ZERO;
             for(Floor floor: block.getBuilding().getFloors()){
                 for(RoofArea roofArea: floor.getRoofAreas()){
