@@ -120,11 +120,10 @@ public class BPA {
   /** JSON object to capture custom fields. */
   private Object additionalDetails;
 
-  public BPA addDocument(Document documentsItem) {
+  public void addDocument(Document documentsItem) {
     if (this.documents == null) {
       this.documents = new ArrayList<>();
     }
     this.documents.add(documentsItem);
-    return this;
   }
 }

@@ -60,9 +60,9 @@ serviceMaps:
         - query: >
             INSERT INTO public.ug_bpa_rtp_details
             (id, buildingplan_id, rtp_category, rtp_id, rtp_name,
-             assignment_status, assignment_date, expiry_date,
+             assignment_status, assignment_date, changed_date,remarks,
              created_by, created_time, last_modified_by, last_modified_time, additional_details)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::JSONB);
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?::JSONB);
           basePath: BPA.rtpDetails
           jsonMaps:
             - jsonPath: $.BPA.rtpDetails.id
@@ -72,7 +72,8 @@ serviceMaps:
             - jsonPath: $.BPA.rtpDetails.rtpName
             - jsonPath: $.BPA.rtpDetails.assignmentStatus
             - jsonPath: $.BPA.rtpDetails.assignmentDate
-            - jsonPath: $.BPA.rtpDetails.expiryDate
+            - jsonPath: $.BPA.rtpDetails.changedDate
+            - jsonPath: $.BPA.rtpDetails.remarks
             - jsonPath: $.BPA.auditDetails.createdBy
             - jsonPath: $.BPA.auditDetails.createdTime
             - jsonPath: $.BPA.auditDetails.lastModifiedBy

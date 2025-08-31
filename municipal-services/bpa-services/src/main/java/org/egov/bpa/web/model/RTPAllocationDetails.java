@@ -24,7 +24,7 @@ public class RTPAllocationDetails {
     private String applicationId;
     private Long assignmentDate;
     private String assignmentStatus;
-    private Long expiryDate;
+    private Long changedDate;
     private String remarks;
     private AuditDetails auditDetails;
     /** JSON object to capture custom fields. */

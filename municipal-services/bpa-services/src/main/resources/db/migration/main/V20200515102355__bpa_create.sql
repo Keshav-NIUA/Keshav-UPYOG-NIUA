@@ -161,7 +161,9 @@ create table ug_bpa_rtp_details (
     assignment_status VARCHAR(64),
 
     assignment_date BIGINT,
-    expiry_date BIGINT,
+    changed_date BIGINT,
+
+    remarks VARCHAR(1000),
 
     /** Audit Fields */
     created_by VARCHAR(64),
