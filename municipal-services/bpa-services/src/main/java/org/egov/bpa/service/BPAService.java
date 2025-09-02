@@ -139,7 +139,8 @@ public class BPAService {
         //TODO : Need to remove after getting land info
       //  landService.addLandInfoToBPA(bpaRequest);
         enrichmentService.enrichBPACreateRequest(bpaRequest, mdmsData, null);
-   //     wfIntegrator.callWorkFlow(bpaRequest);
+
+        wfIntegrator.callWorkFlow(bpaRequest);
 
         //nocService.createNocRequest(bpaRequest, mdmsData);
 
@@ -233,9 +234,9 @@ public class BPAService {
                    /* for (int i = 0; i < bpas.size(); i++) {
                         landIds.add(bpas.get(i).getLandId());
                     }*/
+
                     /*
                      * Filter landids that are not null*/
-
                     landIds = bpas.stream().map(BPA::getLandId).
                             filter(Objects::nonNull).distinct().
                             collect(java.util.stream.Collectors.toCollection(ArrayList::new));
@@ -250,6 +251,18 @@ public class BPAService {
                     ArrayList<LandInfo> landInfos = landService.searchLandInfoToBPA(requestInfo, landcriteria);
 
                     this.populateLandToBPA(bpas, landInfos, requestInfo);
+
+                    bpas.stream().filter(bpa -> bpa.getLandId() ==null).forEach(
+                            bpa -> {
+                                Map<String, String> additionalDetails = bpa.getAdditionalDetails() != null ? (Map<String, String>) bpa.getAdditionalDetails()
+                                        : new HashMap<String, String>();
+                                LandInfo landInfo = null;
+                                if (additionalDetails.get(BPAConstants.LAND_INFO_KEY) != null){
+                                    log.info("land info found in additional details for bpa : {}", bpa.getApplicationNo());
+                                    landInfo = BPAUtil.getLandInfoFromString(additionalDetails.get(BPAConstants.LAND_INFO_KEY));
+                                }
+                                bpa.setLandInfo(landInfo);
+                            });
                 }
             }
         }

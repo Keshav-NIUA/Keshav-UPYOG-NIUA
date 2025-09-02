@@ -115,19 +115,18 @@ public class EnrichmentService {
 			bpaRequest.getBPA().setBusinessService(BPAConstants.BPA_OC_MODULE_CODE);
 			bpaRequest.getBPA().setLandId(values.get("landId"));
 		}*/
-		if (bpaRequest.getBPA().getLandInfo() != null) {
-			bpaRequest.getBPA().setLandId(bpaRequest.getBPA().getLandInfo().getId());
-		}
+		String businessService = workflowService.determineBusinessService(bpaRequest.getBPA().getAreaMappingDetail());
+		bpaRequest.getBPA().setBusinessService(businessService);
+
         if (bpaRequest.getBPA().getRiskType() != null) {
             additionalDetails.put(BPAConstants.RISKTYPE, bpaRequest.getBPA().getRiskType());
         }
-
 		bpaRequest.getBPA().getRtpDetails().setId(UUID.randomUUID().toString());
 
 		//Land info is incomplete here so adding landinfo to additional details
 		//Will send request to land service once data is complete
 		String landInfo = bpaUtil.getLandInfoAsString(bpaRequest.getBPA().getLandInfo());
-		additionalDetails.put("landInfo", landInfo);
+		additionalDetails.put(BPAConstants.LAND_INFO_KEY, landInfo);
 
 //		 BPA Documents
 		if (!CollectionUtils.isEmpty(bpaRequest.getBPA().getDocuments()))

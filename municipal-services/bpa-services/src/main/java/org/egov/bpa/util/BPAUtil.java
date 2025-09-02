@@ -13,12 +13,10 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 import org.egov.bpa.config.BPAConfiguration;
 import org.egov.bpa.repository.ServiceRequestRepository;
-import org.egov.bpa.web.model.AuditDetails;
-import org.egov.bpa.web.model.BPA;
-import org.egov.bpa.web.model.BPARequest;
-import org.egov.bpa.web.model.RequestInfoWrapper;
+import org.egov.bpa.web.model.*;
 import org.egov.bpa.web.model.landInfo.LandInfo;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MasterDetail;
@@ -40,6 +38,7 @@ import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import com.jayway.jsonpath.spi.mapper.MappingProvider;
 
 @Component
+@Slf4j
 public class BPAUtil {
 
 	private BPAConfiguration config;
@@ -291,4 +290,18 @@ public class BPAUtil {
 			throw new CustomException("JSON_CONVERSION_ERROR", "Failed to convert LandInfo to JSON string: " + e.getMessage());
 		}
 	}
+
+	public static LandInfo getLandInfoFromString(String landInfoString) {
+		if (landInfoString == null || landInfoString.trim().isEmpty()) {
+			return null;
+		}
+		try {
+			Gson gson = new Gson();
+			return gson.fromJson(landInfoString, LandInfo.class);
+		} catch (Exception e) {
+			throw new CustomException("JSON_PARSING_ERROR",
+					"Failed to convert JSON string to LandInfo: " + e.getMessage());
+		}
+	}
+
 }

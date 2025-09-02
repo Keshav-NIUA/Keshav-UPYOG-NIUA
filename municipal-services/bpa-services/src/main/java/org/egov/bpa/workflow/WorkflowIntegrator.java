@@ -70,12 +70,10 @@ public class WorkflowIntegrator {
 
 	/**
 	 * Method to integrate with workflow
-	 *
 	 * takes the bpa request as parameter constructs the work-flow request
-	 *
 	 * and sets the resultant status from wf-response back to bpa object
 	 *
-	 * @param bpaRequest
+	 * @param bpaRequest The BPARequest containing the BPA and RequestInfo
 	 */
 	public void callWorkFlow(BPARequest bpaRequest) {
 		String wfTenantId = bpaRequest.getBPA().getTenantId();
@@ -106,28 +104,32 @@ public class WorkflowIntegrator {
 		workFlowRequest.put(WORKFLOWREQUESTARRAYKEY, array);
 		String response = null;
 		try {
-			response = rest.postForObject(config.getWfHost().concat(config.getWfTransitionPath()), workFlowRequest,
-					String.class);
-		} catch (HttpClientErrorException e) {
+			response = rest.postForObject(
+					config.getWfHost().concat(config.getWfTransitionPath()),
+					workFlowRequest,
+					String.class
+			);
 
-			/*
-			 * extracting message from client error exception
-			 */
-			DocumentContext responseContext = JsonPath.parse(e.getResponseBodyAsString());
-			List<Object> errros = null;
+		} catch (HttpClientErrorException e) {
+			String responseBody = e.getResponseBodyAsString();
+			log.error("Workflow API returned HttpClientErrorException: {}", responseBody, e);
+
 			try {
-				errros = responseContext.read("$.Errors");
+				DocumentContext responseContext = JsonPath.parse(responseBody);
+				List<Object> errors = responseContext.read("$.Errors");
+				throw new CustomException(BPAErrorConstants.EG_WF_ERROR, errors.toString());
 			} catch (PathNotFoundException pnfe) {
-				log.error(BPAErrorConstants.EG_BPA_WF_ERROR_KEY_NOT_FOUND,
-						" Unable to read the json path in error object : " + pnfe.getMessage());
-				throw new CustomException(BPAErrorConstants.EG_BPA_WF_ERROR_KEY_NOT_FOUND,
-						" Unable to read the json path in error object : " + pnfe.getMessage());
+				String msg = "Unable to read the json path in error object: " + pnfe.getMessage();
+				log.error(BPAErrorConstants.EG_BPA_WF_ERROR_KEY_NOT_FOUND + " - {}", msg, pnfe);
+				throw new CustomException(BPAErrorConstants.EG_BPA_WF_ERROR_KEY_NOT_FOUND, msg);
 			}
-			throw new CustomException(BPAErrorConstants.EG_WF_ERROR, errros.toString());
+
 		} catch (Exception e) {
-			throw new CustomException(BPAErrorConstants.EG_WF_ERROR,
-					" Exception occured while integrating with workflow : " + e.getMessage());
+			String msg = "Exception occurred while integrating with workflow: " + e.getMessage();
+			log.error(BPAErrorConstants.EG_WF_ERROR + " - {}", msg, e);
+			throw new CustomException(BPAErrorConstants.EG_WF_ERROR, msg);
 		}
+
 
 		/*
 		 * on success result from work-flow read the data and set the status

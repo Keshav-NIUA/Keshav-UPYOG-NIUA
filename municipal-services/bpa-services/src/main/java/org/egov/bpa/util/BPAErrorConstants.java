@@ -5,9 +5,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class BPAErrorConstants {
 
-
-	// MDMS
-
 	public static final String BPA_UNKNOWN_QUESTIONS = "BPA UNKNOWN QUESTIONS";
 	
 	public static final String BPA_UNKNOWN_QUESTIONS_MSG = "Please answer the required questions";
@@ -79,11 +76,13 @@ public class BPAErrorConstants {
 	public static final String EG_WF_ERROR = "EG WF ERROR";
 
 	public static final String NOC_SERVICE_EXCEPTION = "NOC_SERVICE_EXCEPTION";
-	
-        public static final String INVALID_SERVICE_TYPE = "INVALID SERVICE TYPE";
-        
-        public static final String INVALID_APPLN_TYPE = "INVALID APPLICATION TYPE";
-        
-        public static final String DUPLICATE_OC = "DUPLICATE OC";
+
+	public static final String INVALID_SERVICE_TYPE = "INVALID SERVICE TYPE";
+
+	public static final String INVALID_APPLN_TYPE = "INVALID APPLICATION TYPE";
+
+	public static final String DUPLICATE_OC = "DUPLICATE OC";
+
+	public static final String WORKFLOW_NOT_CONFIGURED = "WORKFLOW NOT CONFIGURED";
 
 }

@@ -117,6 +117,8 @@ public class BPA {
 
   private RTPAllocationDetails rtpDetails;
 
+  private AreaMappingDetail areaMappingDetail;
+
   /** JSON object to capture custom fields. */
   private Object additionalDetails;
 
