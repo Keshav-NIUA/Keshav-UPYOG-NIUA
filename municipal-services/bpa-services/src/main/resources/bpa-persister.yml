@@ -10,7 +10,7 @@ serviceMaps:
 
         # Insert main building plan data
         - query: >
-            INSERT INTO public.eg_bpa_buildingplans
+            INSERT INTO public.ug_bpa_buildingplans
             (id, application_no, tenant_id, edcr_number, status, application_date,
              approval_no, approval_date, business_service, account_id, application_type,
              risk_type, land_id, created_by, created_time, last_modified_by, last_modified_time, additional_details)
@@ -40,7 +40,7 @@ serviceMaps:
 
         # Insert documents associated with BPA
         - query: >
-            INSERT INTO public.eg_bpa_documents
+            INSERT INTO public.ug_bpa_documents
             (id, document_type, filestore_id, document_uid, buildingplan_id,
              created_by, created_time, last_modified_by, last_modified_time, additional_details)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?::JSONB);
@@ -61,7 +61,7 @@ serviceMaps:
 
         # Insert RTP allocation details
         - query: >
-            INSERT INTO public.ug_bpa_rtp_details
+            INSERT INTO public.ug_bpa_rtp_detail
             (id, buildingplan_id, rtp_category, rtp_id, rtp_name,
              assignment_status, assignment_date, changed_date, remarks,
              created_by, created_time, last_modified_by, last_modified_time, additional_details)
@@ -87,8 +87,8 @@ serviceMaps:
 
         # Insert Area Mapping details (new addition)
         - query: >
-            INSERT INTO public.area_mapping_detail
-            (id, application_id, district, planning_area, planning_permit_authority,
+            INSERT INTO public.ug_bpa_area_mapping_detail
+            (id, buildingplan_id, district, planning_area, planning_permit_authority,
              building_permit_authority, revenue_village, mouza, ward,
              created_by, last_modified_by, created_time, last_modified_time)
             VALUES (?, ?, ?, ?, ?::planning_permit_authority_enum, ?::building_permit_authority_enum, ?, ?, ?, ?, ?, ?, ?);
@@ -115,7 +115,7 @@ serviceMaps:
       queryMaps:
 
         - query: >
-            UPDATE public.eg_bpa_buildingplans
+            UPDATE public.ug_bpa_buildingplans
             SET status = ?, approval_no = ?, approval_date = ?, risk_type = ?,
                 last_modified_by = ?, last_modified_time = ?, additional_details = ?::JSONB
             WHERE id = ?;
@@ -132,17 +132,17 @@ serviceMaps:
               dbType: JSONB
             - jsonPath: $.BPA.id
 
-        - query: INSERT INTO public.eg_bpa_buildingplans_audit SELECT * FROM public.eg_bpa_buildingplans WHERE id = ?;
+        - query: INSERT INTO public.ug_bpa_buildingplans_audit SELECT * FROM ug_bpa_buildingplans WHERE id = ?;
           basePath: BPA
           jsonMaps:
             - jsonPath: $.BPA.id
 
-        - query: INSERT INTO public.eg_bpa_documents_audit SELECT * FROM public.eg_bpa_documents WHERE id = ?;
+        - query: INSERT INTO public.ug_bpa_documents_audit SELECT * FROM ug_bpa_documents WHERE id = ?;
           basePath: BPA.documents.*
           jsonMaps:
             - jsonPath: $.BPA.documents.*.id
 
-        - query: INSERT INTO public.ug_bpa_rtp_details_audit SELECT * FROM public.ug_bpa_rtp_details WHERE id = ?;
-          basePath: BPA.rtpDetails.*
+        - query: INSERT INTO public.ug_bpa_rtp_detail_audit SELECT * FROM public.ug_bpa_rtp_detail WHERE id = ?;
+          basePath: BPA.rtpDetails
           jsonMaps:
-            - jsonPath: $.BPA.rtpDetails.*.id
+            - jsonPath: $.BPA.rtpDetails.id

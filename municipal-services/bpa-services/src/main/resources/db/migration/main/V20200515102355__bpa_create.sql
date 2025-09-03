@@ -1,7 +1,7 @@
 -- ========================================================
 -- Building Plan Table
 -- ========================================================
-CREATE TABLE IF NOT EXISTS eg_bpa_buildingplans (
+CREATE TABLE IF NOT EXISTS ug_bpa_buildingplans (
     /** Unique Identifier(UUID) of the BPA application for internal reference. */
     id VARCHAR(64) PRIMARY KEY,
 
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS eg_bpa_buildingplans (
 -- ========================================================
 -- Building Plan Audit Table
 -- ========================================================
-CREATE TABLE IF NOT EXISTS eg_bpa_buildingplans_audit (
+CREATE TABLE IF NOT EXISTS ug_bpa_buildingplans_audit (
     /** Unique Identifier(UUID) of the BPA application for internal reference. */
     id VARCHAR(64) NOT NULL,
 
@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS eg_bpa_buildingplans_audit (
 -- ========================================================
 -- BPA Document Table
 -- ========================================================
-CREATE TABLE IF NOT EXISTS eg_bpa_documents (
+CREATE TABLE IF NOT EXISTS ug_bpa_documents (
     /** Unique Identifier(UUID) for the document. */
     id VARCHAR(64) PRIMARY KEY,
 
@@ -132,8 +132,8 @@ CREATE TABLE IF NOT EXISTS eg_bpa_documents (
     /** Additional details JSON for extensibility */
     additional_details JSONB,
 
-    CONSTRAINT fk_eg_bpa_documents_buildingplans FOREIGN KEY (buildingplan_id)
-        REFERENCES eg_bpa_buildingplans (id)
+    CONSTRAINT fk_ug_bpa_documents_buildingplans FOREIGN KEY (buildingplan_id)
+        REFERENCES ug_bpa_buildingplans (id)
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
@@ -142,8 +142,8 @@ CREATE TABLE IF NOT EXISTS eg_bpa_documents (
 -- BPA RTP details
 -- ========================================================
 
-create table IF NOT EXISTS ug_bpa_rtp_details (
-    /** Unique Identifier(UUID) for the RTP details. */
+create table IF NOT EXISTS ug_bpa_rtp_detail (
+    /** Unique Identifier(UUID) for the RTP detail. */
     id VARCHAR(64) PRIMARY KEY,
 
     /** Foreign key reference to the building plan. */
@@ -174,15 +174,15 @@ create table IF NOT EXISTS ug_bpa_rtp_details (
     /** Additional details JSON for extensibility */
     additional_details JSONB,
 
-    CONSTRAINT fk_ug_bpa_rtp_details_buildingplans FOREIGN KEY (buildingplan_id)
-        REFERENCES eg_bpa_buildingplans (id)
+    CONSTRAINT fk_ug_bpa_rtp_detail_buildingplans FOREIGN KEY (buildingplan_id)
+        REFERENCES ug_bpa_buildingplans (id)
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
 
 
-CREATE TABLE IF NOT EXISTS ug_bpa_rtp_details_audit (
-    /** Unique Identifier(UUID) for the RTP details. */
+CREATE TABLE IF NOT EXISTS ug_bpa_rtp_detail_audit (
+    /** Unique Identifier(UUID) for the RTP detail. */
     id VARCHAR(64) NOT NULL,
 
     /** Foreign key reference to the building plan. */
@@ -229,9 +229,9 @@ BEGIN
 END$$;
 
 -- Now create the table
-CREATE TABLE IF NOT EXISTS area_mapping_detail (
+CREATE TABLE IF NOT EXISTS ug_bpa_area_mapping_detail (
     id                        VARCHAR(64) PRIMARY KEY,
-    application_id            VARCHAR(64) NOT NULL,
+    buildingplan_id            VARCHAR(64) NOT NULL,
     district                  VARCHAR(128),
     planning_area             VARCHAR(128),
     planning_permit_authority planning_permit_authority_enum NOT NULL,
@@ -244,5 +244,9 @@ CREATE TABLE IF NOT EXISTS area_mapping_detail (
     created_by          VARCHAR(64),
     last_modified_by    VARCHAR(64),
     created_time        BIGINT, -- assignment_date
-    last_modified_time  BIGINT
+    last_modified_time  BIGINT,
+    CONSTRAINT fk_ug_bpa_area_mapping_detail_buildingplans FOREIGN KEY (buildingplan_id)
+            REFERENCES ug_bpa_buildingplans (id)
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
 );
