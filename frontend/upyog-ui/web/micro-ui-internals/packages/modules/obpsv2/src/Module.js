@@ -6,6 +6,8 @@ import CitizenApp from "./pages/citizen";
 import Create from "./pages/citizen/Create";
 import ApplicantDetails  from "./pageComponents/ApplicantDetails";
 import AddressDetails from "./pageComponents/AddressDetails";
+import LandDetails from "./pageComponents/LandDetails";
+import CheckPage from "./pages/citizen/Create/CheckPage";
 // import EmployeeApp from "./pages/employee";
 
 const OBPSModule = ({ stateCode, userType, tenants }) => {
@@ -54,7 +56,9 @@ const componentsToRegister = {
   OBPSLinks,
   ApplicantDetails,
   AddressDetails,
+  LandDetails,
   BPACreate: Create,
+  CheckPage
 }
 
 export const initOBPSV2Components = () => {

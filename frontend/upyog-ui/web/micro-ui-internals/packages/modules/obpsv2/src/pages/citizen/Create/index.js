@@ -63,13 +63,13 @@ const Create = () => {
   };
 
 
-  if(params && Object.keys(params).length>0 && window.location.href.includes("/searchhall") && sessionStorage.getItem("docReqScreenByBack") !== "true")
+  if(params && Object.keys(params).length>0 && window.location.href.includes("/info") && sessionStorage.getItem("docReqScreenByBack") !== "true")
     {
       clearParams();
       queryClient.invalidateQueries("OBPSV2_CREATE");
     }
 
-  const create = async () => {
+  const acknowledgement = async () => {
     history.push(`${match.path}/acknowledgement`);
   };
 
@@ -92,6 +92,8 @@ const Create = () => {
   });
   
   config.indexRoute = "applicant-details";
+
+  const CheckPage = Digit?.ComponentRegistryService?.getComponent("CheckPage");
   
   return (
     <Switch>
@@ -105,10 +107,10 @@ const Create = () => {
         );
       })}
 
-      {/* <Route path={`${match.path}/check`}>
-        <CheckPage onSubmit={chbcreate} value={params} />
+      <Route path={`${match.path}/check`}>
+        <CheckPage onSubmit={acknowledgement} value={params} />
       </Route>
-      <Route path={`${match.path}/acknowledgement`}>
+      {/* <Route path={`${match.path}/acknowledgement`}>
         <CHBAcknowledgement data={params} onSuccess={onSuccess} />
       </Route> */}
       <Route>

@@ -16,6 +16,12 @@ const AddressDetails = ({ t, config, onSelect, formData }) => {
     { code: "STATE3", name: "State 3" }
   ];
 
+  const districtOptions = [
+    { code: "DISTRICT1", name: "District 1" },
+    { code: "DISTRICT2", name: "District 2" },
+    { code: "DISTRICT3", name: "District 3" }
+  ];
+
   // Permanent Address Fields
   const [permanentHouseNo, setPermanentHouseNo] = useState(formData?.address?.permanent?.houseNo || "");
   const [permanentAddressLine1, setPermanentAddressLine1] = useState(formData?.address?.permanent?.addressLine1 || "");
@@ -46,16 +52,6 @@ const AddressDetails = ({ t, config, onSelect, formData }) => {
       setCorrespondenceState(permanentState);
       setCorrespondencePincode(permanentPincode);
     }
-    else {
-        // Clear correspondence address when unchecked
-        setCorrespondenceHouseNo("");
-        setCorrespondenceAddressLine1("");
-        setCorrespondenceAddressLine2("");
-        setCorrespondenceDistrict("");
-        setCorrespondenceCity("");
-        setCorrespondenceState("");
-        setCorrespondencePincode("");
-      }
   }, [sameAsPermanent, permanentHouseNo, permanentAddressLine1, permanentAddressLine2, permanentDistrict, permanentCity, permanentState, permanentPincode]);
 
   // Go next
@@ -155,15 +151,13 @@ const AddressDetails = ({ t, config, onSelect, formData }) => {
 
           {/* District */}
           <CardLabel>{`${t("BPA_DISTRICT")}`} <span className="check-page-link-button">*</span></CardLabel>
-          <TextInput
+          <Dropdown
             t={t}
-            type="text"
-            name="permanentDistrict"
-            placeholder={t("BPA_ENTER_LANDMARK")}
-            value={permanentDistrict}
-            onChange={(e) => setPermanentDistrict(e.target.value)}
-            ValidationRequired={true}
-            {...{ pattern: "^[a-zA-Z\\s]+$", title: t("BPA_DISTRICT_ERROR_MESSAGE") }}
+            option={districtOptions}
+            selected={permanentDistrict}
+            optionKey="name"
+            select={(value) => setPermanentDistrict(value)}
+            placeholder={t("BPA_SELECT_DISTRICT")}
           />
 
           {/* City/Village */}
@@ -258,16 +252,14 @@ const AddressDetails = ({ t, config, onSelect, formData }) => {
 
             {/* District */}
             <CardLabel>{`${t("BPA_DISTRICT")}`} <span className="check-page-link-button">*</span></CardLabel>
-            <TextInput
+            <Dropdown
               t={t}
-              type="text"
-              name="correspondenceDistrict"
-              placeholder={t("BPA_ENTER_LANDMARK")}
-              value={correspondenceDistrict}
-              onChange={(e) => setCorrespondenceDistrict(e.target.value)}
-              ValidationRequired={true}
-              disabled={sameAsPermanent}
-              {...{ pattern: "^[a-zA-Z\\s]+$", title: t("BPA_DISTRICT_ERROR_MESSAGE") }}
+              option={districtOptions}
+              selected={correspondenceDistrict}
+              optionKey="name"
+              select={(value) => setCorrespondenceDistrict(value)}
+              placeholder={t("BPA_SELECT_DISTRICT")}
+              disable={sameAsPermanent}
             />
 
             {/* City/Village */}
