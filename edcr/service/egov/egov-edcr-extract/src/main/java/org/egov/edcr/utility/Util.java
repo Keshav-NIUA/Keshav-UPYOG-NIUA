@@ -914,6 +914,45 @@ public class Util {
 
     }
 
+    /**
+     * Extracts and formats location plan properties from the specified DXF document.
+     * <p>
+     * This method retrieves the layer corresponding to the location plan,
+     * parses all multi-line text (MTEXT) entities present on that layer,
+     * and extracts key-value pairs from the text content. Each line of text
+     * expected to be in the format "key = value" is split and trimmed before
+     * being added to the resulting map.
+     * </p>
+     *
+     * @param doc The {@link DXFDocument} from which to extract the location plan properties.
+     * @return A map containing formatted location plan properties as key-value pairs.
+     */
+    public Map<String, String> getFormatedLocationPlanProperties(DXFDocument doc) {
+
+        DXFLayer planInfoLayer = doc.getDXFLayer(layerNames.getLayerName("LAYER_NAME_LOCATION_PLAN"));
+        List texts = planInfoLayer.getDXFEntities(DXFConstants.ENTITY_TYPE_MTEXT);
+        DXFText text = null;
+        Map<String, String> planInfoProperties = new HashMap<>();
+
+        if (texts != null && texts.size() > 0) {
+            Iterator iterator = texts.iterator();
+            while (iterator.hasNext()) {
+                text = (DXFText) iterator.next();
+                Iterator styledParagraphIterator = text.getTextDocument().getStyledParagraphIterator();
+                while (styledParagraphIterator.hasNext()) {
+                    StyledTextParagraph styledTextParagraph = (StyledTextParagraph) styledParagraphIterator.next();
+                    String[] data = styledTextParagraph.getText().split("=");
+                    System.out.println(styledTextParagraph.getText());
+                    if (data.length == 2)
+                        planInfoProperties.put(data[0].trim(), data[1].trim());
+                }
+
+            }
+        }
+        return planInfoProperties;
+    }
+
+    
     public static List<DXFLWPolyline> getPolyLinesByLayerAndColor(DXFDocument dxfDocument, String layerName,
             int colorCode, PlanDetail pl) {
 

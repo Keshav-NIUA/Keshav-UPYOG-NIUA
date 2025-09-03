@@ -90,7 +90,7 @@ public class Far extends FeatureProcess {
 	BigDecimal totalBuiltUpArea = BigDecimal.ZERO;
 	BigDecimal totalFloorArea = BigDecimal.ZERO;
 	BigDecimal totalCarpetArea = BigDecimal.ZERO;
-	BigDecimal totalExistingCarpetArea = BigDecimal.ZERO;// Use an appropriate																// upper bound
+	BigDecimal totalExistingCarpetArea = BigDecimal.ZERO;
 
 	@Autowired
 	MDMSCacheManager cache;

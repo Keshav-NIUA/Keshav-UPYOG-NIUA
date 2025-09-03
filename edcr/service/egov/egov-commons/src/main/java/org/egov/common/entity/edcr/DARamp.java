@@ -94,6 +94,7 @@ package org.egov.common.entity.edcr;
  */
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DARamp extends Measurement {
@@ -104,9 +105,19 @@ public class DARamp extends Measurement {
 
     private BigDecimal slope;
     
+    private List<RampLanding> landings = new ArrayList<>();
+    
     private transient List<Measurement> measurements;
 
-    public Integer getNumber() {
+    public List<RampLanding> getLandings() {
+		return landings;
+	}
+
+	public void setLandings(List<RampLanding> landings) {
+		this.landings = landings;
+	}
+
+	public Integer getNumber() {
         return number;
     }
 

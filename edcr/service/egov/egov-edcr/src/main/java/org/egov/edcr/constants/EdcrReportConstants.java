@@ -43,6 +43,7 @@ public class EdcrReportConstants {
     public static final int PLOTAREA_500 = 500;
     public static final int PLOTAREA_1000 = 1000;
     public static final int PLOTAREA_3000 = 3000;
+    public static final int YWOTHOUSANEE = 3000;
     public static final String OLD = "OLD";
     public static final String NEW = "NEW";
     public static final String OLD_AREA_ERROR = "road width old area";
@@ -52,6 +53,7 @@ public class EdcrReportConstants {
     public static final String NO_OF_FLOORS = "Maximum number of floors allowed";
     public static final String HEIGHT_BUILDING = "Maximum height of building allowed";
     public static final String MIN_PLINTH_HEIGHT_DESC = "Minimum plinth height";
+    public static final String MIN_FURTHEST_CORNER_DESC = "Minimum Furthest Corner";
     public static final String MAX_BSMNT_CELLAR = "Number of basement/cellar allowed";
     public static final String MIN_INT_COURT_YARD = "0.15";
     public static final String MIN_INT_COURT_YARD_DESC = "Minimum interior courtyard";
@@ -153,6 +155,8 @@ public class EdcrReportConstants {
     public static final BigDecimal POINTFIVE = BigDecimal.valueOf(0.5);
     public static final BigDecimal POINTSIX = BigDecimal.valueOf(0.6);
     public static final BigDecimal POINTSEVEN = BigDecimal.valueOf(0.7);
+    public static final BigDecimal POINTTWOFIVE = BigDecimal.valueOf(0.25);
+    
     public static final BigDecimal ONE = BigDecimal.valueOf(1);
     public static final BigDecimal ONE_POINTTWO = BigDecimal.valueOf(1.2);
     public static final BigDecimal ONE_POINTEIGHT = BigDecimal.valueOf(1.8);
@@ -160,11 +164,14 @@ public class EdcrReportConstants {
     public static final BigDecimal THREE_POINTTWOFIVE = BigDecimal.valueOf(3.25);
     public static final BigDecimal THREE_POINTFIVE = BigDecimal.valueOf(3.5);
     public static final BigDecimal FIFTEEN = BigDecimal.valueOf(15);
+    public static final BigDecimal ONEBIGHA = new BigDecimal("1338");
+    public static final BigDecimal TWOTHOUSAND = new BigDecimal("2000");
 
     public static final BigDecimal ROAD_WIDTH_EIGHTEEN_POINTTHREE = BigDecimal.valueOf(18.3);
     public static final BigDecimal ROAD_WIDTH_TWENTYFOUR_POINTFOUR = BigDecimal.valueOf(24.4);
     public static final BigDecimal ROAD_WIDTH_TWENTYSEVEN_POINTFOUR = BigDecimal.valueOf(27.4);
     public static final BigDecimal ROAD_WIDTH_THIRTY_POINTFIVE = BigDecimal.valueOf(30.5);
+    public static final BigDecimal POINTTHREE = BigDecimal.valueOf(0.3);
     
     // Constants for Residential FAR Added by Bimal Kumar
     public static final BigDecimal FAR_UP_TO_2_00 = new BigDecimal("2.00");
@@ -209,6 +216,20 @@ public class EdcrReportConstants {
     public static final String RULE_37_TWO_H = "37-2-H";
     public static final String RULE_37_TWO_I = "37-2-I";
     public static final String RULE_4_4_4_I = "4.4.4";
+    public static final String RULE117 = "117 (C)";
+    public static final String RULE117B = "117 (B)";
+    public static final String RESIDENTIAL_SLOW_CHARGER = "Residential Slow Charger";
+    public static final String FOUR_WHEELER_FAST_CHARGER = "Four Wheeler Fast Charger";
+    public static final String FOUR_WHEELER_SLOW_CHARGER = "Four Wheeler Slow Charger";
+    public static final String THREE_WHEELER_FAST_CHARGER = "Three Wheeler Fast Charger";
+    public static final String THREE_WHEELER_SLOW_CHARGER = "Three Wheeler Slow Charger";
+    public static final String TWO_WHEELER_FAST_CHARGER = "Two Wheeler Fast Charger";
+    public static final String TWO_WHEELER_SLOW_CHARGER = "Two Wheeler Slow Charger";
+    public static final String PASSENGER_VEHICLE_FAST_CHARGER = "Passenger Vehicle Fast Charger";
+    public static final String PASSENGER_VEHICLE_SLOW_CHARGER = "Passenger Vehicle Slow Charger";
+    public static final String BASIS_EXPLANATION_FORMAT = 
+            "Total Vehicles = %s, Vehicles/Charger = %s, Calculated Requirement = %s";
+
 
     public static final String MINIMUMLABEL = "Minimum distance ";
 
@@ -269,8 +290,11 @@ public class EdcrReportConstants {
     public static final String RULE9 = "4.4.4 (ix)";
     public static final String SUBRULE_41_II_B = "41-ii-b";
 
+    public static final String ERR_NARROW_ROAD_RULE =
+            "On 2.40m road width, only G+1 floors are permitted. Found: %s";
     public static final String RULE_AC_DESC = "Minimum height of ac room";
     public static final String RULE_REGULAR_DESC = "Minimum height of regular room";
+    public static final String RULE_ROOM_DESC = "NonInhabitational room";
     public static final String SUBRULE_41_II_B_AREA_DESC = "Total area of rooms";
     public static final String SUBRULE_41_II_B_TOTAL_WIDTH = "Minimum Width of room";
 
@@ -297,7 +321,8 @@ public class EdcrReportConstants {
 
 
     public static String subRuleDoor = "6.4.1";
-    public static String subRuleDesc = "Minimum Area and Width of Room";
+  
+    public static String RULE_REGULAR_ROOM = "Minimum Area and Width of Room";
     public static String subRuleDesc1 = "Room Wise Ventialtion";
     public static String subRuleDesc5 = "Door Ventialtion";
     public static String subRuleDesc2 = "Room Wise Window Area";
@@ -362,6 +387,35 @@ public class EdcrReportConstants {
     public static final String SUB_RULE_55_7_DESC = "Maximum allowed area of balcony";
     public static final String SUB_RULE_55_7 = "55-7";
     public static final String HALL_NUMBER = "Hall Number";
+   
+    public static final String EV_PARKING_DESCRIPTION = "EV parking";
+
+    // Report output messages
+    public static final String EV_PARKING_REQUIRED = "Minimum 20% EV parking required";
+    public static final String EV_PARKING_PROVIDED = "%.2f%% EV parking provided";
+    public static final String FIELD_RIVER = "river";
+    public static final String DESC_RIVER = "Distance from River";
+    
+
+    public static final String FIELD_BHARALU_MORA_BONDAJAN = "bharaluMoraBondajan";
+    public static final String DESC_BHARALU_MORA_BONDAJAN = "Distance from Bharalu/Mora/Bondajan";
+   
+
+    public static final String FIELD_OTHER_CHANNELS = "otherChannels";
+    public static final String DESC_OTHER_CHANNELS = "Distance from Other Channels";
+  
+
+    public static final String FIELD_NOTIFIED_WATER_BODIES = "notifiedWaterBodies";
+    public static final String DESC_NOTIFIED_WATER_BODIES = "Distance from Notified Water Bodies";
+    public static final String RULE_NOTIFIED_WATER_BODIES = "44(ix)";
+
+    public static final String FIELD_OTHER_NOTIFIED_WATER_BODIES = "otherNotifiedWaterBodies";
+    public static final String DESC_OTHER_NOTIFIED_WATER_BODIES = "Distance from Other Notified Water Bodies";
+   
+
+    public static final String FIELD_OTHER_LARGE_PONDS_WATER_BODIES = "otherLargePondsWaterBodies";
+    public static final String DESC_OTHER_LARGE_PONDS_WATER_BODIES = "Distance from Other Large Ponds/Water Bodies";
+   
 
     // Constants for rule identifiers and descriptions
     public static final String RULE_20 = "20";
@@ -444,6 +498,14 @@ public class EdcrReportConstants {
 
     public static final String SUBRULE_59_10 = "59-10";
     public static final String SUBRULE_59_10_DESC = "Minimum distance from canopy to plot boundary";
+    public static final String SECTION_CAR_PARKING = "26";
+    public static final String SECTION_TWO_WHEELER_PARKING = "26";
+    public static final String SECTION_VISITOR_PARKING = "26";
+
+    public static final String LABEL_CAR_PARKING = "Car Parking ";
+    public static final String LABEL_TWO_WHEELER_PARKING = "Two-Wheeler Parking ";
+    public static final String LABEL_VISITOR_PARKING = "Visitor Parking ";
+
 
     public static final String RULE_32 = "4.4.4 (XI)";
     public static final String PLANTATION_TREECOVER_DESCRIPTION = "Plantation tree cover";
@@ -464,6 +526,64 @@ public class EdcrReportConstants {
     public static final String SUBRULE_50_C_4_B_DESCRIPTION = "Maximum slope of ramp %s";
     public static final String SUBRULE_50_C_4_B_SLOPE_DESCRIPTION = "Maximum Slope of DA Ramp %s";
     public static final String SUBRULE_50_C_4_B_SLOPE_MAN_DESC = "Slope of DA Ramp";
+    public static final String RULE_RAMP_LENGTH = "RAMP_LENGTH_RULE";
+    public static final String RULE_RAMP_WIDTH  = "RAMP_WIDTH_RULE";
+
+    public static final String DESC_RAMP_LENGTH = "Ramp length shall not exceed 9.0 m between landings";
+    public static final String DESC_RAMP_WIDTH  = "Ramp width shall be minimum 1.5 m with handrails on either side";
+
+    public static final String PERMISSIBLE_LENGTH = "≤ 9.0 m";
+    public static final String PERMISSIBLE_WIDTH  = "≥ 1.5 m";
+
+    public static final String NOT_DEFINED = "Not Defined";
+
+    // Rule Numbers
+    public static final String RULE_91_D = "91 d";
+  
+    public static final String RULE_46_6C_DESCRIPTION = "Mechanised Split Level Basement Parking height";
+    public static final String EWS = "EWS";
+    public static final String LIG = "LIG";
+    public static final String TYPE_ULB = "ULB"; 
+    public static final String TYPE_OUTSIDE_ULB = "OUTSIDE_ULB"; 
+
+
+    // Water Closet Ventilation Descriptions
+    public static final String WC_VENTILATION_AREA_DESC = "Water Closet - Ventilation Area";
+    public static final String WC_VENTILATION_WIDTH_DESC = "Water Closet - Ventilation Width";
+    public static final String WC_VENTILATION_MISSING_DESC = "Water closet - Ventilation Area"; // (For 'Not defined' case, can merge with AREA_DESC if you prefer)
+
+    // Messages/Format Strings
+    public static final String WC_VENTILATION_NOT_DEFINED = "Not defined";
+    public static final String WC_VENTILATION_NOT_AVAILABLE = "Water closet measurements not available on floor ";
+    public static final String WC_VENTILATION_AREA_UNIT = " sqm";
+    public static final String WC_VENTILATION_WIDTH_UNIT = " m";
+    public static final String WC_VENTILATION_AT_FLOOR = " at floor ";
+ // Rule Numbers
+    public static final String RULE_VENT_01 = "Clause 55";
+    public static final String SUB_RULE_SIDE_YARD = "83b (ii)";
+    public static final String SUB_RULE_NURSING = "83 (i) B";
+
+    // Laundry Room Ventilation Descriptions
+    public static final String LAUNDRY_VENTILATION_DESC = "Laundry Room Ventilation";
+    public static final String LAUNDRY_VENTILATION_OPENING_DESC_PREFIX = "Laundry Room Ventilation Opening ≥ "; // add dynamic '%' + suffix in code
+
+    // Common Room Ventilation Descriptions
+    public static final String COMMON_ROOM_VENTILATION_DESC = "Common Room Ventilation";
+    public static final String COMMON_ROOM_VENTILATION_OPENING_DESC_PREFIX = "Common Room Ventilation Opening ≥ "; // add dynamic '%' + suffix in code
+
+    // Messages / format strings
+    public static final String VENTILATION_DEFINED_PERCENT_MSG = "Defined % of Laundry Room Floor Area"; // similarly for common room can be reused or create another
+    public static final String COMMON_ROOM_VENTILATION_DEFINED_PERCENT_MSG = "Defined % of Common Room Floor Area";
+
+    public static final String VENTILATION_NOT_PROVIDED_AT_FLOOR = "Not provided at floor "; // append floor number in code
+
+    public static final String AREA_UNIT_SQM = " sqm";
+    public static final String PERCENTAGE_SUFFIX = "% of ";
+    public static final String PARENTHESIS_START = " (";
+    public static final String PARENTHESIS_END = ")";
+  
+
+
 
     public static final BigDecimal REARYARDMINIMUM_DISTANCE_0_9 = BigDecimal.valueOf(0.9);
     public static final BigDecimal REARYARDMINIMUM_DISTANCE_1_2 = BigDecimal.valueOf(1.2);
@@ -481,6 +601,9 @@ public class EdcrReportConstants {
     public static final BigDecimal REARYARDMINIMUM_DISTANCE_8 = BigDecimal.valueOf(8);
     public static final BigDecimal REARYARDMINIMUM_DISTANCE_9 = BigDecimal.valueOf(9);
     public static final BigDecimal REARYARDMINIMUM_DISTANCE_12 = BigDecimal.valueOf(12);
+    public static final BigDecimal BUILDING_HEIGHT_SCHOOL = BigDecimal.valueOf(15.6);
+    public static final BigDecimal BUILDING_HEIGHT = BigDecimal.valueOf(12.6);
+   
 
     public static final String BSMT_REAR_YARD_DESC = "Basement Rear Setback";
     public static final String SUB_RULE_50_DESC = "Recreational space for Residential Apartment ";
@@ -573,6 +696,7 @@ public class EdcrReportConstants {
     public static final BigDecimal SIDEVALUE_EIGHT = BigDecimal.valueOf(8);
     public static final BigDecimal SIDEVALUE_NINE = BigDecimal.valueOf(9);
     public static final BigDecimal SIDEVALUE_TEN = BigDecimal.valueOf(10);
+    public static final BigDecimal PLOT_AREA_802_SQM = BigDecimal.valueOf(802);
 
     public static final String SIDENUMBER = "Side Number";
     public static final String RULE_35_T9 = "35 Table-9";

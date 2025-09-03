@@ -86,6 +86,8 @@ public class DxfFileConstants {
     public static final int YARD_DIMENSION_COLOR = 2;
     public static final int STAIR_FLIGHT_LENGTH_COLOR = 1;
     public static final int STAIR_FLIGHT_WIDTH_COLOR = 2;
+    public static final int RAMP_FLIGHT_LENGTH_COLOR = 1;
+    public static final int RAMP_FLIGHT_WIDTH_COLOR = 2;
     public static final int INDEX_COLOR_ONE = 1;
     public static final int INDEX_COLOR_TWO = 2;
 
@@ -165,7 +167,29 @@ public class DxfFileConstants {
     public static final String PLOT_NO = "PLOT_NO";
     public static final String ZONE = "ZONE";
     public static final String SUB_ZONE = "SUB_ZONE";
-  //  public static final String KHATA_NO = "KHATA_NO";
+    public static final String DAGNO = "DAG_NO";
+    public static final String DEVELOPMENTZONE = "DEVELOPMENT_ZONE";
+    public static final String WARDNO = "WARD_NO";
+    public static final String TWO_WHEELER_SLOW_CHARGER = "TWO_WHEELER_SLOW_CHARGER";
+    public static final String TWO_WHEELER_FAST_CHARGER = "TWO_WHEELER_FAST_CHARGER";
+    public static final String FOUR_WHEELER_SLOW_CHARGER = "FOUR_WHEELER_SLOW_CHARGER";
+    public static final String FOUR_WHEELER_FAST_CHARGER = "FOUR_WHEELER_FAST_CHARGER";
+    public static final String THREE_WHEELER_SLOW_CHARGER = "THREE_WHEELER_SLOW_CHARGER";
+    public static final String THREE_WHEELER_FAST_CHARGER = "THREE_WHEELER_FAST_CHARGER";
+    public static final String PV_SLOW_CHARGER = "PV_SLOW_CHARGER";
+    public static final String PV_FAST_CHARGER = "PV_FAST_CHARGER";
+    public static final String NO_OF_FOUR_WHEELER_FOR_SLOW_CHARGER = "NO_OF_FOUR_WHEELER_FOR_SLOW_CHARGER";
+    public static final String NO_OF_THREE_WHEELER_FOR_SLOW_CHARGER = "NO_OF_THREE_WHEELER_FOR_SLOW_CHARGER";
+    public static final String NO_OF_TWO_WHEELER_FOR_SLOW_CHARGER = "NO_OF_TWO_WHEELER_FOR_SLOW_CHARGER";
+    public static final String NO_OF_PV_FOR_SLOW_CHARGER = "NO_OF_PV_FOR_SLOW_CHARGER";
+    public static final String NO_OF_FOUR_WHEELER_FOR_FAST_CHARGER = "NO_OF_FOUR_WHEELER_FOR_FAST_CHARGER";
+    public static final String NO_OF_THREE_WHEELER_FOR_FAST_CHARGER = "NO_OF_THREE_WHEELER_FOR_FAST_CHARGER";
+    public static final String NO_OF_WHEELER_RESIDENTIAL = "NO_OF_WHEELER_RESIDENTIAL";
+    public static final String CHARGER_RESIDENTIAL = "CHARGER_RESIDENTIAL";
+    public static final String EARTHQUAKE_RESISTANT = "isEarthquakeResistant";
+    public static final String SECOND_ROAD_WIDTH = "SECOND_ROAD_WIDTH";
+
+    //  public static final String KHATA_NO = "KHATA_NO";
     public static final String KHASRA_NO = "KHASRA_NO";
     public static final String KHATUNI_NO = "KHATUNI_NO";
     public static final String DISTRICT = "DISTRICT";
@@ -197,5 +221,15 @@ public class DxfFileConstants {
     public static final int DIMENSION_WIDTH_COLOR_CODE = 2;
     public static final int DIMENSION_HEIGHT_COLOR_CODE = 3;
     public static final int PORTICO_EXTERIOR_WALL_COLOR = 4;
+    
+    public static final String RIVER = "RIVER";
+    public static final String BHARALU_MORA_BONDAJAN = "BHARALU_MORA_BONDAJAN";
+    public static final String OTHER_CHANNELS = "OTHER_CHANNELS";
+    public static final String MINOR_DRAINS = "MINOR_DRAINS";
+    public static final String NOTIFIED_WATERBODIES = "NOTIFIED_WATERBODIES";
+    public static final String OTHER_NOTIFIED_WATERBODIES = "OTHER_NOTIFIED_WATERBODIES";
+    public static final String OTHER_LARGE_PONDS_WATERBODIES = "OTHER_LARGE_PONDS_WATERBODIES";
+    public static final String SMALL_PONDS = "SMALL_PONDS";
+    
 
 }

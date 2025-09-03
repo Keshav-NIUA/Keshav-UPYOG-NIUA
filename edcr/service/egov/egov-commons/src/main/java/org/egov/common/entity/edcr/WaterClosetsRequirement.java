@@ -14,6 +14,16 @@ public class WaterClosetsRequirement extends MdmsFeatureRule {
     private BigDecimal waterClosetsArea;
     @JsonProperty("waterClosetsWidth")
     private BigDecimal waterClosetsWidth;
+	@JsonProperty("waterClosetsVentilationWidth")
+    private BigDecimal waterClosetsVentilationWidth;
+
+    public BigDecimal getWaterClosetsVentilationWidth() {
+		return waterClosetsVentilationWidth;
+	}
+	public void setWaterClosetsVentilationWidth(BigDecimal waterClosetsVentilationWidth) {
+		this.waterClosetsVentilationWidth = waterClosetsVentilationWidth;
+	}
+	
 	public BigDecimal getWaterClosetsVentilationArea() {
 		return waterClosetsVentilationArea;
 	}

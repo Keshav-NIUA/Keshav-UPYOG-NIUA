@@ -37,16 +37,29 @@ public class BathRoomExtract extends FeatureExtract {
         List<Measurement> roomMeasurements;
         List<BigDecimal> roomHeights;
         List<RoomHeight> roomHeightsList;
+        List<DXFLWPolyline> ventilationBS;
+        List<Measurement> ventilationMeasurements;
         RoomHeight height;
         for (Block block : planDetail.getBlocks())
             if (block.getBuilding() != null && block.getBuilding().getFloors() != null)
                 for (Floor f : block.getBuilding().getFloors()) {
                     String layerName = String.format(layerNames.getLayerName("LAYER_NAME_BLK_FLR_BATH"), block.getNumber(),
                             f.getNumber());
+                    String ventilationLayerName = layerNames.getLayerName("LAYER_NAME_BLOCK_NAME_PREFIX") + block.getNumber() + "_"
+                    		+ layerNames.getLayerName("LAYER_NAME_FLOOR_NAME_PREFIX") + f.getNumber() + "_"
+                    		+ layerNames.getLayerName("LAYER_NAME_BATH_STORE_VENTILATION");
+                    ventilationBS = Util.getPolyLinesByLayer(planDetail.getDoc(), ventilationLayerName);
+                       if (ventilationBS != null) {
+                        ventilationMeasurements = ventilationBS.stream()
+                            .map(flightPolyLine -> new MeasurementDetail(flightPolyLine, true)).collect(Collectors.toList());
+                       } else {
+                          ventilationMeasurements = new ArrayList<>();
+                       }
                     rooms = Util.getPolyLinesByLayer(planDetail.getDoc(), layerName);
                     roomMeasurements = rooms.stream()
                             .map(flightPolyLine -> new MeasurementDetail(flightPolyLine, true)).collect(Collectors.toList());
                     f.setBathRoom(new Room());
+                    f.getBathRoom().setBathVentilation(ventilationMeasurements);
                     f.getBathRoom().setRooms(roomMeasurements);
                     roomHeights = Util.getListOfDimensionValueByLayer(planDetail,
                             String.format(layerNames.getLayerName("LAYER_NAME_BLK_FLR_BATH_HT"), block.getNumber(),

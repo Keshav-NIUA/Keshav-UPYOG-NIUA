@@ -51,24 +51,40 @@ import static org.egov.edcr.constants.CommonFeatureConstants.*;
 import static org.egov.edcr.constants.CommonKeyConstants.BLOCK;
 import static org.egov.edcr.constants.DxfFileConstants.A;
 import static org.egov.edcr.constants.DxfFileConstants.A_AF;
+import static org.egov.edcr.constants.DxfFileConstants.A_PO;
 import static org.egov.edcr.constants.DxfFileConstants.A_R;
 import static org.egov.edcr.constants.DxfFileConstants.B;
+import static org.egov.edcr.constants.DxfFileConstants.B2;
+import static org.egov.edcr.constants.DxfFileConstants.C;
 import static org.egov.edcr.constants.DxfFileConstants.D;
+import static org.egov.edcr.constants.DxfFileConstants.D_AW;
+import static org.egov.edcr.constants.DxfFileConstants.D_M;
+import static org.egov.edcr.constants.DxfFileConstants.E;
+import static org.egov.edcr.constants.DxfFileConstants.E_CLG;
+import static org.egov.edcr.constants.DxfFileConstants.E_NS;
+import static org.egov.edcr.constants.DxfFileConstants.E_PS;
 import static org.egov.edcr.constants.DxfFileConstants.F;
 import static org.egov.edcr.constants.DxfFileConstants.G;
+import static org.egov.edcr.constants.DxfFileConstants.G_LI;
+import static org.egov.edcr.constants.DxfFileConstants.G_PHI;
+import static org.egov.edcr.constants.DxfFileConstants.G_SI;
+import static org.egov.edcr.constants.DxfFileConstants.H;
 import static org.egov.edcr.constants.DxfFileConstants.I;
 import static org.egov.edcr.constants.DxfFileConstants.A_PO;
 import static org.egov.edcr.constants.EdcrReportConstants.*;
 import static org.egov.edcr.service.FeatureUtil.addScrutinyDetailtoPlan;
 import static org.egov.edcr.service.FeatureUtil.mapReportDetails;
 import static org.egov.edcr.utility.DcrConstants.OBJECTNOTDEFINED;
+import static org.egov.edcr.utility.DcrConstants.REAR_YARD_DESC;
 import static org.egov.edcr.utility.DcrConstants.SIDE_YARD1_DESC;
 import static org.egov.edcr.utility.DcrConstants.SIDE_YARD2_DESC;
 import static org.egov.edcr.utility.DcrConstants.SIDE_YARD_DESC;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -180,6 +196,8 @@ public class SideYardService extends GeneralRule {
                                 pl.getPlot(), minMax[0], minMax[1], occupancy.getTypeHelper(), sideYard1Result, sideYard2Result);
                     }
                 }
+                
+                
 
                 addSideYardResult(pl, errors, sideYard1Result, sideYard2Result);
             }

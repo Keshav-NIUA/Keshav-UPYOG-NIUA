@@ -715,6 +715,132 @@ public class PlanInfoFeatureExtract extends FeatureExtract {
 		if (StringUtils.isNotBlank(subZone))
 			pi.setSubZone(subZone);
 		
+		String dagNo = planInfoProperties.get(DxfFileConstants.DAGNO);
+		if (StringUtils.isNotBlank(dagNo))
+			pi.setDagNo(dagNo);
+		
+		String wardNo = planInfoProperties.get(DxfFileConstants.WARDNO);
+		if (StringUtils.isNotBlank(dagNo))
+			pi.setWardNo(wardNo);
+		
+		String developementZone = planInfoProperties.get(DxfFileConstants.DEVELOPMENTZONE);
+		if (StringUtils.isNotBlank(developementZone))
+			pi.setDevelopementZone(developementZone);
+		
+		
+		String twoWheelerSlowCharger = planInfoProperties.get(DxfFileConstants.TWO_WHEELER_SLOW_CHARGER);
+		if (StringUtils.isNotBlank(twoWheelerSlowCharger)) {
+			twoWheelerSlowCharger = twoWheelerSlowCharger.replaceAll(digitsRegex, "");
+			BigDecimal twoWheelerSlowChargerValue = getNumericValue(twoWheelerSlowCharger, pl, DxfFileConstants.TWO_WHEELER_SLOW_CHARGER);
+			pi.setTwoWheelerSlowCharger(twoWheelerSlowChargerValue);
+		}
+		
+		String twoWheelerFastCharger = planInfoProperties.get(DxfFileConstants.TWO_WHEELER_FAST_CHARGER);
+		if (StringUtils.isNotBlank(twoWheelerFastCharger)) {
+		    twoWheelerFastCharger = twoWheelerFastCharger.replaceAll(digitsRegex, "");
+		    BigDecimal value = getNumericValue(twoWheelerFastCharger, pl, DxfFileConstants.TWO_WHEELER_FAST_CHARGER);
+		    pi.setTwoWheelerFastCharger(value);
+		}
+
+		String fourWheelerSlowCharger = planInfoProperties.get(DxfFileConstants.FOUR_WHEELER_SLOW_CHARGER);
+		if (StringUtils.isNotBlank(fourWheelerSlowCharger)) {
+		    fourWheelerSlowCharger = fourWheelerSlowCharger.replaceAll(digitsRegex, "");
+		    BigDecimal value = getNumericValue(fourWheelerSlowCharger, pl, DxfFileConstants.FOUR_WHEELER_SLOW_CHARGER);
+		    pi.setFourWheelerSlowCharger(value);
+		}
+
+		String fourWheelerFastCharger = planInfoProperties.get(DxfFileConstants.FOUR_WHEELER_FAST_CHARGER);
+		if (StringUtils.isNotBlank(fourWheelerFastCharger)) {
+		    fourWheelerFastCharger = fourWheelerFastCharger.replaceAll(digitsRegex, "");
+		    BigDecimal value = getNumericValue(fourWheelerFastCharger, pl, DxfFileConstants.FOUR_WHEELER_FAST_CHARGER);
+		    pi.setFourWheelerFastCharger(value);
+		}
+
+		String threeWheelerSlowCharger = planInfoProperties.get(DxfFileConstants.THREE_WHEELER_SLOW_CHARGER);
+		if (StringUtils.isNotBlank(threeWheelerSlowCharger)) {
+		    threeWheelerSlowCharger = threeWheelerSlowCharger.replaceAll(digitsRegex, "");
+		    BigDecimal value = getNumericValue(threeWheelerSlowCharger, pl, DxfFileConstants.THREE_WHEELER_SLOW_CHARGER);
+		    pi.setThreeWheelerSlowCharger(value);
+		}
+
+		String threeWheelerFastCharger = planInfoProperties.get(DxfFileConstants.THREE_WHEELER_FAST_CHARGER);
+		if (StringUtils.isNotBlank(threeWheelerFastCharger)) {
+		    threeWheelerFastCharger = threeWheelerFastCharger.replaceAll(digitsRegex, "");
+		    BigDecimal value = getNumericValue(threeWheelerFastCharger, pl, DxfFileConstants.THREE_WHEELER_FAST_CHARGER);
+		    pi.setThreeWheelerFastCharger(value);
+		}
+
+		String PVslowCharger = planInfoProperties.get(DxfFileConstants.PV_SLOW_CHARGER);
+		if (StringUtils.isNotBlank(PVslowCharger)) {
+		    PVslowCharger = PVslowCharger.replaceAll(digitsRegex, "");
+		    BigDecimal value = getNumericValue(PVslowCharger, pl, DxfFileConstants.PV_SLOW_CHARGER);
+		    pi.setPVslowCharger(value);
+		}
+
+		String PVfastCharger = planInfoProperties.get(DxfFileConstants.PV_FAST_CHARGER);
+		if (StringUtils.isNotBlank(PVfastCharger)) {
+		    PVfastCharger = PVfastCharger.replaceAll(digitsRegex, "");
+		    BigDecimal value = getNumericValue(PVfastCharger, pl, DxfFileConstants.PV_FAST_CHARGER);
+		    pi.setPVfastCharger(value);
+		}
+
+		String noOfFourWheelerForSlowCharger = planInfoProperties.get(DxfFileConstants.NO_OF_FOUR_WHEELER_FOR_SLOW_CHARGER);
+		if (StringUtils.isNotBlank(noOfFourWheelerForSlowCharger)) {
+		    noOfFourWheelerForSlowCharger = noOfFourWheelerForSlowCharger.replaceAll(digitsRegex, "");
+		    BigDecimal value = getNumericValue(noOfFourWheelerForSlowCharger, pl, DxfFileConstants.NO_OF_FOUR_WHEELER_FOR_SLOW_CHARGER);
+		    pi.setNoOfFourWheelerForSlowCharger(value);
+		}
+
+		String noOfThreeWheelerForSlowCharger = planInfoProperties.get(DxfFileConstants.NO_OF_THREE_WHEELER_FOR_SLOW_CHARGER);
+		if (StringUtils.isNotBlank(noOfThreeWheelerForSlowCharger)) {
+		    noOfThreeWheelerForSlowCharger = noOfThreeWheelerForSlowCharger.replaceAll(digitsRegex, "");
+		    BigDecimal value = getNumericValue(noOfThreeWheelerForSlowCharger, pl, DxfFileConstants.NO_OF_THREE_WHEELER_FOR_SLOW_CHARGER);
+		    pi.setNoOfThreeWheelerForSlowCharger(value);
+		}
+
+		String noOfTwoWheelerForSlowCharger = planInfoProperties.get(DxfFileConstants.NO_OF_TWO_WHEELER_FOR_SLOW_CHARGER);
+		if (StringUtils.isNotBlank(noOfTwoWheelerForSlowCharger)) {
+		    noOfTwoWheelerForSlowCharger = noOfTwoWheelerForSlowCharger.replaceAll(digitsRegex, "");
+		    BigDecimal value = getNumericValue(noOfTwoWheelerForSlowCharger, pl, DxfFileConstants.NO_OF_TWO_WHEELER_FOR_SLOW_CHARGER);
+		    pi.setNoOfTwoWheelerForSlowCharger(value);
+		}
+
+		String noOfPVForSlowCharger = planInfoProperties.get(DxfFileConstants.NO_OF_PV_FOR_SLOW_CHARGER);
+		if (StringUtils.isNotBlank(noOfPVForSlowCharger)) {
+		    noOfPVForSlowCharger = noOfPVForSlowCharger.replaceAll(digitsRegex, "");
+		    BigDecimal value = getNumericValue(noOfPVForSlowCharger, pl, DxfFileConstants.NO_OF_PV_FOR_SLOW_CHARGER);
+		    pi.setNoOfPVForSlowCharger(value);
+		}
+
+		String noOfFourWheelerForfastCharger = planInfoProperties.get(DxfFileConstants.NO_OF_FOUR_WHEELER_FOR_FAST_CHARGER);
+		if (StringUtils.isNotBlank(noOfFourWheelerForfastCharger)) {
+		    noOfFourWheelerForfastCharger = noOfFourWheelerForfastCharger.replaceAll(digitsRegex, "");
+		    BigDecimal value = getNumericValue(noOfFourWheelerForfastCharger, pl, DxfFileConstants.NO_OF_FOUR_WHEELER_FOR_FAST_CHARGER);
+		    pi.setNoOfFourWheelerForfastCharger(value);
+		}
+
+		String noOfThreeWheelerForFastCharger = planInfoProperties.get(DxfFileConstants.NO_OF_THREE_WHEELER_FOR_FAST_CHARGER);
+		if (StringUtils.isNotBlank(noOfThreeWheelerForFastCharger)) {
+		    noOfThreeWheelerForFastCharger = noOfThreeWheelerForFastCharger.replaceAll(digitsRegex, "");
+		    BigDecimal value = getNumericValue(noOfThreeWheelerForFastCharger, pl, DxfFileConstants.NO_OF_THREE_WHEELER_FOR_FAST_CHARGER);
+		    pi.setNoOfThreeWheelerForFastCharger(value);
+		}
+
+		String noOfWheelerResidential = planInfoProperties.get(DxfFileConstants.NO_OF_WHEELER_RESIDENTIAL);
+		if (StringUtils.isNotBlank(noOfWheelerResidential)) {
+		    noOfWheelerResidential = noOfWheelerResidential.replaceAll(digitsRegex, "");
+		    BigDecimal value = getNumericValue(noOfWheelerResidential, pl, DxfFileConstants.NO_OF_WHEELER_RESIDENTIAL);
+		    pi.setNoOfWheelerResidential(value);
+		}
+
+		String chargerResidential = planInfoProperties.get(DxfFileConstants.CHARGER_RESIDENTIAL);
+		if (StringUtils.isNotBlank(chargerResidential)) {
+		    chargerResidential = chargerResidential.replaceAll(digitsRegex, "");
+		    BigDecimal value = getNumericValue(chargerResidential, pl, DxfFileConstants.CHARGER_RESIDENTIAL);
+		    pi.setChargerResidential(value);
+		}
+
+		
 		
 		String khasraNo = planInfoProperties.get(DxfFileConstants.KHASRA_NO);
 		if (StringUtils.isNotBlank(khasraNo))
@@ -728,6 +854,28 @@ public class PlanInfoFeatureExtract extends FeatureExtract {
 		String city = planInfoProperties.get(DxfFileConstants.DISTRICT);
 		if (StringUtils.isNotBlank(city))
 			pi.setCity(city);
+
+        // Extract for earthquake resistance measures
+        String isEarthquakeResistant = planInfoProperties.get(DxfFileConstants.EARTHQUAKE_RESISTANT);
+        if (StringUtils.isNotBlank(isEarthquakeResistant)) {
+            LOG.info("Extracting Earthquake Resistant value from Plan Information layer: " + isEarthquakeResistant);
+            if (isEarthquakeResistant.equalsIgnoreCase(DcrConstants.YES))
+                pi.setEarthquakeResistant(true);
+            else if (isEarthquakeResistant.equalsIgnoreCase(DcrConstants.NO))
+                pi.setEarthquakeResistant(false);
+            else
+                pl.addError(DxfFileConstants.EARTHQUAKE_RESISTANT,
+                        DxfFileConstants.EARTHQUAKE_RESISTANT + " cannot be accepted , should be either YES/NO.");
+        }
+
+        String secondRoadWidth = planInfoProperties.get(DxfFileConstants.SECOND_ROAD_WIDTH);
+        if (StringUtils.isNotBlank(secondRoadWidth)) {
+            secondRoadWidth = secondRoadWidth.replaceAll(digitsRegex, "");
+            BigDecimal roadWidthValue = getNumericValue(secondRoadWidth, pl, DxfFileConstants.SECOND_ROAD_WIDTH);
+            if(roadWidthValue.compareTo(pi.getRoadWidth()) > 0){
+                pi.setRoadWidth(roadWidthValue);
+            }
+        }
 
 //		String mauza = planInfoProperties.get(DxfFileConstants.MAUZA);
 //		if (StringUtils.isNotBlank(mauza))

@@ -26,13 +26,40 @@ public class RampServiceRequirement extends MdmsFeatureRule {
     private BigDecimal rampServiceExpectedSlopeCompareTrue;
     @JsonProperty("rampServiceExpectedSlopeCompareFalse")
     private BigDecimal rampServiceExpectedSlopeCompareFalse;
+    @JsonProperty("rampServiceWidth")
+    private BigDecimal rampServiceWidth;
     @JsonProperty("rampServiceMinHeightEntrance")
     private BigDecimal rampServiceMinHeightEntrance;
+    @JsonProperty("rampServiceMaxLength")
+    private BigDecimal rampServiceMaxLength;
+    @JsonProperty("rampServiceMinWidth")
+    private BigDecimal rampServiceMinWidth;
+
+    public BigDecimal getRampServiceMaxLength() {
+        return rampServiceMaxLength;
+    }
+    public void setRampServiceMaxLength(BigDecimal rampServiceMaxLength) {
+        this.rampServiceMaxLength = rampServiceMaxLength;
+    }
+
+    public BigDecimal getRampServiceMinWidth() {
+        return rampServiceMinWidth;
+    }
+    public void setRampServiceMinWidth(BigDecimal rampServiceMinWidth) {
+        this.rampServiceMinWidth = rampServiceMinWidth;
+    }
+    
 	public BigDecimal getRampServiceMinHeightEntrance() {
 		return rampServiceMinHeightEntrance;
 	}
 	public void setRampServiceMinHeightEntrance(BigDecimal rampServiceMinHeightEntrance) {
 		this.rampServiceMinHeightEntrance = rampServiceMinHeightEntrance;
+	}
+	public BigDecimal getRampServiceWidth() {
+		return rampServiceWidth;
+	}
+	public void setRampServiceWidth(BigDecimal rampServiceWidth) {
+		this.rampServiceWidth = rampServiceWidth;
 	}
 	public BigDecimal getRampServiceValueOne() {
 		return rampServiceValueOne;

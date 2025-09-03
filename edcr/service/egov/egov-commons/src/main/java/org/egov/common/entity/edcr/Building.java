@@ -95,9 +95,21 @@ public class Building extends Measurement {
 
     private List<Floor> floors = new ArrayList<>();
 
-    private BigDecimal floorsAboveGround;
+    private List<ServiceFloor> serviceFloors = new ArrayList<>();
 
-    private List<BigDecimal> distanceFromBuildingFootPrintToRoadEnd = new ArrayList<>();
+    private BigDecimal floorsAboveGround;
+    
+    private BigDecimal furthestCornerOfTheBuilding = BigDecimal.ZERO;
+
+    public BigDecimal getFurthestCornerOfTheBuilding() {
+		return furthestCornerOfTheBuilding;
+	}
+
+	public void setFurthestCornerOfTheBuilding(BigDecimal furthestCornerOfTheBuilding) {
+		this.furthestCornerOfTheBuilding = furthestCornerOfTheBuilding;
+	}
+
+	private List<BigDecimal> distanceFromBuildingFootPrintToRoadEnd = new ArrayList<>();
     private List<BigDecimal> distanceFromSetBackToBuildingLine = new ArrayList<>();
 
     private BigDecimal totalBuitUpArea;
@@ -396,4 +408,20 @@ public class Building extends Measurement {
         this.totalConstructedArea = totalConstructedArea;
     }
 
+    public List<ServiceFloor> getServiceFloors() {
+        return serviceFloors;
+    }
+
+    public void setServiceFloors(List<ServiceFloor> serviceFloors) {
+        this.serviceFloors = serviceFloors;
+    }
+
+    public ServiceFloor getServiceFloorNumber(int servicefloorNo) {
+        for (ServiceFloor f : serviceFloors) {
+            if (f.getNumber() != null && f.getNumber().intValue() == servicefloorNo) {
+                return f;
+            }
+        }
+        return null;
+    }
 }

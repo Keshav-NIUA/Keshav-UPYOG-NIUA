@@ -214,7 +214,7 @@ public class LiftService extends FeatureProcess {
 	
 		                // You can apply min dimension checks here if needed
 		                String provided = height + " * " + width;
-		                setReportOutputDetails(plan, SUBRULE_118, String.format(SUBRULE_118_DESCRIPTION, EMPTY_STRING, EMPTY_STRING), EMPTY_STRING,
+		                setReportOutputDetails(plan, SUBRULE_118, String.format(SUBRULE_118_DESCRIPTION, EMPTY_STRING, EMPTY_STRING), "-",
 		                        provided, Result.Accepted.getResultVal(), scrutinyDetail);
 		                return;
 		            }

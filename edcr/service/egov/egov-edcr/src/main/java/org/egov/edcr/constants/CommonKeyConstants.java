@@ -69,6 +69,10 @@ public class CommonKeyConstants {
     public static final String GENERAL_STAIR_NUMBER_OF_RISERS = "General Stair - Number of risers";
     public static final String GENERAL_STAIR_MID_LANDING = "General Stair - Mid landing";
     public static final String GENERAL_STAIR_RISER_HEIGHT = "General Stair - Riser Height";
+    public static final String MINIMUM_TWO_STAIRCASES_REQUIRED = "Minimum Two Staircases Required";
+    public static final String MINIMUM_TWO_STAIRCASES_REQUIRED_MSG = "must have at least two staircases as per height/occupancy rules";
+
+
 
     public static final String STAIR_HEADROOM_SUFFIX = "_Stair Headroom";
 

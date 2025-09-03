@@ -94,6 +94,24 @@ public class Block extends Measurement {
     private Parapet parapetV2;
     private Chimney chimneyV2;
     private List<Portico> porticos = new ArrayList<>();
+    
+    private List<BigDecimal> roofSlopes = new ArrayList<>();
+
+    public List<BigDecimal> getRoofSlopes() {
+        return roofSlopes;
+    }
+
+    public void setRoofSlopes(List<BigDecimal> roofSlopes) {
+        this.roofSlopes = roofSlopes;
+    }
+
+    public void addRoofSlope(BigDecimal slope) {
+        if (this.roofSlopes == null) {
+            this.roofSlopes = new ArrayList<>();
+        }
+        this.roofSlopes.add(slope);
+    }
+
 
     @Override
     public String toString() {

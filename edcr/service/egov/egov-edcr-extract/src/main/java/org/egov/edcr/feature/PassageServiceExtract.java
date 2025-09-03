@@ -30,6 +30,7 @@ public class PassageServiceExtract extends FeatureExtract {
 		
 		String LAYER_PASSAGE="LAYER_NAME_PASSAGE";
 		String LAYER_PASSAGESTAIR="LAYER_NAME_PASSAGE_STAIR";
+        String LAYER_PASSAGE_LENGTH="LAYER_NAME_PASSAGE_LENGTH";
 		List<Block> blocks = planDetail.getBlocks();
 		Map<String, Integer> passageColors = planDetail.getSubFeatureColorCodesMaster().get("Passage");
 		Map<String, Integer> passageStairColors = planDetail.getSubFeatureColorCodesMaster().get("PassageStair");
@@ -38,14 +39,17 @@ public class PassageServiceExtract extends FeatureExtract {
 		List<BigDecimal> passageStairHeights = new ArrayList<>();
 		List<BigDecimal> passagePolylines = new ArrayList<>();
 		List<BigDecimal> passageStairPolylines = new ArrayList<>();
+        BigDecimal passageLengthValue = null;
 
-		for (Block block : blocks)
+        for (Block block : blocks)
 			if (block.getBuilding() != null) {
 
 				List<DXFDimension> passageDimension = Util.getDimensionsByLayer(planDetail.getDoc(),
 						layerNames.getLayerName(LAYER_PASSAGE));
 				List<DXFDimension> passageStairDimension = Util.getDimensionsByLayer(planDetail.getDoc(),
 						layerNames.getLayerName(LAYER_PASSAGESTAIR));
+                DXFDimension passageLengthDim = Util.getSingleDimensionByLayer(planDetail.getDoc(),
+                        layerNames.getLayerName(LAYER_PASSAGE_LENGTH));
 
 				if (!passageDimension.isEmpty()) {
 					for (DXFDimension dim : passageDimension) {
@@ -78,17 +82,29 @@ public class PassageServiceExtract extends FeatureExtract {
 						});
 					}
 				}
+                // Passage length (single dimension)
+                if (passageLengthDim != null) {
+                    List<BigDecimal> value = new ArrayList<>();
+                    Util.extractDimensionValue(planDetail, value, passageLengthDim, layerNames.getLayerName(LAYER_PASSAGE_LENGTH));
+                    if (!value.isEmpty()) {
+                        passageLengthValue = value.get(0);
+                        LOG.info("Passage length extracted: {}", passageLengthValue);
+                    }
+                }
 
 				if (passagePolylines != null && !passagePolylines.isEmpty()
 						|| passageStairPolylines != null && !passageStairPolylines.isEmpty()
 						|| passageHeights != null && !passageHeights.isEmpty()
-						|| passageStairHeights != null && passageStairHeights.isEmpty()) {
+						|| passageStairHeights != null && !passageStairHeights.isEmpty()
+                        || (passageLengthValue != null)
+                ) {
 					Passage passage = new Passage();
 					passage.setPassageDimensions(passagePolylines);
 					passage.setPassageStairDimensions(passageStairPolylines);
 					passage.setPassageHeight(passageHeights);
 					passage.setPassageStairHeight(passageStairHeights);
-					block.getBuilding().setPassage(passage);
+                    passage.setPassageLength(passageLengthValue);
+                    block.getBuilding().setPassage(passage);
 				}
 			}
 
