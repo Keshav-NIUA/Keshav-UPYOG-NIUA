@@ -115,7 +115,7 @@ public class EnrichmentService {
 			bpaRequest.getBPA().setBusinessService(BPAConstants.BPA_OC_MODULE_CODE);
 			bpaRequest.getBPA().setLandId(values.get("landId"));
 		}*/
-		String businessService = workflowService.determineBusinessService(bpaRequest.getBPA().getAreaMappingDetail());
+		String businessService = workflowService.determineBusinessService(bpaRequest.getBPA().getAreaMapping());
 		bpaRequest.getBPA().setBusinessService(businessService);
 
         if (bpaRequest.getBPA().getRiskType() != null) {

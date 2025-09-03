@@ -8,6 +8,7 @@ serviceMaps:
       isTransaction: true
       queryMaps:
 
+        # Insert main building plan data
         - query: >
             INSERT INTO public.eg_bpa_buildingplans
             (id, application_no, tenant_id, edcr_number, status, application_date,
@@ -37,6 +38,7 @@ serviceMaps:
               type: JSON
               dbType: JSONB
 
+        # Insert documents associated with BPA
         - query: >
             INSERT INTO public.eg_bpa_documents
             (id, document_type, filestore_id, document_uid, buildingplan_id,
@@ -57,12 +59,13 @@ serviceMaps:
               type: JSON
               dbType: JSONB
 
+        # Insert RTP allocation details
         - query: >
             INSERT INTO public.ug_bpa_rtp_details
             (id, buildingplan_id, rtp_category, rtp_id, rtp_name,
-             assignment_status, assignment_date, changed_date,remarks,
+             assignment_status, assignment_date, changed_date, remarks,
              created_by, created_time, last_modified_by, last_modified_time, additional_details)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?::JSONB);
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::JSONB);
           basePath: BPA.rtpDetails
           jsonMaps:
             - jsonPath: $.BPA.rtpDetails.id
@@ -78,9 +81,32 @@ serviceMaps:
             - jsonPath: $.BPA.auditDetails.createdTime
             - jsonPath: $.BPA.auditDetails.lastModifiedBy
             - jsonPath: $.BPA.auditDetails.lastModifiedTime
-            - jsonPath: $.BPA.rtpDetails.*.additionalDetails
+            - jsonPath: $.BPA.rtpDetails.additionalDetails
               type: JSON
               dbType: JSONB
+
+        # Insert Area Mapping details (new addition)
+        - query: >
+            INSERT INTO public.area_mapping_detail
+            (id, application_id, district, planning_area, planning_permit_authority,
+             building_permit_authority, revenue_village, mouza, ward,
+             created_by, last_modified_by, created_time, last_modified_time)
+            VALUES (?, ?, ?, ?, ?::planning_permit_authority_enum, ?::building_permit_authority_enum, ?, ?, ?, ?, ?, ?, ?);
+          basePath: BPA.areaMapping
+          jsonMaps:
+            - jsonPath: $.BPA.areaMapping.id
+            - jsonPath: $.BPA.id
+            - jsonPath: $.BPA.areaMapping.district
+            - jsonPath: $.BPA.areaMapping.planningArea
+            - jsonPath: $.BPA.areaMapping.planningPermitAuthority
+            - jsonPath: $.BPA.areaMapping.buildingPermitAuthority
+            - jsonPath: $.BPA.areaMapping.revenueVillage
+            - jsonPath: $.BPA.areaMapping.mouza
+            - jsonPath: $.BPA.areaMapping.ward
+            - jsonPath: $.BPA.auditDetails.createdBy
+            - jsonPath: $.BPA.auditDetails.lastModifiedBy
+            - jsonPath: $.BPA.auditDetails.createdTime
+            - jsonPath: $.BPA.auditDetails.lastModifiedTime
 
     - version: 1.0
       description: Updates BPA application and maintains audit trail

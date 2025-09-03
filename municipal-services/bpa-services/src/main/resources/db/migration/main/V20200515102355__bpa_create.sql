@@ -142,7 +142,7 @@ CREATE TABLE IF NOT EXISTS eg_bpa_documents (
 -- BPA RTP details
 -- ========================================================
 
-create table ug_bpa_rtp_details (
+create table IF NOT EXISTS ug_bpa_rtp_details (
     /** Unique Identifier(UUID) for the RTP details. */
     id VARCHAR(64) PRIMARY KEY,
 
@@ -178,4 +178,71 @@ create table ug_bpa_rtp_details (
         REFERENCES eg_bpa_buildingplans (id)
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
+);
+
+
+CREATE TABLE IF NOT EXISTS ug_bpa_rtp_details_audit (
+    /** Unique Identifier(UUID) for the RTP details. */
+    id VARCHAR(64) NOT NULL,
+
+    /** Foreign key reference to the building plan. */
+    buildingplan_id VARCHAR(64),
+
+    /** RTP category */
+    rtp_category VARCHAR(100),
+
+    /** RTP id */
+    rtp_id VARCHAR(64),
+
+    /** RTP name */
+    rtp_name VARCHAR(200),
+
+    assignment_status VARCHAR(64),
+
+    assignment_date BIGINT,
+    changed_date BIGINT,
+
+    remarks VARCHAR(1000),
+
+    /** Audit Fields */
+    created_by VARCHAR(64),
+    last_modified_by VARCHAR(64),
+    created_time BIGINT,
+    last_modified_time BIGINT,
+
+    /** Additional details JSON for extensibility */
+    additional_details JSONB
+);
+-- ========================================================
+
+
+-- First create ENUM types
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'planning_permit_authority_enum') THEN
+        CREATE TYPE planning_permit_authority_enum AS ENUM ('DA', 'TACP', 'GMDA', 'CMA');
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'building_permit_authority_enum') THEN
+        CREATE TYPE building_permit_authority_enum AS ENUM ('MB', 'GP', 'GMC', 'NGMB');
+    END IF;
+END$$;
+
+-- Now create the table
+CREATE TABLE IF NOT EXISTS area_mapping_detail (
+    id                        VARCHAR(64) PRIMARY KEY,
+    application_id            VARCHAR(64) NOT NULL,
+    district                  VARCHAR(128),
+    planning_area             VARCHAR(128),
+    planning_permit_authority planning_permit_authority_enum NOT NULL,
+    building_permit_authority building_permit_authority_enum NOT NULL,
+    revenue_village           VARCHAR(128),
+    mouza                     VARCHAR(128),
+    ward                      VARCHAR(128),
+
+    /** Audit Fields */
+    created_by          VARCHAR(64),
+    last_modified_by    VARCHAR(64),
+    created_time        BIGINT, -- assignment_date
+    last_modified_time  BIGINT
 );
