@@ -868,6 +868,15 @@ public class PlanInfoFeatureExtract extends FeatureExtract {
                         DxfFileConstants.EARTHQUAKE_RESISTANT + " cannot be accepted , should be either YES/NO.");
         }
 
+        String secondRoadWidth = planInfoProperties.get(DxfFileConstants.SECOND_ROAD_WIDTH);
+        if (StringUtils.isNotBlank(secondRoadWidth)) {
+            secondRoadWidth = secondRoadWidth.replaceAll(digitsRegex, "");
+            BigDecimal roadWidthValue = getNumericValue(secondRoadWidth, pl, DxfFileConstants.SECOND_ROAD_WIDTH);
+            if(roadWidthValue.compareTo(pi.getRoadWidth()) > 0){
+                pi.setRoadWidth(roadWidthValue);
+            }
+        }
+
 //		String mauza = planInfoProperties.get(DxfFileConstants.MAUZA);
 //		if (StringUtils.isNotBlank(mauza))
 //			pi.setMauza(mauza);

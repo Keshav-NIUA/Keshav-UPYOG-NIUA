@@ -32,7 +32,7 @@ public class ServiceFloorExtract extends FeatureExtract {
             LOG.debug("Starting of ServiceFloor room Extract......");
 
         String farDeductByFloor = layerNames.getLayerName("LAYER_NAME_BLOCK_NAME_PREFIX") + "%s" + "_"
-                + layerNames.getLayerName("LAYER_NAME_FLOOR_NAME_PREFIX") + "%s" + "_"
+                + layerNames.getLayerName("LAYER_NAME_SERVICE_FLOOR_NAME_PREFIX") + "%s" + "_"
                 + layerNames.getLayerName("LAYER_NAME_BUILT_UP_AREA_DEDUCT");
 
         if (pl != null && !pl.getBlocks().isEmpty())
@@ -41,7 +41,7 @@ public class ServiceFloorExtract extends FeatureExtract {
                 List<DXFLWPolyline> polyLinesByLayer;
 
                 String layerRegEx = layerNames.getLayerName("LAYER_NAME_BLOCK_NAME_PREFIX") + block.getNumber() + "_"
-                        + layerNames.getLayerName("LAYER_NAME_FLOOR_NAME_PREFIX") + "-?\\d+_"
+                        + layerNames.getLayerName("LAYER_NAME_SERVICE_FLOOR_NAME_PREFIX") + "-?\\d+_"
                         + layerNames.getLayerName("LAYER_NAME_SERVICE_FLOOR");
                 List<String> layerNames = Util.getLayerNamesLike(pl.getDoc(), layerRegEx);
 

@@ -26,19 +26,46 @@ public class PassageService_Assam extends FeatureProcess {
     @Autowired
     MDMSCacheManager cache;
 
+    /**
+     * Validates the plan (no validation logic implemented for passages).
+     *
+     * @param plan The plan to validate
+     * @return The unchanged plan
+     */
     @Override
     public Plan validate(Plan plan) {
         return plan;
     }
 
+    /**
+     * Main processing method that validates passage and passage stair dimensions
+     * for all blocks based on building occupancy type and passage length.
+     *
+     * @param plan The plan to process
+     * @return The processed plan with validation results
+     */
     @Override
     public Plan process(Plan plan) {
         BigDecimal passageStairMinimumWidth = BigDecimal.ZERO;
+        BigDecimal passageServiceValueA = BigDecimal.ZERO;
+        BigDecimal passageServiceValueBD = BigDecimal.ZERO;
+        BigDecimal passageServiceValueDefault = BigDecimal.ZERO;
+        BigDecimal passageServiceValueFH = BigDecimal.ZERO;
+        BigDecimal passageServiceValueFlow = BigDecimal.ZERO;
+        BigDecimal passageServiceValueFhigh = BigDecimal.ZERO;
+        BigDecimal passageServicePassageLength = BigDecimal.ZERO;
 
         List<Object> rules = cache.getFeatureRules(plan, FeatureEnum.PASSAGE_SERVICE.getValue(), false);
         for (Object obj : rules) {
             PassageRequirement rule = (PassageRequirement) obj;
             passageStairMinimumWidth = rule.getPassageServiceValueOne();
+            passageServiceValueA = rule.getPassageServiceValueA();
+            passageServiceValueBD = rule.getPassageServiceValueBD();
+            passageServiceValueDefault = rule.getPassageServiceValueDefault();
+            passageServiceValueFH = rule.getPassageServiceValueFH();
+            passageServiceValueFlow = rule.getPassageServiceValueFlow();
+            passageServiceValueFhigh = rule.getPassageServiceValueFhigh();
+            passageServicePassageLength = rule.getPassageServicePassageLength();
             break;
         }
 
@@ -52,7 +79,15 @@ public class PassageService_Assam extends FeatureProcess {
 
             Passage passage = block.getBuilding().getPassage();
             BigDecimal passageLength = passage.getPassageLength();
-            BigDecimal requiredPassageWidth = getBuildingTypeBasedWidth(block.getBuilding(), passageLength);
+            BigDecimal requiredPassageWidth = getBuildingTypeBasedWidth(block.getBuilding(), passageLength,
+                    passageServiceValueA,
+                    passageServiceValueBD,
+                    passageServiceValueDefault,
+                    passageServiceValueFH,
+                    passageServiceValueFlow,
+                    passageServiceValueFhigh,
+                    passageServicePassageLength
+            );
 
             validatePassageDimension(
                     passage.getPassageDimensions(),
@@ -76,75 +111,96 @@ public class PassageService_Assam extends FeatureProcess {
         return plan;
     }
 
-    private BigDecimal getBuildingTypeBasedWidth(Building building, BigDecimal passageLength) {
+    /**
+     * Determines required passage width based on building occupancy type and passage length.
+     * Different widths apply for residential (A), commercial (F), educational/institutional (B/D),
+     * and hotel (F-H) occupancies.
+     *
+     * @param building The building to check
+     * @param passageLength Length of the passage
+     * @param passageServiceValueA Width for residential buildings
+     * @param passageServiceValueBD Width for educational/institutional buildings
+     * @param passageServiceValueDefault Default width for other occupancies
+     * @param passageServiceValueFH Width for hotel buildings
+     * @param passageServiceValueFlow Width for short commercial passages
+     * @param passageServiceValueFhigh Width for long commercial passages
+     * @param passageServicePassageLength Length threshold for commercial passages
+     * @return Required passage width based on occupancy type
+     */
+    private BigDecimal getBuildingTypeBasedWidth(Building building, BigDecimal passageLength,
+                                                 BigDecimal passageServiceValueA,
+                                                 BigDecimal passageServiceValueBD,
+                                                 BigDecimal passageServiceValueDefault,
+                                                 BigDecimal passageServiceValueFH,
+                                                 BigDecimal passageServiceValueFlow,
+                                                 BigDecimal passageServiceValueFhigh,
+                                                 BigDecimal passageServicePassageLength
+                                                 ) {
         String occupancy = building.getMostRestrictiveFarHelper().getType() != null
                 ? building.getMostRestrictiveFarHelper().getType().getCode() : null;
         String subOccupancy = building.getMostRestrictiveFarHelper().getSubtype() != null
                 ? building.getMostRestrictiveFarHelper().getSubtype().getCode() : null;
 
-        // passageLength to be setted and then passed here
-//        List<BigDecimal> passageLength;
-
+        // Return passage width based on occupancy
         if (occupancy != null) {
+            LOG.info("Setting Passage Width according to Occupancy: " + occupancy);
             switch (occupancy) {
                 case DxfFileConstants.A:
-                    return BigDecimal.valueOf(1.0);
+                    return passageServiceValueA;
                 case DxfFileConstants.F:
-                    return getShoppingComplexWidth(passageLength);
+                    return getShoppingComplexWidth(passageLength, passageServiceValueFlow, passageServiceValueFhigh, passageServicePassageLength);
                 case DxfFileConstants.B:
                 case DxfFileConstants.D:
-                    return BigDecimal.valueOf(2.5);
+                    return passageServiceValueBD;
                 default:
-                    return BigDecimal.valueOf(1.5);
+                    return passageServiceValueDefault;
             }
         }
         if (subOccupancy != null) {
+            LOG.info("Setting Passage Width according to SubOccupancy: " + subOccupancy);
             switch (subOccupancy) {
                 case DxfFileConstants.F_H:
-                    return BigDecimal.valueOf(1.5);
+                    return passageServiceValueFH;
                 default:
-                    return BigDecimal.valueOf(1.5);
+                    return passageServiceValueDefault;
             }
         }
 
-        return BigDecimal.valueOf(1.5);
+        return passageServiceValueDefault;
     }
 
-    private BigDecimal getShoppingComplexWidth(BigDecimal passageLength) {
+    /**
+     * Determines passage width for shopping complexes based on passage length.
+     * Uses higher width requirement for passages longer than threshold.
+     *
+     * @param passageLength Length of the passage
+     * @param passageServiceValueFlow Width for shorter passages
+     * @param passageServiceValueFhigh Width for longer passages
+     * @param passageServicePassageLength Length threshold
+     * @return Required passage width for shopping complex
+     */
+    private BigDecimal getShoppingComplexWidth(BigDecimal passageLength, BigDecimal passageServiceValueFlow, BigDecimal passageServiceValueFhigh, BigDecimal passageServicePassageLength) {
         if (passageLength != null) {
 //            BigDecimal maxLength = passageLength.stream().reduce(BigDecimal::max).orElse(BigDecimal.ZERO);
-            return passageLength.compareTo(BigDecimal.valueOf(15.0)) > 0 ? BigDecimal.valueOf(2.1) : BigDecimal.valueOf(1.8);
+            return passageLength.compareTo(passageServicePassageLength) > 0 ? passageServiceValueFhigh : passageServiceValueFlow;
         }
-        return BigDecimal.valueOf(1.8);
+        return passageServiceValueFlow;
     }
 
-//    private String getBuildingTypeDescription(Building building) {
-//        OccupancyType occupancy = building.getMostRestrictiveOccupancy();
-//        if (occupancy == null) return "Minimum width of passages for other buildings";
-//
-//        switch (occupancy) {
-//            case OCCUPANCY_A1:
-//            case OCCUPANCY_A4:
-//                return "Minimum width of passages for residential house";
-//            case OCCUPANCY_F3:
-//                return "Minimum width of passages for hotel";
-//            case OCCUPANCY_F:
-//                return "Minimum width of passages for shopping complex";
-//            case OCCUPANCY_D:
-//            case OCCUPANCY_D1:
-//            case OCCUPANCY_D2:
-//                return "Minimum width of passages for assembly building";
-//            case OCCUPANCY_B1:
-//            case OCCUPANCY_B2:
-//            case OCCUPANCY_B3:
-//                return "Minimum width of passages for educational building";
-//            default:
-//                return "Minimum width of passages for other buildings";
-//        }
-//    }
-
+    /**
+     * Validates passage dimensions against minimum width requirements.
+     * Finds minimum width from provided dimensions and compares with permissible width.
+     *
+     * @param dimensions List of passage dimensions
+     * @param permissibleWidth Minimum required width
+     * @param ruleNo Rule number for validation
+     * @param ruleDesc Rule description
+     * @param detail Scrutiny detail object to store results
+     * @param plan The plan being validated
+     */
     private void validatePassageDimension(List<BigDecimal> dimensions, BigDecimal permissibleWidth,
                                           String ruleNo, String ruleDesc, ScrutinyDetail detail, Plan plan) {
+        LOG.info("Validating Passage Dimensions...");
         if (dimensions != null && !dimensions.isEmpty()) {
             BigDecimal minWidth = Util.roundOffTwoDecimal(dimensions.stream().reduce(BigDecimal::min).get());
             String result = minWidth.compareTo(permissibleWidth) >= 0
@@ -156,6 +212,13 @@ public class PassageService_Assam extends FeatureProcess {
         }
     }
 
+    /**
+     * Creates a new scrutiny detail object with standard column headings
+     * for passage validation reports.
+     *
+     * @param key Unique key for the scrutiny detail
+     * @return Configured ScrutinyDetail object
+     */
     private ScrutinyDetail createScrutinyDetail(String key) {
         ScrutinyDetail detail = new ScrutinyDetail();
         detail.addColumnHeading(1, RULE_NO);
@@ -166,6 +229,18 @@ public class PassageService_Assam extends FeatureProcess {
         return detail;
     }
 
+    /**
+     * Sets validation results in the report output by creating and adding
+     * scrutiny details to the plan.
+     *
+     * @param pl The plan to add results to
+     * @param ruleNo Rule number
+     * @param ruleDesc Rule description
+     * @param expected Expected/required value
+     * @param actual Provided/actual value
+     * @param status Validation status (Accepted/Not_Accepted)
+     * @param scrutinyDetail Scrutiny detail object to add results to
+     */
     private void setReportOutputDetails(Plan pl, String ruleNo, String ruleDesc, String expected, String actual,
                                         String status, ScrutinyDetail scrutinyDetail) {
         ReportScrutinyDetail detail = new ReportScrutinyDetail();
@@ -179,6 +254,11 @@ public class PassageService_Assam extends FeatureProcess {
         addScrutinyDetailtoPlan(scrutinyDetail, pl, details);
     }
 
+    /**
+     * Returns amendments map (empty for this implementation).
+     *
+     * @return Empty LinkedHashMap of amendments
+     */
     @Override
     public Map<String, Date> getAmendments() {
         return new LinkedHashMap<>();

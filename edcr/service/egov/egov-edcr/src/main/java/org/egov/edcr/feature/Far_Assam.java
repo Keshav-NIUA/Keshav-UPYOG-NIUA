@@ -247,8 +247,6 @@ public class Far_Assam extends Far {
 
 	    LOG.debug("Called decideNocIsRequired");
 
-	    System.out.println("hi inside process");
-
 	    HashMap<String, String> errorMsgs = new HashMap<>();
 	    int initialErrorCount = pl.getErrors().size();
 	    LOG.debug("Initial error count: {}", initialErrorCount);
@@ -256,7 +254,7 @@ public class Far_Assam extends Far {
 	    validate(pl);
 	    LOG.debug("Called validate method");
 
-	    System.out.println("plotarea" + pl.getPlot().getArea());
+	    LOG.info("plotarea" + pl.getPlot().getArea());
 
 	    if (validationFailed(pl, initialErrorCount)) {
 	        LOG.warn("Validation failed with new errors added. Returning plan early.");

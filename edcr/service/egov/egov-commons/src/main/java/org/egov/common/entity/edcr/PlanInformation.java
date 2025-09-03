@@ -160,7 +160,8 @@ public class PlanInformation implements Serializable {
 
     //true/false.Does the building have earthquake resistance measures
     private transient Boolean isEarthquakeResistant = false;
-    private transient BigDecimal noOfAccessRoads = BigDecimal.ZERO;
+    //Extracted from Plan info. Second Road Width declared in the plan.
+    private  BigDecimal secondRoadWidth = BigDecimal.ZERO;
 
     private BigDecimal twoWheelerSlowCharger = BigDecimal.ZERO;
     
@@ -971,11 +972,15 @@ public class PlanInformation implements Serializable {
         isEarthquakeResistant = earthquakeResistant;
     }
 
-    public BigDecimal getNoOfAccessRoads() {
-        return noOfAccessRoads;
+    public BigDecimal getSecondRoadWidth() {
+        return secondRoadWidth;
     }
 
-    public void setNoOfAccessRoads(BigDecimal noOfAccessRoads) {
-        this.noOfAccessRoads = noOfAccessRoads;
+    public void setSecondRoadWidth(BigDecimal secondRoadWidth) {
+        this.secondRoadWidth = secondRoadWidth;
+    }
+
+    public Boolean getEarthquakeResistant() {
+        return isEarthquakeResistant;
     }
 }

@@ -33,7 +33,7 @@ public class ServiceRoomExtract extends FeatureExtract {
         roomOccupancyTypes.addAll(roomOccupancyFeature.keySet());
         for (Block block : pl.getBlocks()) {
             if (block.getBuilding() != null && !block.getBuilding().getFloors().isEmpty())
-                outside:for (Floor floor : block.getBuilding().getFloors()) {
+                for (Floor floor : block.getBuilding().getFloors()) {
 
 //                    List<ServiceRoom> serviceRooms = new ArrayList<>();
 //
