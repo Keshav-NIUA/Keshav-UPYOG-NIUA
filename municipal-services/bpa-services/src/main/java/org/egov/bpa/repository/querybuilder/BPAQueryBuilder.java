@@ -23,22 +23,47 @@ public class BPAQueryBuilder {
     private static final String LEFT_OUTER_JOIN = " LEFT OUTER JOIN ";
 
     //Updated base query with snake_case + new table names
-    private static final String QUERY = "SELECT bpa.*, bpadoc.*, " +
-            "bpa.id AS bpa_id, " +
-            "bpa.tenant_id AS bpa_tenant_id, " +
-            "bpa.last_modified_time AS bpa_last_modified_time, " +
-            "bpa.created_by AS bpa_created_by, " +
-            "bpa.last_modified_by AS bpa_last_modified_by, " +
-            "bpa.created_time AS bpa_created_time, " +
-            "bpa.additional_details, " +
-            "bpa.land_id AS bpa_land_id, " +
-            "bpadoc.id AS bpa_doc_id, " +
-            "bpadoc.additional_details AS doc_details, " +
-            "bpadoc.document_type AS bpa_doc_document_type, " +
-            "bpadoc.filestore_id AS bpa_doc_filestore " +
-            "FROM eg_bpa_buildingplans bpa " +
-            LEFT_OUTER_JOIN +
-            "eg_bpa_documents bpadoc ON bpadoc.buildingplan_id = bpa.id";
+    private static final String QUERY =
+            "SELECT bpa.*, " +
+                    "       bpadoc.*, " +
+                    "       rtp.*, " +
+                    "       area.*, " +
+                    "       bpa.id AS bpa_id, " +
+                    "       bpa.tenant_id AS bpa_tenant_id, " +
+                    "       bpa.last_modified_time AS bpa_last_modified_time, " +
+                    "       bpa.created_by AS bpa_created_by, " +
+                    "       bpa.last_modified_by AS bpa_last_modified_by, " +
+                    "       bpa.created_time AS bpa_created_time, " +
+                    "       bpa.additional_details AS bpa_additional_details, " +
+                    "       bpa.land_id AS bpa_land_id, " +
+
+                    "       bpadoc.id AS bpa_doc_id, " +
+                    "       bpadoc.additional_details AS doc_details, " +
+                    "       bpadoc.document_type AS bpa_doc_document_type, " +
+                    "       bpadoc.filestore_id AS bpa_doc_filestore, " +
+
+                    "       rtp.id AS rtp_id, " +
+                    "       rtp.rtp_category AS rtp_category, " +
+                    "       rtp.rtp_name AS rtp_name, " +
+                    "       rtp.assignment_status AS rtp_assignment_status, " +
+                    "       rtp.assignment_date AS rtp_assignment_date, " +
+                    "       rtp.changed_date AS rtp_changed_date, " +
+                    "       rtp.remarks AS rtp_remarks, " +
+                    "       rtp.additional_details AS rtp_additional_details, " +
+
+                    "       area.id AS area_id, " +
+                    "       area.district AS area_district, " +
+                    "       area.planning_area AS area_planning_area, " +
+                    "       area.planning_permit_authority AS area_planning_permit_authority, " +
+                    "       area.building_permit_authority AS area_building_permit_authority, " +
+                    "       area.revenue_village AS area_revenue_village, " +
+                    "       area.mouza AS area_mouza, " +
+                    "       area.ward AS area_ward " +
+
+                    "FROM ug_bpa_buildingplans bpa " +
+                    "LEFT OUTER JOIN ug_bpa_documents bpadoc ON bpadoc.buildingplan_id = bpa.id " +
+                    "LEFT OUTER JOIN ug_bpa_rtp_detail rtp ON rtp.buildingplan_id = bpa.id " +
+                    "LEFT OUTER JOIN ug_bpa_area_mapping_detail area ON area.buildingplan_id = bpa.id";
 
     private final String paginationWrapper = "SELECT * FROM " +
             "(SELECT *, DENSE_RANK() OVER (ORDER BY bpa_last_modified_time DESC) offset_ FROM ({}) result) result_offset " +
@@ -255,7 +280,7 @@ public class BPAQueryBuilder {
     }
 
     private void addToPreparedStatement(List<Object> preparedStmtList, List<String> ids) {
-        ids.forEach(preparedStmtList::add);
+        preparedStmtList.addAll(ids);
     }
 
     private Object createQuery(List<String> ids) {

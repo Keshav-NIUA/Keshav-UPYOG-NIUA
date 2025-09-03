@@ -1,9 +1,7 @@
 package org.egov.bpa.web.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  *
@@ -15,6 +13,8 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class RTPAllocationDetails {
 
     private String id;

@@ -1,5 +1,6 @@
 package org.egov.bpa.repository;
 
+import lombok.extern.slf4j.Slf4j;
 import org.egov.bpa.config.BPAConfiguration;
 import org.egov.bpa.producer.Producer;
 import org.egov.bpa.repository.querybuilder.BPAQueryBuilder;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Repository
 public class BPARepository {
 
@@ -87,6 +89,7 @@ public class BPARepository {
 		String query = queryBuilder.getBPASearchQuery(criteria, preparedStmtList, edcrNos, false);
 		try {
 			query = centralInstanceUtil.replaceSchemaPlaceholder(query, criteria.getTenantId());
+			log.info("getBPAData query : {} and preparedStmtList : {}", query, preparedStmtList);
 		} catch (InvalidTenantIdException e) {
 			throw new CustomException("EG_PT_TENANTID_ERROR",
 					"TenantId length is not sufficient to replace query schema in a multi state instance");

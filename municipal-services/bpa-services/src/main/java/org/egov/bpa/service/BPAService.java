@@ -241,6 +241,8 @@ public class BPAService {
                             filter(Objects::nonNull).distinct().
                             collect(java.util.stream.Collectors.toCollection(ArrayList::new));
                     log.info("land ids for bpa application : {}", landIds);
+                    //In case of landId is not present in BPA then try to fetch from additional details
+                    populateLandToBPAFromAdditionalDetail(bpas);
                     if(landIds.isEmpty()){
                         return bpas;
                     }
@@ -251,22 +253,31 @@ public class BPAService {
                     ArrayList<LandInfo> landInfos = landService.searchLandInfoToBPA(requestInfo, landcriteria);
 
                     this.populateLandToBPA(bpas, landInfos, requestInfo);
-
-                    bpas.stream().filter(bpa -> bpa.getLandId() ==null).forEach(
-                            bpa -> {
-                                Map<String, String> additionalDetails = bpa.getAdditionalDetails() != null ? (Map<String, String>) bpa.getAdditionalDetails()
-                                        : new HashMap<String, String>();
-                                LandInfo landInfo = null;
-                                if (additionalDetails.get(BPAConstants.LAND_INFO_KEY) != null){
-                                    log.info("land info found in additional details for bpa : {}", bpa.getApplicationNo());
-                                    landInfo = BPAUtil.getLandInfoFromString(additionalDetails.get(BPAConstants.LAND_INFO_KEY));
-                                }
-                                bpa.setLandInfo(landInfo);
-                            });
                 }
             }
         }
         return bpas;
+    }
+
+    /**
+     * In case of landId is not present in BPA then try to fetch from additional details
+     *
+     * @param bpas - list of bpas application
+     */
+    private void populateLandToBPAFromAdditionalDetail(List<BPA> bpas) {
+        bpas.stream().filter(bpa -> bpa.getLandId() ==null).forEach(
+                bpa -> {
+                    Map<String, String> additionalDetails = bpa.getAdditionalDetails() != null ? (Map<String, String>) bpa.getAdditionalDetails()
+                            : new HashMap<String, String>();
+                    LandInfo landInfo = null;
+                    if (additionalDetails.get(BPAConstants.LAND_INFO_KEY) != null){
+                        log.info("land info found in additional details for bpa : {}", bpa.getApplicationNo());
+                        landInfo = BPAUtil.getLandInfoFromString(additionalDetails.get(BPAConstants.LAND_INFO_KEY));
+                        additionalDetails.remove(BPAConstants.LAND_INFO_KEY);
+                        bpa.setAdditionalDetails(additionalDetails);
+                    }
+                    bpa.setLandInfo(landInfo);
+                });
     }
 
     /**
