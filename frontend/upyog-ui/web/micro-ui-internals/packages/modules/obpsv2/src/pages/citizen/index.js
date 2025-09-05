@@ -9,6 +9,7 @@ const App = ({ path }) => {
 
 
   const BPACreate= Digit?.ComponentRegistryService?.getComponent("BPACreate");
+  const BPAMyApplications = Digit?.ComponentRegistryService?.getComponent("BPAMyApplications");
   const isDocScreenAfterEdcr = sessionStorage.getItem("clickOnBPAApplyAfterEDCR") === "true" ? true : false
   console.log("path", path);
   return (
@@ -16,8 +17,8 @@ const App = ({ path }) => {
       <div className="ws-citizen-wrapper">
        {!location.pathname.includes("response") && !location.pathname.includes("openlink/stakeholder") && !location.pathname.includes("/acknowledgement") && !isDocScreenAfterEdcr && <BackButton style={{ border: "none" }}>{t("CS_COMMON_BACK")}</BackButton>}
       <Switch>
-        <PrivateRoute path={`${path}/my-applications`} />
-        <PrivateRoute path={`${path}/stakeholder/apply/stakeholder-docs-required`} component={BPACreate}/>
+        <PrivateRoute path={`${path}/my-applications`} component={BPAMyApplications}></PrivateRoute>
+        <PrivateRoute path={`${path}/building-permit`} component={BPACreate}/>
       </Switch>
       </div>
     </React.Fragment>

@@ -91,7 +91,7 @@ const Create = () => {
     config = config.concat(obj.body.filter((a) => !a.hideInCitizen));
   });
   
-  config.indexRoute = "applicant-details";
+  config.indexRoute = "area-mapping";
 
   const CheckPage = Digit?.ComponentRegistryService?.getComponent("CheckPage");
   

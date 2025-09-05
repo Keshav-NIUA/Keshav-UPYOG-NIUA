@@ -1,4 +1,4 @@
-import { Banner, Card, LinkButton, Loader, Row, StatusTable, SubmitBar, Toast } from "@nudmcdgnpm/digit-ui-react-components";
+import { Banner, Card, LinkButton, Loader, Row, StatusTable, SubmitBar, Toast } from "@upyog/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";

@@ -8,9 +8,11 @@ import ApplicantDetails  from "./pageComponents/ApplicantDetails";
 import AddressDetails from "./pageComponents/AddressDetails";
 import LandDetails from "./pageComponents/LandDetails";
 import CheckPage from "./pages/citizen/Create/CheckPage";
+import { BPAMyApplications } from "./pages/citizen/MyApplications";
+import AreaMapping from "./pageComponents/AreaMapping";
 // import EmployeeApp from "./pages/employee";
 
-const OBPSModule = ({ stateCode, userType, tenants }) => {
+const OBPSV2Module = ({ stateCode, userType, tenants }) => {
   const moduleCode = ["bpa", "bpareg", "common"]; //"bpa";
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
@@ -29,19 +31,19 @@ const OBPSModule = ({ stateCode, userType, tenants }) => {
   return <EmployeeApp path={path} stateCode={stateCode} />
 }
 
-const OBPSLinks = ({ matchPath, userType }) => {
+const OBPSV2Links = ({ matchPath, userType }) => {
   const { t } = useTranslation();
 
   const links = [
     
     {
-      link: `${matchPath}/stakeholder/apply/stakeholder-docs-required`,
+      link: `${matchPath}/building-permit`,
       i18nKey: t("BPA_CITIZEN_HOME_STAKEHOLDER_LOGIN_LABEL"),
     },
     {
       link: `${matchPath}/home`,
       i18nKey: t("BPA_CITIZEN_HOME_ARCHITECT_LOGIN_LABEL"),
-    },
+    }
   ];
 
   return (
@@ -52,13 +54,15 @@ const OBPSLinks = ({ matchPath, userType }) => {
 } 
 
 const componentsToRegister = {
-  OBPSModule,
-  OBPSLinks,
+  OBPSV2Module,
+  OBPSV2Links,
   ApplicantDetails,
   AddressDetails,
   LandDetails,
   BPACreate: Create,
-  CheckPage
+  CheckPage,
+  BPAMyApplications,
+  AreaMapping
 }
 
 export const initOBPSV2Components = () => {
