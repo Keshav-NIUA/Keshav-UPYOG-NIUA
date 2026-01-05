@@ -1,7 +1,7 @@
 # Build Stage: Install dependencies, set environment, and build the React app
 # Production Stage: Copy built files to Nginx and serve the app
 
-FROM upyogio/alpine-node-builder-14:yarn AS build
+FROM node:22-alpine AS build
 RUN apk update && apk upgrade
 RUN apk add --no-cache git>2.30.0
 RUN yarn add @nudmcdgnpm/digit-ui-libraries
