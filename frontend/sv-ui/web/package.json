@@ -48,7 +48,7 @@
   },
   "scripts": {
     "start": "react-scripts --openssl-legacy-provider start",
-    "build": "GENERATE_SOURCEMAP=true SKIP_PREFLIGHT_CHECK=true react-scripts build",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider GENERATE_SOURCEMAP=true SKIP_PREFLIGHT_CHECK=true react-scripts build",
     "build:prepare": "./build.sh"
   },
   "eslintConfig": {
