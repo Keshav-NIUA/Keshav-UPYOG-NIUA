@@ -12,7 +12,7 @@ RUN yarn add @nudmcdgnpm/upyog-ui-module-sv
 
 ARG WORK_DIR
 WORKDIR /app
-ENV NODE_OPTIONS "--max-old-space-size=2560"
+ENV NODE_OPTIONS "--max-old-space-size=2560 --openssl-legacy-provider"
 ENV GENERATE_SOURCEMAP "true"
 
 COPY ${WORK_DIR} .
