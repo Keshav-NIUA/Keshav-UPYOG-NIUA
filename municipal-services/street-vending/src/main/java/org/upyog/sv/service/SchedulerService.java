@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.upyog.sv.config.StreetVendingConfiguration;
 import org.upyog.sv.constants.StreetVendingConstants;
 import org.upyog.sv.repository.StreetVendingRepository;
 import org.upyog.sv.util.StreetVendingUtil;
@@ -32,9 +33,12 @@ public class SchedulerService {
 
 	@Autowired
 	private StreetyVendingNotificationService notificationService;
+
+	@Autowired
+	private StreetVendingConfiguration config;
 	
 
-	@Value("${scheduler.sv.expiry.enabled:false}")
+	@Value("${scheduler.sv.expiry.enabled}")
 	private boolean isSchedulerEnabled;
 
 	/** SCHEDLOCK USE: All pods load the scheduler and attempt to run the scheduled job at the same time.
@@ -137,8 +141,8 @@ public class SchedulerService {
 			return;
 		}
 
-		UserDetailResponse systemUser = userService.searchByUserName(StreetVendingConstants.SYSTEM_CITIZEN_USERNAME,
-				StreetVendingConstants.SYSTEM_CITIZEN_TENANTID);
+		UserDetailResponse systemUser = userService.searchByUserName(config.getInternalMicroserviceUserName(),
+				config.getStateLevelTenantId());
 		if (systemUser == null || systemUser.getUser() == null || systemUser.getUser().isEmpty()) {
 			log.error("System user not found");
 			return;
