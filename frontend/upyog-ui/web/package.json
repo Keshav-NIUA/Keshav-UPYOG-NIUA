@@ -9,8 +9,7 @@
     "micro-ui-internals/packages/modules/common",
     "micro-ui-internals/packages/modules/assetv2",
     "micro-ui-internals/packages/modules/tl",
-    "micro-ui-internals/packages/modules/pt",
-     "micro-ui-internals/packages/modules/est"
+    "micro-ui-internals/packages/modules/est"
   ],
   "engines": {
     "node": ">=14"
@@ -45,7 +44,7 @@
     "@upyog/upyog-ui-module-vendor":"3.10.0",
     "@upyog/upyog-ui-module-pgrai":"3.10.0",
     "@nudmcdgnpm/upyog-ui-module-asset-v2":"1.0.0",
-    "@nudmcdgnpm/upyog-ui-module-gis": "1.0.3",
+    "@nudmcdgnpm/upyog-ui-module-gis": "1.0.4",
     "@upyog/upyog-ui-module-est":"1.0.0",
     "babel-loader": "8.1.0",
     "react": "17.0.2",

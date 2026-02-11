@@ -10,9 +10,8 @@
     "packages/modules/common",
     "packages/modules/assetv2",
     "packages/modules/tl",
-    "packages/modules/pt",
     "packages/modules/est"
-  ],
+    ],
   
   "license": "MIT",
   "private": true,
@@ -64,7 +63,7 @@
     "build:assetv2": "cd packages/modules/assetv2 && yarn build",
     "build:components": "cd packages/react-components && yarn build",
     "build:common": "cd packages/modules/common && yarn build",
-    "build:pt": "cd packages/modules/pt && yarn build",
+    "buildD:pt": "cd packages/modules/pt && yarn build",
     "buildD:ptr": "cd packages/modules/ptr && yarn build",
     "buildD:commonPt": "cd packages/modules/commonPt && yarn build",
     "buildD:core": "cd packages/modules/core && yarn build",
