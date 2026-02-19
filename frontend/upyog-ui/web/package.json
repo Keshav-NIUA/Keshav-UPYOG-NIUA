@@ -8,10 +8,12 @@
     "micro-ui-internals/packages/react-components",
     "micro-ui-internals/packages/modules/common",
     "micro-ui-internals/packages/modules/asset",
+    "micro-ui-internals/packages/modules/assetv2",
     "micro-ui-internals/packages/modules/ads",
     "micro-ui-internals/packages/modules/chb",
     "micro-ui-internals/packages/modules/pt",
-    "micro-ui-internals/packages/modules/ptr"
+    "micro-ui-internals/packages/modules/ptr",
+    "micro-ui-internals/packages/modules/est"
   ],
   "engines": {
     "node": ">=14"
