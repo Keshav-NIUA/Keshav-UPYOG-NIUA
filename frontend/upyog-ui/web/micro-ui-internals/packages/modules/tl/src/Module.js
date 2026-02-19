@@ -62,6 +62,7 @@ import TLTradeUnitsEmployeeInitial from "./pageComponents/TLTradeUnitsEmployeeIn
 import CommonRedirect from "./pageComponents/CommonRedirect"
 import CitizenApp from "./pages/citizen";
 import EmployeeApp from "./pages/employee";
+import { ReportSearchApplication, EnhancedReport } from "@nudmcdgnpm/digit-ui-module-reports";
 
 export const TLModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -162,7 +163,9 @@ const componentsToRegister = {
   SelectOtherTradeDetails,
   SelectTradeUnitsInitial,
   TLTradeUnitsEmployeeInitial,
-  CommonRedirect
+  CommonRedirect,
+  EnhancedReport,
+  ReportSearchApplication
 };
 
 export const initTLComponents = () => {
