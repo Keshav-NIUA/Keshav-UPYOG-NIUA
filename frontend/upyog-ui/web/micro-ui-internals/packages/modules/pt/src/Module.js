@@ -92,6 +92,7 @@ import DocsRequired from "./pages/employee/PropertyMutation/docsRequired";
 import SelectOtp from "../../core/src/pages/citizen/Login/SelectOtp";
 import CitizenFeedback from "../../core/src/components/CitizenFeedback";
 import AcknowledgementCF from "../../core/src/components/AcknowledgementCF";
+import { ReportSearchApplication, EnhancedReport } from "@nudmcdgnpm/digit-ui-module-reports";
 // PTAcknowledgementCF from "@upyog/digit-ui-module-core/src/components/PTAcknowledgementCF";
 //import PTCitizenFeedbackPopUp from "./pageComponents/PTCitizenFeedbackPopUp";
 
@@ -155,6 +156,8 @@ const componentsToRegister = {
   PropertySearchForm,
   PropertySearchResults,
   PTMyPayments,
+  EnhancedReport,
+  ReportSearchApplication,
   SelectPTUnits,
   PTNewApplication: NewApplication,
   ApplicationDetails: ApplicationDetails,
