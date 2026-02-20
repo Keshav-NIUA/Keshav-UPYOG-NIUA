@@ -28,8 +28,7 @@ import CitizenFeedback from "../../core/src/components/CitizenFeedback";
 import AcknowledgementCF from "../../core/src/components/AcknowledgementCF";
 import CHBRequiredDoc from "./pageComponents/CHBRequiredDoc";
 import CHBMapView from "./components/CHBMapView";
-import EnhancedReport from "../../reports/src/components/EnhancedReport";
-import ReportSearchApplication from "../../reports/src/components/ReportSearchApplication";
+import { ReportSearchApplication, EnhancedReport } from "@nudmcdgnpm/digit-ui-module-reports";
 
 
 /**
