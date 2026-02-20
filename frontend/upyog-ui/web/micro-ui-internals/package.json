@@ -32,7 +32,7 @@
     "devD:asset": "cd packages/modules/asset && yarn start",
     "devD:ptr": "cd packages/modules/ptr && yarn start",
     "dev:commonPt": "cd packages/modules/commonPt && yarn start",
-    "dev:core": "cd packages/modules/core && yarn start",
+    "devD:core": "cd packages/modules/core && yarn start",
     "dev:pgr": "cd packages/modules/pgr && yarn start",
     "dev:fsm": "cd packages/modules/fsm && yarn start",
     "dev:dss": "cd packages/modules/dss && yarn start",
