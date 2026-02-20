@@ -39,8 +39,6 @@ import EditGeneralDetails from "./pageComponents/EditGeneralDetails";
 import EditAssetDetails from "./pageComponents/EditAssetDetails";
 import EditResponse from "./pages/employee/EditResponse";
 import EditAssetMaintenance from "./pages/employee/EditAssetMaintenance";
-// import EnhancedReport from "../../reports/src/components/EnhancedReport";
-// import ReportSearchApplication from "../../reports/src/components/ReportSearchApplication";
 import { ReportSearchApplication, EnhancedReport } from "@nudmcdgnpm/digit-ui-module-reports";
 
 
