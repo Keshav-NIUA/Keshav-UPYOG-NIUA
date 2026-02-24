@@ -332,21 +332,17 @@ def transform(**kwargs):
 extract_tl = PythonOperator(
     task_id='elastic_search_extract_tl',
     python_callable=dump_kibana,
-    provide_context=True,
-    do_xcom_push=True,
     op_kwargs={ 'module' : 'TL'},
     dag=dag)
 
 transform_tl = PythonOperator(
     task_id='nudb_transform_tl',
     python_callable=transform,
-    provide_context=True,
     dag=dag)
 
 load_tl = PythonOperator(
     task_id='nudb_ingest_load_tl',
     python_callable=load,
-    provide_context=True,
     op_kwargs={ 'module' : 'TL'},
     dag=dag)
 
@@ -354,42 +350,34 @@ load_tl = PythonOperator(
 extract_pgr = PythonOperator(
     task_id='elastic_search_extract_pgr',
     python_callable=dump_kibana,
-    provide_context=True,
-    do_xcom_push=True,
     op_kwargs={ 'module' : 'PGR'},
     dag=dag)
 
 transform_pgr = PythonOperator(
     task_id='nudb_transform_pgr',
     python_callable=transform,
-    provide_context=True,
     dag=dag)
 
 load_pgr = PythonOperator(
     task_id='nudb_ingest_load_pgr',
     python_callable=load,
-    provide_context=True,
     op_kwargs={ 'module' : 'PGR'},
     dag=dag)
 
 extract_ws = PythonOperator(
     task_id='elastic_search_extract_ws',
     python_callable=dump_kibana,
-    provide_context=True,
-    do_xcom_push=True,
     op_kwargs={ 'module' : 'WS'},
     dag=dag)
 
 transform_ws = PythonOperator(
     task_id='nudb_transform_ws',
     python_callable=transform,
-    provide_context=True,
     dag=dag)
 
 load_ws = PythonOperator(
     task_id='nudb_ingest_load_ws',
     python_callable=load,
-    provide_context=True,
     op_kwargs={ 'module' : 'WS'},
     dag=dag)
 
@@ -397,42 +385,34 @@ load_ws = PythonOperator(
 extract_pt = PythonOperator(
     task_id='elastic_search_extract_pt',
     python_callable=dump_kibana,
-    provide_context=True,
-    do_xcom_push=True,
     op_kwargs={ 'module' : 'PT'},
     dag=dag)
 
 transform_pt = PythonOperator(
     task_id='nudb_transform_pt',
     python_callable=transform,
-    provide_context=True,
     dag=dag)
 
 load_pt = PythonOperator(
     task_id='nudb_ingest_load_pt',
     python_callable=load,
-    provide_context=True,
     op_kwargs={ 'module' : 'PT'},
     dag=dag)
 
 extract_firenoc = PythonOperator(
     task_id='elastic_search_extract_firenoc',
     python_callable=dump_kibana,
-    provide_context=True,
-    do_xcom_push=True,
     op_kwargs={ 'module' : 'FIRENOC'},
     dag=dag)
 
 transform_firenoc = PythonOperator(
     task_id='nudb_transform_firenoc',
     python_callable=transform,
-    provide_context=True,
     dag=dag)
 
 load_firenoc = PythonOperator(
     task_id='nudb_ingest_load_firenoc',
     python_callable=load,
-    provide_context=True,
     op_kwargs={ 'module' : 'FIRENOC'},
     dag=dag)
 
@@ -440,85 +420,71 @@ load_firenoc = PythonOperator(
 extract_mcollect = PythonOperator(
     task_id='elastic_search_extract_mcollect',
     python_callable=dump_kibana,
-    provide_context=True,
-    do_xcom_push=True,
     op_kwargs={ 'module' : 'MCOLLECT'},
     dag=dag)
 
 transform_mcollect = PythonOperator(
     task_id='nudb_transform_mcollect',
     python_callable=transform,
-    provide_context=True,
     dag=dag)
 
 load_mcollect = PythonOperator(
     task_id='nudb_ingest_load_mcollect',
     python_callable=load,
-    provide_context=True,
     op_kwargs={ 'module' : 'MCOLLECT'},
     dag=dag)
 
 extract_common = PythonOperator(
     task_id='elastic_search_extract_common',
     python_callable=dump_kibana,
-    provide_context=True,
-    do_xcom_push=True,
     op_kwargs={ 'module' : 'COMMON'},
     dag=dag)
 
 transform_common = PythonOperator(
     task_id='nudb_transform_common',
     python_callable=transform,
-    provide_context=True,
     dag=dag)
 
 load_common = PythonOperator(
     task_id='nudb_ingest_load_common',
     python_callable=load,
-    provide_context=True,
     op_kwargs={ 'module' : 'COMMON'},
     dag=dag)
 
 # extract_ws_digit = PythonOperator(
 #     task_id='elastic_search_extract_ws_digit',
 #     python_callable=dump_kibana,
-#     provide_context=True,
-#     do_xcom_push=True,
+# #     do_xcom_push=True,
 #     op_kwargs={ 'module' : 'WS_DIGIT'},
 #     dag=dag)
 
 # transform_ws_digit = PythonOperator(
 #     task_id='nudb_transform_ws_digit',
 #     python_callable=transform,
-#     provide_context=True,
-#     dag=dag)
+# #     dag=dag)
 
 # load_ws_digit = PythonOperator(
 #     task_id='nudb_ingest_load_ws_digit',
 #     python_callable=load,
-#     provide_context=True,
-#     op_kwargs={ 'module' : 'WS_DIGIT'},
+# #     op_kwargs={ 'module' : 'WS_DIGIT'},
 #     dag=dag)
 
 # extract_obps = PythonOperator(
 #     task_id='elastic_search_extract_obps',
 #     python_callable=dump_kibana,
-#     provide_context=True,
-#     do_xcom_push=True,
+# #     do_xcom_push=True,
 #     op_kwargs={ 'module' : 'OBPS'},
 #     dag=dag)
 
 # transform_obps = PythonOperator(
 #     task_id='nudb_transform_obps',
 #     python_callable=transform,
-#     provide_context=True,
-#     dag=dag)
+# #     dag=dag)
 
 # load_obps = PythonOperator(
 #     task_id='nudb_ingest_load_obps',
 #     python_callable=load,
-#     provide_context=True,
-#     op_kwargs={ 'module' : 'OBPS'},
+# #     op_kwargs={ 'module' : 'OBPS'},
 #     dag=dag)
 
 
