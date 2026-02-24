@@ -1,11 +1,12 @@
 import sys
 from pathlib import Path
 
-# Ensure accelerator plugins (hooks, etc.) are importable when DAGs run from .../dags/
+# Ensure accelerator plugins and dags dir are importable when DAGs run from .../dags/
 _dag_dir = Path(__file__).resolve().parent
 _plugins_dir = _dag_dir.parent / "plugins"
-if _plugins_dir.is_dir() and str(_plugins_dir) not in sys.path:
-    sys.path.insert(0, str(_plugins_dir))
+for _d in (_plugins_dir, _dag_dir):
+    if _d.is_dir() and str(_d) not in sys.path:
+        sys.path.insert(0, str(_d))
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
@@ -21,7 +22,6 @@ from hooks.elastic_hook import ElasticHook
 from queries.tl import *
 from queries.pgr import *
 from queries.ws import *
-from queries.ws_digit import *
 from queries.pt import *
 from queries.firenoc import *
 from queries.mcollect import *
@@ -40,7 +40,6 @@ module_map = {
     'TL' : (tl_queries, empty_tl_payload),
     'PGR' : (pgr_queries, empty_pgr_payload),
     'WS' : (ws_queries, empty_ws_payload),
-    'WS_DIGIT' : (ws_digit_queries, empty_ws_digit_payload),
     'PT' : (pt_queries, empty_pt_payload),
     'FIRENOC' : (firenoc_queries, empty_firenoc_payload),
     'MCOLLECT' : (mcollect_queries, empty_mcollect_payload),
