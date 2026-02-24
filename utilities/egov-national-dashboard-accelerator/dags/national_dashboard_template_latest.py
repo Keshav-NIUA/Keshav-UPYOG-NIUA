@@ -2,12 +2,10 @@
 from numpy import sinc
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.utils.dates import days_ago
 from datetime import datetime, timedelta, timezone
 from datetime import date
 from hooks.elastic_hook import ElasticHook
-from airflow.providers.http.operators.http import SimpleHttpOperator
 import requests
 from airflow.hooks.base import BaseHook
 import logging
