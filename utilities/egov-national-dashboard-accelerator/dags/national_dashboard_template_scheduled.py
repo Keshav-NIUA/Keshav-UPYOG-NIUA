@@ -1,3 +1,12 @@
+import sys
+from pathlib import Path
+
+# Ensure accelerator plugins (hooks, etc.) are importable when DAGs run from .../dags/
+_dag_dir = Path(__file__).resolve().parent
+_plugins_dir = _dag_dir.parent / "plugins"
+if _plugins_dir.is_dir() and str(_plugins_dir) not in sys.path:
+    sys.path.insert(0, str(_plugins_dir))
+
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.utils import timezone as airflow_tz
