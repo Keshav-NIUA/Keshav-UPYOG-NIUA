@@ -1,13 +1,13 @@
 
 from numpy import sinc
 from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
-from airflow.operators.postgres_operator import PostgresOperator
+from airflow.operators.python import PythonOperator
+from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.utils.dates import days_ago
 from datetime import datetime, timedelta, timezone
 from datetime import date
 from hooks.elastic_hook import ElasticHook
-from airflow.operators.http_operator import SimpleHttpOperator
+from airflow.providers.http.operators.http import SimpleHttpOperator
 import requests
 from airflow.hooks.base import BaseHook
 import logging
