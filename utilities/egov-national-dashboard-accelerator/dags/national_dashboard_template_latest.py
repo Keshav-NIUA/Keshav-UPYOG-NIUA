@@ -1,16 +1,16 @@
-
-from numpy import sinc
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from airflow.utils.dates import days_ago
-from datetime import datetime, timedelta, timezone
-from datetime import date
-from hooks.elastic_hook import ElasticHook
-import requests
+from airflow.utils import timezone as airflow_tz
+from airflow.models import Variable
 from airflow.hooks.base import BaseHook
+from datetime import datetime, timedelta
+from pytz import timezone
 import logging
 import json
-import urllib
+import uuid
+import requests
+from elasticsearch import Elasticsearch, helpers
+from hooks.elastic_hook import ElasticHook
 from queries.tl import *
 from queries.pgr import *
 from queries.ws import *
@@ -20,21 +20,13 @@ from queries.firenoc import *
 from queries.mcollect import *
 from queries.obps import *
 from queries.common import *
-from utils.utils import log
-from pytz import timezone
-from airflow.models import Variable
-from elasticsearch import Elasticsearch, helpers
-from csv import reader
-import uuid
-
 
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
     'retries': 3,
     'retry_delay': timedelta(seconds=10),
-    'start_date': datetime(2017, 1, 24)
-
+    'start_date': airflow_tz.utcnow() - timedelta(days=1),
 }
 
 module_map = {
@@ -50,7 +42,8 @@ module_map = {
 }
 
 
-dag = DAG('national_dashboard_template_manual', default_args=default_args, schedule_interval=None)
+# Manual trigger only; pass conf e.g. {"date": "06-02-2026"} when triggering.
+dag = DAG('national_dashboard_template_manual', default_args=default_args, schedule=None)
 log_endpoint = 'kibana/api/console/proxy'
 batch_size = 50
 
