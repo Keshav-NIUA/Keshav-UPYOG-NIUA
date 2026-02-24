@@ -1,16 +1,14 @@
-
-from numpy import sinc
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from airflow.utils.dates import days_ago
-from datetime import datetime, timedelta, timezone
-from datetime import date
-from hooks.elastic_hook import ElasticHook
-import requests
+from airflow.utils import timezone as airflow_tz
+from airflow.models import Variable
 from airflow.hooks.base import BaseHook
+from datetime import datetime, timedelta, date
+from pytz import timezone
 import logging
 import json
-import urllib
+import requests
+from hooks.elastic_hook import ElasticHook
 from queries.tl import *
 from queries.pgr import *
 from queries.ws import *
@@ -20,17 +18,13 @@ from queries.firenoc import *
 from queries.mcollect import *
 from queries.obps import *
 from queries.common import *
-from utils.utils import log
-from pytz import timezone
-from airflow.models import Variable
 
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
     'retries': 3,
     'retry_delay': timedelta(seconds=10),
-    'start_date': datetime(2022, 8, 9)
-
+    'start_date': airflow_tz.utcnow() - timedelta(days=1),
 }
 
 module_map = {
@@ -46,7 +40,13 @@ module_map = {
 }
 
 
-dag = DAG('national_dashboard_template_scheduled', catchup = True, default_args=default_args, schedule_interval='@daily')
+# Runs daily at 02:00 UTC; trigger manually anytime. Set catchup=False to avoid backfill.
+dag = DAG(
+    'national_dashboard_template_scheduled',
+    catchup=False,
+    default_args=default_args,
+    schedule='0 2 * * *',  # 02:00 UTC daily; change cron for different time
+)
 log_endpoint = 'kibana/api/console/proxy'
 batch_size = 50
 
