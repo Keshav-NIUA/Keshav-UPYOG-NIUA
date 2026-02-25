@@ -90,11 +90,16 @@ const Download = {
     const element = ReactDOM.findDOMNode(node.current);
 
 
-    return domtoimage.toPng(element, {
-      quality: 1,
-      bgcolor: 'white',
-      filter:node=>!node?.className?.includes?.("divToBeHidden")
-     }).then(function (dataUrl) {
+    return html2canvas(element, {
+      scrollY: -window.scrollY,
+      scrollX: 0,
+      useCORS: true,
+      scale: 1.5,
+      height: element.scrollHeight,
+      windowHeight: element.scrollHeight,
+      ignoreElements: (node) => node?.className?.includes?.("divToBeHidden")
+    }).then(function (canvas) {
+       const dataUrl = canvas.toDataURL('image/png');
        var pdf = new jsPDF('p', 'pt', 'a4');
        const imgProps = pdf.getImageProperties(dataUrl);
        const margin = 20;

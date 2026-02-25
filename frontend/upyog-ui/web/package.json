@@ -9,7 +9,10 @@
     "micro-ui-internals/packages/modules/common",
     "micro-ui-internals/packages/modules/assetv2",
     "micro-ui-internals/packages/modules/pt",
-    "micro-ui-internals/packages/modules/est"
+    "micro-ui-internals/packages/modules/est",
+    "micro-ui-internals/packages/modules/tl",
+    "micro-ui-internals/packages/modules/ws"
+
   ],
   "engines": {
     "node": ">=14"
