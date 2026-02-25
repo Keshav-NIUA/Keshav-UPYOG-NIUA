@@ -1,0 +1,22 @@
+/**
+ * Module to Role Mapping Configuration
+ * Maps module codes to their respective employee role codes
+ * Used for determining which modules an employee has access to
+ */
+
+export const MODULE_ROLE_MAPPING = {
+  'PT': ['PT_CEMP', 'PT_APPROVER', 'PT_FIELD_INSPECTOR', 'PT_DOC_VERIFIER'],
+  'PETSERVICES': ["PTR_APPROVER", "PTR_CEMP", "PTR_VERIFIER"],
+  'TL': ["TL_CEMP", "TL_APPROVER", "TL_FIELD_INSPECTOR", "TL_DOC_VERIFIER"],
+  'FSM': ['FSM_EDITOR_EMP', 'FSM_EMP_FSTPO', 'FSM_ADMIN','FSM_CREATOR_EMP','FSM_VIEW_EMP'],
+  'PGR': ["PGR_LME", "PGR-ADMIN", "CSR", "CEMP", "FEMP", "DGRO", "ULB Operator", "GRO", "GO", "RO", "GA"],
+  'WATER': ["WS_CEMP", "WS_APPROVER", "WS_FIELD_INSPECTOR", "WS_DOC_VERIFIER","WS_CLERK"],
+  'SEWERAGE': ["SW_CEMP", "SW_APPROVER", "SW_FIELD_INSPECTOR", "SW_DOC_VERIFIER","SW_CLERK"],
+  'CHB': ["CHB_APPROVER", "CHB_VERIFIER", "CHB_CEMP"],
+  'OBPAS': ["BPA_VERIFIER","CEMP","BPA_APPROVER","BPA_FIELD_INSPECTOR","BPA_NOC_VERIFIER","BPA_DOC_VERIFIER","EMPLOYEE"],
+  "ASSET": ["ASSET_INITIATOR","ASSET_VERIFIER","ASSET_APPROVER"],
+  'MT': ['MT_CEMP'],
+  "WT": ['WT_CEMP'],
+  'TP': ["TP_CEMP","TP_VERIFIER","TP_EXECUTION"],
+  'EWASTE': ['EW_VENDOR'],
+};

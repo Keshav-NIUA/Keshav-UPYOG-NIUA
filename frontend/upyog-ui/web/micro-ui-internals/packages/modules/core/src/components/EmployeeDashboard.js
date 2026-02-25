@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { Loader } from "@upyog/digit-ui-react-components";
+import { MODULE_ROLE_MAPPING } from '../config/module-role-mapping';
 
 /**
  * @author - Shivank Shukla - NIUA
@@ -29,109 +30,147 @@ import { Loader } from "@upyog/digit-ui-react-components";
 
 const formatNumbers = (amount) => {
   if (amount === null || amount === undefined) return '';
-  
   const num = Number(amount);
   const numStr = num.toString();
   
-  // If number has 5 digits or less, show exact value with Indian comma formatting
   if (numStr.length <= 5) {
     const lastThree = numStr.substring(numStr.length - 3);
     const otherNums = numStr.substring(0, numStr.length - 3);
     const formatted = otherNums.replace(/\B(?=(\d{2})+(?!\d))/g, ',');
     return otherNums ? formatted + ',' + lastThree : lastThree;
   }
-  
-  // For numbers greater than 5 digits
-  else if (num >= 10000000) { // 1 crore and above
+  else if (num >= 10000000) {
     const crores = num / 10000000;
-    if (crores >= 100) {
-      return `${Math.round(crores)} Crores`;
-    } else if (crores >= 10) {
-      return `${(crores).toFixed(1)} Crores`;
-    } else {
-      return `${(crores).toFixed(2)} Crores`;
-    }
-  } else if (num >= 100000) { // 1 lakh and above
+    return crores >= 100 ? `${Math.round(crores)} Crores` : `${crores.toFixed(2)} Crores`;
+  } else if (num >= 100000) {
     const lakhs = num / 100000;
-    if (lakhs >= 100) {
-      return `${Math.round(lakhs)} Lakhs`;
-    } else if (lakhs >= 10) {
-      return `${(lakhs).toFixed(1)} Lakhs`;
-    } else {
-      return `${(lakhs).toFixed(2)} Lakhs`;
-    }
+    return lakhs >= 100 ? `${Math.round(lakhs)} Lakhs` : `${lakhs.toFixed(2)} Lakhs`;
   }
-  
-  // Fallback for edge cases
   return numStr;
 };
 
 const formatIndianCurrency = (amount) => {
   if (amount === null || amount === undefined) return '';
-  
-  const formattedNumber = formatNumbers(amount);
-  return `₹${formattedNumber}`;
+  return `₹${formatNumbers(amount)}`;
 };
 
-const EmployeeDashboard = ({modules}) => {
-  const { t } = useTranslation();
-  const [cardData, setCardData] = useState([
-    { title: "", count: null, color: "blue" },
-    { title: "", count: null, color: "teal" },
-    { title: "", count: null, color: "purple" },
-    { title: "", count: null, color: "green" },
-  ]);
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        const tenantId = Digit.ULBService.getCurrentUlb().code;
-        const payload = {
-          tenantId: tenantId,
-          moduleName: "ALL"
-        };
-        
-        const response = await Digit.EmployeeDashboardService.search(payload);
-        if (response && response.employeeDashboard) {
-          setCardData([
-            { title: t("ES_APPLICATION_RECEIVED"), count: response.employeeDashboard.applicationReceived || 0, color: "blue" },
-            { title: t("ES_TOTAL_AMOUNT"), count: response.employeeDashboard.totalAmount || 0, color: "teal", isAmount: true },
-            { title: t("ES_APPLICATION_PENDING"), count: response.employeeDashboard.applicationPending || 0, color: "purple" },
-            { title: t("ES_APPLICATION_APPROVED"), count: response.employeeDashboard.applicationApproved || 0, color: "green" },
-          ]);
-        }
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error);
-      }
-    };
-    fetchDashboardData();
-  }, [t]);
+const getEmployeeModules = () => {
+  const user = Digit.UserService.getUser();
+  if (!user || !user.info || !user.info.roles) return [];
+  
+  const roles = user.info.roles;
+  const employeeModules = [];
+  
+  for (const [module, roleCodes] of Object.entries(MODULE_ROLE_MAPPING)) {
+    const hasModuleRole = roles.some(role => 
+      roleCodes.some(roleCode => role.code.includes(roleCode))
+    );
+    if (hasModuleRole) employeeModules.push(module);
+  }
+  
+  return employeeModules;
+};
 
+const ModuleDashboardSection = ({ moduleName, data, t }) => {
   return (
-    <React.Fragment>
-      <div style={{marginLeft:"42%", fontWeight:"bold", fontSize:"22px", marginBottom:"5px"}}>
-        {t("COMMON_ULB_DASHBOARD")}
+    <div style={{ marginBottom: "40px" }}>
+      <div style={{ 
+        fontWeight: "bold", 
+        fontSize: "20px", 
+        marginBottom: "15px",
+        textAlign: "center",
+        color: "#505A5F"
+      }}>
+        {t(`${moduleName}_DASHBOARD`)}
       </div>
+      
       <div className="ground-container moduleCardWrapper gridModuleWrapper">
-        {cardData.map(({ title, count, color, isAmount }, index) => (
+        {[
+          { title: t("ES_APPLICATION_RECEIVED"), count: data.applicationReceived || 0, color: "blue" },
+          { title: t("ES_TOTAL_AMOUNT"), count: data.totalAmount || 0, color: "teal", isAmount: true },
+          { title: t("ES_APPLICATION_PENDING"), count: data.applicationPending || 0, color: "purple" },
+          { title: t("ES_APPLICATION_APPROVED"), count: data.applicationApproved || 0, color: "green" },
+        ].map(({ title, count, color, isAmount }, index) => (
           <div key={index} className={`status-card ${color}`}>
             <div className="card-content">
-            {count === null ? (
-                <div>
-                  <Loader />
-                </div>
-            ) : (
-              <React.Fragment>    
-                <span className="count">
-                  {isAmount ? formatIndianCurrency(count) : formatNumbers(count)}
-                </span>
-                <span className="title">{title}</span>
-              </React.Fragment>  
-            )}
+              {count === null ? (
+                <Loader />
+              ) : (
+                <React.Fragment>
+                  <span className="count">
+                    {isAmount ? formatIndianCurrency(count) : formatNumbers(count)}
+                  </span>
+                  <span className="title">{title}</span>
+                </React.Fragment>
+              )}
             </div>
           </div>
         ))}
       </div>
-    </React.Fragment>
+    </div>
+  );
+};
+
+const EmployeeDashboard = () => {
+  const { t } = useTranslation();
+  const [modulesData, setModulesData] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAllModuleDashboards = async () => {
+      try {
+        const tenantId = Digit.ULBService.getCurrentUlb().code;
+        const employeeModules = getEmployeeModules();
+        
+        if (employeeModules.length === 0) return;
+        
+        const responses = await Promise.all(
+          employeeModules.map(async (moduleName) => {
+            const response = await Digit.EmployeeDashboardService.search({ tenantId, moduleName });
+            return { moduleName, data: response?.employeeDashboard || null };
+          })
+        );
+        
+        const dataByModule = {};
+        responses.forEach(({ moduleName, data }) => {
+          if (data) dataByModule[moduleName] = data;
+        });
+        
+        setModulesData(dataByModule);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+        setLoading(false);
+      }
+    };
+    
+    fetchAllModuleDashboards();
+  }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  return (
+    <div className="employee-app-container" style={{ padding: "20px" }}>
+      <div style={{ 
+        textAlign: "center", 
+        fontWeight: "bold", 
+        fontSize: "24px", 
+        marginBottom: "30px" 
+      }}>
+        {t("COMMON_ULB_DASHBOARD")}
+      </div>
+      
+      {Object.entries(modulesData).map(([moduleName, data]) => (
+        <ModuleDashboardSection 
+          key={moduleName}
+          moduleName={moduleName}
+          data={data}
+          t={t}
+        />
+      ))}
+    </div>
   );
 };
 

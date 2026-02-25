@@ -17,6 +17,7 @@ import {
 import React from "react";
 import { useTranslation } from "react-i18next";
 import EmployeeDashboard from "./EmployeeDashboard";
+import { useHistory } from "react-router-dom";
 
 /* 
 Feature :: Citizen All service screen cards
@@ -137,24 +138,34 @@ const CitizenHome = ({ modules, getCitizenMenu, fetchedCitizen, isLoading }) => 
 
 
 const EmployeeHome = ({ modules }) => {
+  const { t } = useTranslation();
+  const history = useHistory(); // ← Add this import at top
   const dashboardCemp = Digit.UserService.hasAccess(["DASHBOARD_EMPLOYEE"])?true:false;
+  console.log("dashboardCempdashboardCemp",dashboardCemp);
   if(window.Digit.SessionStorage.get("PT_CREATE_EMP_TRADE_NEW_FORM")) window.Digit.SessionStorage.set("PT_CREATE_EMP_TRADE_NEW_FORM",{})
-    const { data: dashboardConfig } = Digit.Hooks.useCustomMDMS(Digit.ULBService.getStateId(),"common-masters",[{ name: "CommonConfig" }],
-      {
-        select: (data) => {
-          const formattedData = data?.["common-masters"]?.["CommonConfig"];
-          // Find the object with cityDashboardEnabled and return its isActive value
-          const cityDashboardObject = formattedData?.find(
-            (item) => item?.name === "cityDashboardEnabled"
-          );
-          return cityDashboardObject?.isActive;
-        },
-      }
-    );
   return (
     <div className="employee-app-container">
       <br />
-      {(dashboardConfig && dashboardCemp)?<EmployeeDashboard modules={modules}/>:null}
+      {dashboardCemp && (
+        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+          <button
+            className="view-dashboard-btn"
+            style={{
+              padding: "12px 24px",
+              fontSize: "16px",
+              fontWeight: "bold",
+              backgroundColor: "#F47738",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer"
+            }}
+            onClick={() => history.push("/upyog-ui/employee/dashboard")}
+          >
+            {t("VIEW_DASHBOARD")}
+          </button>
+        </div>
+      )}
       <div className="ground-container moduleCardWrapper gridModuleWrapper">
         {modules.map(({ code }, index) => {
           const Card = Digit.ComponentRegistryService.getComponent(`${code}Card`) || (() => <React.Fragment />);
