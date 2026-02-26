@@ -11,7 +11,8 @@
     "packages/modules/pt",
     "packages/modules/core",
     "packages/modules/tl",
-    "packages/modules/ws"
+    "packages/modules/ws",
+    "packages/modules/wt"
     ],
   
   "license": "MIT",
@@ -52,7 +53,7 @@
     "devD:ads": "cd packages/modules/ads && yarn start",
     "devD:ew": "cd packages/modules/ew && yarn start",
     "devD:sv": "cd packages/modules/sv && yarn start",
-    "devD:wt": "cd packages/modules/wt && yarn start",
+    "dev:wt": "cd packages/modules/wt && yarn start",
     "devD:vendor": "cd packages/modules/vendor && yarn start",
     "devD:pgrai": "cd packages/modules/pgrai && yarn start",
     "devD:est": "cd packages/modules/est && yarn start",
@@ -86,7 +87,7 @@
     "buildD:ew": "cd packages/modules/ew && yarn build",
     "buildD:sv": "cd packages/modules/sv && yarn build",
     "buildD:cm": "cd packages/modules/cm && yarn build",
-    "buildD:wt": "cd packages/modules/wt && yarn build",
+    "build:wt": "cd packages/modules/wt && yarn build",
     "buildD:vendor": "cd packages/modules/vendor && yarn build",
     "buildD:pgrai": "cd packages/modules/pgrai && yarn build",
     "buildD:gis": "cd packages/modules/gis && yarn build",
