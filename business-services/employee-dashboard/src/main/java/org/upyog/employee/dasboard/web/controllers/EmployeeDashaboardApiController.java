@@ -15,6 +15,8 @@ import org.upyog.employee.dasboard.web.models.EmployeeDashboardResponse;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
+import org.upyog.employee.dasboard.web.models.RoleBasedDashboardRequest;
+import org.upyog.employee.dasboard.web.models.RoleBasedDashboardResponse;
 
 
 @RestController
@@ -34,5 +36,17 @@ public class EmployeeDashaboardApiController {
 		EmployeeDashboardResponse response = dashboardService.getEmployeeDashboardData(employeeDashboardRequest);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+
+	/// This new endpoint will get the data as per roles
+	@PostMapping("/v2/_search")
+	public ResponseEntity<RoleBasedDashboardResponse> getRoleBasedDashboardData(
+			@Parameter(description = "Fetch dashboard data based on user roles", required = true)
+			@Valid @RequestBody RoleBasedDashboardRequest request) {
+
+		RoleBasedDashboardResponse response = dashboardService.getRoleBasedDashboardData(request);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+
 
 }
