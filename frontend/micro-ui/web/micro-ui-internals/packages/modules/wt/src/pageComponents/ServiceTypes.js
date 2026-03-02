@@ -26,7 +26,7 @@ const tenantId=Digit.ULBService.getStateId();
 //Fetching service type data from MDMS
     const { data: serviceTypeData} = Digit.Hooks.useCustomMDMS(tenantId, "request-service", [{ name: "ServiceType" }], {
     select: (data) => {
-      const formattedData = data?.["request-service"]?.["ServiceType"];
+      const formattedData = data?.["Request-Service"]?.["ServiceType"];
       return formattedData;
     },
   });

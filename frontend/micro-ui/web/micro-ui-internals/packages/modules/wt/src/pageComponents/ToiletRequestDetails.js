@@ -17,7 +17,7 @@ const ToiletRequestDetails = ({ t, config, onSelect, userType, formData }) => {
    // Fetch noOfMobileToilet data from MDMS
    const { data: NoOfMobileToilet} = Digit.Hooks.useCustomMDMS(tenantId, "request-service", [{ name: "NoOfMobileToilet" }], {
     select: (data) => {
-      const formattedData = data?.["request-service"]?.["NoOfMobileToilet"];
+      const formattedData = data?.["Request-Service"]?.["NoOfMobileToilet"];
       return formattedData;
     },
   });
@@ -151,7 +151,6 @@ const ToiletRequestDetails = ({ t, config, onSelect, userType, formData }) => {
             placeholder="Special Request"
             value={specialRequest}
             onChange={SetSpecialRequest}
-            style={{ width: user.type === "EMPLOYEE" ? "51.6%" : null }}
           />
 
         </div>
