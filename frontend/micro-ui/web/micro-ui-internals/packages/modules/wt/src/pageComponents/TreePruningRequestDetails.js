@@ -15,7 +15,7 @@ const TreePruningRequestDetails = ({ t, config, onSelect, userType, formData }) 
 
   const { data: ReasonOfPruningType} = Digit.Hooks.useCustomMDMS(tenantId, "request-service", [{ name: "ReasonPruningType" }], {
     select: (data) => {
-      const formattedData = data?.["request-service"]?.["ReasonPruningType"];
+      const formattedData = data?.["Request-Service"]?.["ReasonPruningType"];
       return formattedData;
     },
   });
