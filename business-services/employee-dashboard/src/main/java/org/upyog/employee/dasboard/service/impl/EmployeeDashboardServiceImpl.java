@@ -1,7 +1,6 @@
 package org.upyog.employee.dasboard.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.upyog.employee.dasboard.query.constant.DashboardConstants;
@@ -17,10 +16,9 @@ import java.util.*;
  * Implementation of Employee Dashboard Service
  * Handles dashboard data retrieval for modules and role-based requests
  */
+@Slf4j
 @Service
 public class EmployeeDashboardServiceImpl implements EmployeeDashboardService {
-
-	private static final Logger log = LoggerFactory.getLogger(EmployeeDashboardServiceImpl.class);
 
 	@Autowired
 	private ServiceRequestRepositoryImpl dashboardRepository;
@@ -54,14 +52,18 @@ public class EmployeeDashboardServiceImpl implements EmployeeDashboardService {
 	 */
 	@Override
 	public RoleBasedDashboardResponse getRoleBasedDashboardData(RoleBasedDashboardRequest request) {
+		// Extract roles and tenantId from RequestInfo
+		List<org.egov.common.contract.request.Role> userRoles = request.getRequestInfo().getUserInfo().getRoles();
+		String tenantId = request.getRequestInfo().getUserInfo().getTenantId();
+
 		log.info("Processing role-based dashboard request for tenant: {} with {} roles",
-				request.getTenantId(), request.getRoles().size());
+				tenantId, userRoles.size());
 
 		Map<String, EmployeeDashboardDetails> dashboardDataMap = new HashMap<>();
 		Set<String> processedModules = new HashSet<>();
 
 		// Iterate through roles and fetch data for corresponding modules
-		for (Role role : request.getRoles()) {
+		for (org.egov.common.contract.request.Role role : userRoles) {
 			String moduleCode = DashboardConstants.ROLE_TO_MODULE_MAP.get(role.getCode());
 
 			if (moduleCode != null && !processedModules.contains(moduleCode)) {
@@ -72,7 +74,7 @@ public class EmployeeDashboardServiceImpl implements EmployeeDashboardService {
 				EmployeeDashboardRequest moduleRequest = new EmployeeDashboardRequest();
 				moduleRequest.setRequestInfo(request.getRequestInfo());
 				moduleRequest.setModuleName(ModuleName.valueOf(moduleCode));
-				moduleRequest.setTenantId(request.getTenantId());
+				moduleRequest.setTenantId(tenantId);
 
 				// Fetch dashboard data for the module
 				EmployeeDashboardDetails details = dashboardRepository.fetchModuleData(moduleRequest);

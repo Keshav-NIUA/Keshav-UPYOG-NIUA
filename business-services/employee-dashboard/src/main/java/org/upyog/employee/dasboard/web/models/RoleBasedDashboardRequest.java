@@ -5,13 +5,11 @@ import jakarta.validation.constraints.NotNull;
 import org.egov.common.contract.request.RequestInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import java.util.List;
 
 /**
- * Request model for role-based dashboard data retrieval
- * Accepts multiple roles and returns dashboard data for corresponding modules
+ * Simplified request model for role-based dashboard
+ * Extracts roles and tenantId from RequestInfo.userInfo
  */
-
 @Data
 public class RoleBasedDashboardRequest {
 
@@ -19,12 +17,4 @@ public class RoleBasedDashboardRequest {
     @NotNull
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
-
-    @NotNull
-    @JsonProperty("roles")
-    private List<Role> roles;
-
-    @NotNull
-    @JsonProperty("tenantId")
-    private String tenantId;
 }
