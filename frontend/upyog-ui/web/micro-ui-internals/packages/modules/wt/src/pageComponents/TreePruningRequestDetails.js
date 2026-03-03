@@ -13,7 +13,7 @@ const TreePruningRequestDetails = ({ t, config, onSelect, userType, formData }) 
   const tenantId = Digit.ULBService.getStateId();
   const inputStyles = { width: user.type === "EMPLOYEE" ? "50%" : "100%" };
 
-  const { data: ReasonOfPruningType} = Digit.Hooks.useCustomMDMS(tenantId, "request-service", [{ name: "ReasonPruningType" }], {
+  const { data: ReasonOfPruningType} = Digit.Hooks.useCustomMDMS(tenantId, "Request-Service", [{ name: "ReasonPruningType" }], {
     select: (data) => {
       const formattedData = data?.["Request-Service"]?.["ReasonPruningType"];
       return formattedData;
