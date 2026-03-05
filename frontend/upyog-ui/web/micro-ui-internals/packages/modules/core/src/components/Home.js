@@ -141,13 +141,12 @@ const EmployeeHome = ({ modules }) => {
   const { t } = useTranslation();
   const history = useHistory(); // ← Add this import at top
   const dashboardCemp = Digit.UserService.hasAccess(["DASHBOARD_EMPLOYEE"])?true:false;
-  console.log("dashboardCempdashboardCemp",dashboardCemp);
   if(window.Digit.SessionStorage.get("PT_CREATE_EMP_TRADE_NEW_FORM")) window.Digit.SessionStorage.set("PT_CREATE_EMP_TRADE_NEW_FORM",{})
   return (
     <div className="employee-app-container">
       <br />
       {dashboardCemp && (
-        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <div style={{ textAlign: "center", marginBottom: "20px", marginLeft:"70%" }}>
           <button
             className="view-dashboard-btn"
             style={{
@@ -158,7 +157,7 @@ const EmployeeHome = ({ modules }) => {
               color: "white",
               border: "none",
               borderRadius: "4px",
-              cursor: "pointer"
+              cursor: "pointer",
             }}
             onClick={() => history.push("/upyog-ui/employee/dashboard")}
           >
