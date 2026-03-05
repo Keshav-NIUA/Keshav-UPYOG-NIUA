@@ -1,31 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { Loader } from "@upyog/digit-ui-react-components";
-import { MODULE_ROLE_MAPPING } from '../config/module-role-mapping';
 
 /**
- * @author - Shivank Shukla - NIUA
+ * ============================================================================
+ * EMPLOYEE DASHBOARD COMPONENT
+ * ============================================================================
  * 
- * This component displays a dashboard with key metrics for employees.
+ * @author Shivank Shukla - NIUA
+ * @version 2.0
+ * @date 2024
  * 
- * How it works:
- * 1. The component initially renders cards with loaders.
- * 2. When the component loads, it fetches dashboard data from an API.
- * 3. It displays four cards showing different metrics:
- *    - Applications Received
- *    - Total Amount
- *    - Pending Applications
- *    - Approved Applications
+ * PURPOSE:
+ * --------
+ * Displays role-based dashboard metrics for employees across multiple modules.
+ * Shows separate dashboard sections for each module the employee has access to.
  * 
- * Technical details:
- * - Fetches data using the Digit.EmployeeDashboardService.search method.
- * - Uses the current tenant ID from Digit.ULBService.getCurrentUlb().
- * - Each card has its own loading state, replaced by data when available.
- * - Smart number formatting for large values (lakhs/crores)
+ * HOW IT WORKS:
+ * -------------
+ * 1. Component makes a single API call to backend with RequestInfo
+ * 2. Backend automatically:
+ *    - Extracts user roles from RequestInfo
+ *    - Maps roles to modules (PT, TL, PETSERVICES, etc.)
+ *    - Returns dashboard data for all accessible modules
+ * 3. Frontend dynamically renders one dashboard section per module
+ * 4. Each section displays 4 metric cards:
+ *    - Applications Received (blue)
+ *    - Total Amount (teal)
+ *    - Applications Pending (purple)
+ *    - Applications Approved (green)
  * 
- * Note: If the API call fails, an error is logged to the console, and the cards
- * will remain in their loading state.
+ * SCENARIOS HANDLED:
+ * ------------------
+ * 1. Multiple Module Access (e.g., PT + TL):
+ *    - Shows 2 separate dashboard sections
+ *    - Each with its own heading and 4 cards
  * 
+ * 2. Single Module Access (e.g., only PT):
+ *    - Shows 1 dashboard section with 4 cards
+ * 
+ * 3. No Module Access:
+ *    - Shows "No Dashboard Access" message
+ * 
+ * NUMBER FORMATTING:
+ * ------------------
+ * - Numbers ≤ 99,999: Indian comma format (e.g., 12,345)
+ * - Numbers ≥ 1,00,000: Lakhs format (e.g., 5.25 Lakhs)
+ * - Numbers ≥ 1,00,00,000: Crores format (e.g., 2.50 Crores)
+ * - Currency: Prefixed with ₹ symbol
+ * 
+ * ============================================================================
  */
 
 const formatNumbers = (amount) => {
@@ -54,23 +78,6 @@ const formatIndianCurrency = (amount) => {
   return `₹${formatNumbers(amount)}`;
 };
 
-const getEmployeeModules = () => {
-  const user = Digit.UserService.getUser();
-  if (!user || !user.info || !user.info.roles) return [];
-  
-  const roles = user.info.roles;
-  const employeeModules = [];
-  
-  for (const [module, roleCodes] of Object.entries(MODULE_ROLE_MAPPING)) {
-    const hasModuleRole = roles.some(role => 
-      roleCodes.some(roleCode => role.code.includes(roleCode))
-    );
-    if (hasModuleRole) employeeModules.push(module);
-  }
-  
-  return employeeModules;
-};
-
 const ModuleDashboardSection = ({ moduleName, data, t }) => {
   return (
     <div style={{ marginBottom: "40px" }}>
@@ -93,16 +100,12 @@ const ModuleDashboardSection = ({ moduleName, data, t }) => {
         ].map(({ title, count, color, isAmount }, index) => (
           <div key={index} className={`status-card ${color}`}>
             <div className="card-content">
-              {count === null ? (
-                <Loader />
-              ) : (
-                <React.Fragment>
-                  <span className="count">
-                    {isAmount ? formatIndianCurrency(count) : formatNumbers(count)}
-                  </span>
-                  <span className="title">{title}</span>
-                </React.Fragment>
-              )}
+              <React.Fragment>
+                <span className="count">
+                  {isAmount ? formatIndianCurrency(count) : formatNumbers(count)}
+                </span>
+                <span className="title">{title}</span>
+              </React.Fragment>
             </div>
           </div>
         ))}
@@ -117,26 +120,14 @@ const EmployeeDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchAllModuleDashboards = async () => {
+    const fetchDashboardData = async () => {
       try {
-        const tenantId = Digit.ULBService.getCurrentUlb().code;
-        const employeeModules = getEmployeeModules();
+        const response = await Digit.EmployeeDashboardService.roleBaseSearch({});
         
-        if (employeeModules.length === 0) return;
+        if (response?.dashboardData) {
+          setModulesData(response.dashboardData);
+        }
         
-        const responses = await Promise.all(
-          employeeModules.map(async (moduleName) => {
-            const response = await Digit.EmployeeDashboardService.search({ tenantId, moduleName });
-            return { moduleName, data: response?.employeeDashboard || null };
-          })
-        );
-        
-        const dataByModule = {};
-        responses.forEach(({ moduleName, data }) => {
-          if (data) dataByModule[moduleName] = data;
-        });
-        
-        setModulesData(dataByModule);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
@@ -144,7 +135,7 @@ const EmployeeDashboard = () => {
       }
     };
     
-    fetchAllModuleDashboards();
+    fetchDashboardData();
   }, []);
 
   if (loading) {
@@ -162,14 +153,25 @@ const EmployeeDashboard = () => {
         {t("COMMON_ULB_DASHBOARD")}
       </div>
       
-      {Object.entries(modulesData).map(([moduleName, data]) => (
-        <ModuleDashboardSection 
-          key={moduleName}
-          moduleName={moduleName}
-          data={data}
-          t={t}
-        />
-      ))}
+      {Object.keys(modulesData).length === 0 ? (
+        <div style={{ 
+          textAlign: "center", 
+          padding: "40px", 
+          color: "#505A5F",
+          fontSize: "16px" 
+        }}>
+          {t("NO_DASHBOARD_ACCESS")}
+        </div>
+      ) : (
+        Object.entries(modulesData).map(([moduleName, data]) => (
+          <ModuleDashboardSection 
+            key={moduleName}
+            moduleName={moduleName}
+            data={data}
+            t={t}
+          />
+        ))
+      )}
     </div>
   );
 };
