@@ -2,6 +2,56 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { Loader } from "@upyog/digit-ui-react-components";
 
+/**
+ * ============================================================================
+ * EMPLOYEE DASHBOARD COMPONENT
+ * ============================================================================
+ * 
+ * @author Shivank Shukla - NIUA
+ * @version 2.0
+ * @date 2024
+ * 
+ * PURPOSE:
+ * --------
+ * Displays role-based dashboard metrics for employees across multiple modules.
+ * Shows separate dashboard sections for each module the employee has access to.
+ * 
+ * HOW IT WORKS:
+ * -------------
+ * 1. Component makes a single API call to backend with RequestInfo
+ * 2. Backend automatically:
+ *    - Extracts user roles from RequestInfo
+ *    - Maps roles to modules (PT, TL, PETSERVICES, etc.)
+ *    - Returns dashboard data for all accessible modules
+ * 3. Frontend dynamically renders one dashboard section per module
+ * 4. Each section displays 4 metric cards:
+ *    - Applications Received (blue)
+ *    - Total Amount (teal)
+ *    - Applications Pending (purple)
+ *    - Applications Approved (green)
+ * 
+ * SCENARIOS HANDLED:
+ * ------------------
+ * 1. Multiple Module Access (e.g., PT + TL):
+ *    - Shows 2 separate dashboard sections
+ *    - Each with its own heading and 4 cards
+ * 
+ * 2. Single Module Access (e.g., only PT):
+ *    - Shows 1 dashboard section with 4 cards
+ * 
+ * 3. No Module Access:
+ *    - Shows "No Dashboard Access" message
+ * 
+ * NUMBER FORMATTING:
+ * ------------------
+ * - Numbers ≤ 99,999: Indian comma format (e.g., 12,345)
+ * - Numbers ≥ 1,00,000: Lakhs format (e.g., 5.25 Lakhs)
+ * - Numbers ≥ 1,00,00,000: Crores format (e.g., 2.50 Crores)
+ * - Currency: Prefixed with ₹ symbol
+ * 
+ * ============================================================================
+ */
+
 const formatNumbers = (amount) => {
   if (amount === null || amount === undefined) return '';
   const num = Number(amount);
