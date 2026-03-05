@@ -17,6 +17,7 @@ public enum ModuleName {
 	  WT,
 	  MT,
 	  CND,
+	  ADS,
 	  ALL
 
 }

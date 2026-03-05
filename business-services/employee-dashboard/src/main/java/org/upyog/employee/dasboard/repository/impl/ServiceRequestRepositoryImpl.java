@@ -83,6 +83,9 @@ public class ServiceRequestRepositoryImpl implements ServiceRequestRepository {
 		case TP:
 			query = DashboardQueryConstant.TP_DASHBOARD_QUERY_;
 			break;
+		case ADS:
+				query = DashboardQueryConstant.ADV_DASHBOARD_QUERY_;
+			break;
 		case ALL:
 			query = DashboardQueryConstant.DASHBOARD_QUERY_ALL;
 			break;
