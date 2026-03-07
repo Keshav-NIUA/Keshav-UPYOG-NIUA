@@ -15,7 +15,7 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@nudmcdgnpm/upyog-css": "1.2.8",
+    "@nudmcdgnpm/upyog-css": "1.2.11",
     "@upyog/digit-ui-libraries": "3.10.0",
     "@upyog/digit-ui-module-bills": "3.10.0",
     "@upyog/digit-ui-module-common": "3.10.0",
@@ -70,7 +70,9 @@
     "**/q": "1.5.1",
     "**/cssesc": "3.0.0",
     "glob":"7.2.3",
-    "minimatch":"3.1.2"
+    "minimatch":"3.1.2",
+    "react-leaflet": "2.8.0",
+    "react-leaflet-draw": "0.19.0"
   },
   "scripts": {
     "start": "react-scripts start",

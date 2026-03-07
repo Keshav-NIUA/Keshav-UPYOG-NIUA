@@ -80,32 +80,26 @@ const formatIndianCurrency = (amount) => {
 
 const ModuleDashboardSection = ({ moduleName, data, t }) => {
   return (
-    <div style={{ marginBottom: "40px" }}>
-      <div style={{ 
-        fontWeight: "bold", 
-        fontSize: "20px", 
-        marginBottom: "15px",
-        textAlign: "center",
-        color: "#505A5F"
-      }}>
-        {t(`${moduleName}_DASHBOARD`)}
+    <div className="module-dashboard-container">
+
+      <div className="module-header">
+        <span className="module-title">{t(`${moduleName}_DASHBOARD`)}</span>
       </div>
-      
-      <div className="ground-container moduleCardWrapper gridModuleWrapper">
+
+      <div className="module-cards">
         {[
-          { title: t("ES_APPLICATION_RECEIVED"), count: data.applicationReceived || 0, color: "blue" },
-          { title: t("ES_TOTAL_AMOUNT"), count: data.totalAmount || 0, color: "teal", isAmount: true },
-          { title: t("ES_APPLICATION_PENDING"), count: data.applicationPending || 0, color: "purple" },
-          { title: t("ES_APPLICATION_APPROVED"), count: data.applicationApproved || 0, color: "green" },
+          { title: t("ES_APPLICATION_RECEIVED"), count: data.applicationReceived || 0, color: "received" },
+          { title: t("ES_TOTAL_AMOUNT"), count: data.totalAmount || 0, color: "amount", isAmount: true },
+          { title: t("ES_APPLICATION_PENDING"), count: data.applicationPending || 0, color: "pending" },
+          { title: t("ES_APPLICATION_APPROVED"), count: data.applicationApproved || 0, color: "approved" },
         ].map(({ title, count, color, isAmount }, index) => (
-          <div key={index} className={`status-card ${color}`}>
-            <div className="card-content">
-              <React.Fragment>
-                <span className="count">
-                  {isAmount ? formatIndianCurrency(count) : formatNumbers(count)}
-                </span>
-                <span className="title">{title}</span>
-              </React.Fragment>
+          <div key={index} className={`metric-card ${color}`}>
+            <div className="metric-number">
+              {isAmount ? formatIndianCurrency(count) : formatNumbers(count)}
+            </div>
+
+            <div className="metric-title">
+              {title}
             </div>
           </div>
         ))}

@@ -146,24 +146,16 @@ const EmployeeHome = ({ modules }) => {
     <div className="employee-app-container">
       <br />
       {dashboardCemp && (
-        <div style={{ textAlign: "center", marginBottom: "20px", marginLeft:"70%" }}>
-          <button
-            className="view-dashboard-btn"
-            style={{
-              padding: "12px 24px",
-              fontSize: "16px",
-              fontWeight: "bold",
-              backgroundColor: "#F47738",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-            }}
-            onClick={() => history.push("/upyog-ui/employee/dashboard")}
-          >
-            {t("VIEW_DASHBOARD")}
-          </button>
-        </div>
+        <div className="dashboard-btn-wrapper">
+        <button
+          className="view-dashboard-btn"
+          onClick={() => history.push("/upyog-ui/employee/dashboard")}
+        >
+          <span className="dashboard-icon">📊</span>
+          <span className="dashboard-text">{t("VIEW_DASHBOARD")}</span>
+          <span className="dashboard-arrow">→</span>
+        </button>
+      </div>
       )}
       <div className="ground-container moduleCardWrapper gridModuleWrapper">
         {modules.map(({ code }, index) => {
